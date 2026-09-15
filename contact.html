@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#0B0B0D">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Contact — ProAV Podcast</title>
 <meta name="description" content="Get in touch with the ProAV Podcast team — guest pitches, sponsor inquiries, and general contact.">
 <meta property="og:type" content="website">
@@ -23,6 +23,7 @@
 <meta name="twitter:image" content="/og-image.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNjQgNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iNiIgZmlsbD0iIzBCMEIwRCIvPgogIDx0ZXh0IHg9IjMyIiB5PSI1MyIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICAgICBmb250LWZhbWlseT0iJ0FyaWFsIEJsYWNrJywgSW1wYWN0LCBIYWV0dGVuc2Nod2VpbGVyLCAnQXJpYWwgTmFycm93IEJvbGQnLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iNTgiCiAgICAgICAgdGV4dExlbmd0aD0iNTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIKICAgICAgICBmaWxsPSIjRjVGNUYwIj5QQTwvdGV4dD4KPC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -73,6 +74,77 @@
   .nav-links a:hover { color: var(--signal-white); }
   .nav-links a.active { color: var(--tungsten-amber); }
   .nav-social { display: flex; align-items: center; gap: 16px; padding-left: 28px; border-left: 1px solid var(--border-quiet); }
+
+  /* ---------- site search ---------- */
+  .search-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: none; border: 1px solid var(--border-quiet); border-radius: 8px;
+    color: var(--graphite-light); cursor: pointer;
+    padding: 7px 10px; font-family: 'Inter', sans-serif; font-size: 12.5px;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .search-btn:hover { border-color: var(--signal-white); color: var(--signal-white); }
+  .search-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .search-btn kbd {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    border: 1px solid var(--border-quiet); border-radius: 4px; padding: 1px 5px;
+    color: var(--graphite-light);
+  }
+  .mobile-search-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: none; border: 1px solid var(--border-quiet); border-radius: 10px;
+    color: var(--graphite-light); cursor: pointer;
+    padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 15px;
+  }
+  .mobile-search-btn svg { width: 17px; height: 17px; }
+
+  .search-overlay {
+    position: fixed; inset: 0; z-index: 110;
+    background: rgba(0,0,0,0.85);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 90px 20px 20px;
+    opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s;
+  }
+  .search-overlay.open { opacity: 1; visibility: visible; }
+  .search-panel {
+    width: min(560px, 100%);
+    background: var(--stage-black-raised);
+    border: 1px solid var(--border-quiet);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+  }
+  .search-input-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px; border-bottom: 1px solid var(--border-quiet);
+  }
+  .search-input-row svg { width: 18px; height: 18px; color: var(--graphite-light); flex-shrink: 0; }
+  .search-input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--signal-white); font-family: 'Inter', sans-serif; font-size: 16px;
+  }
+  .search-input::placeholder { color: var(--graphite-light); }
+  .search-esc {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--graphite-light);
+    border: 1px solid var(--border-quiet); border-radius: 4px; padding: 2px 6px; cursor: pointer;
+    background: none; flex-shrink: 0;
+  }
+  .search-results { max-height: 60vh; overflow-y: auto; padding: 8px; }
+  .search-result {
+    display: block; width: 100%; text-align: left;
+    background: none; border: none; border-radius: 8px; cursor: pointer;
+    padding: 11px 12px; color: var(--signal-white);
+    transition: background 0.15s ease;
+  }
+  .search-result:hover, .search-result.active { background: rgba(245,245,240,0.06); }
+  .search-result-cat {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--tungsten-amber); margin-bottom: 3px;
+  }
+  .search-result-title { font-size: 14.5px; font-weight: 600; margin-bottom: 2px; }
+  .search-result-snippet { font-size: 12.5px; color: var(--graphite-light); line-height: 1.4; }
+  .search-empty { padding: 24px 16px; text-align: center; color: var(--graphite-light); font-size: 14px; }
+  .search-hint { padding: 24px 16px; text-align: center; color: var(--graphite-light); font-size: 13px; }
   .nav-social a { display: flex; color: var(--graphite-light); transition: color 0.2s ease; }
   .nav-social a:hover { color: var(--signal-white); }
   .nav-social svg { width: 16px; height: 16px; fill: currentColor; }
@@ -523,6 +595,12 @@
   .footer-social a:hover { color: var(--signal-white); border-color: var(--signal-white); transform: translateY(-2px); }
   .footer-social svg { width: 18px; height: 18px; fill: currentColor; }
   .footer-meta { font-size: 12.5px; color: #5c5c62; }
+  .footer-madein {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    font-size: 12px; color: #5c5c62; margin-top: 10px;
+    letter-spacing: 0.03em;
+  }
+  .footer-madein svg { width: 20px; height: auto; border-radius: 2px; flex-shrink: 0; }
 
   @media (max-width: 1024px) {
     .nav-right { display: none; }
@@ -552,7 +630,7 @@
 <body>
 
 <nav class="nav">
-  <a href="index.html" class="nav-logo" aria-label="Back to home">
+  <a href="/" class="nav-logo" aria-label="Back to home">
     <svg class="nav-bug" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <rect width="64" height="64" rx="10" fill="var(--stage-black)" stroke="var(--border-quiet)" stroke-width="2"/>
       <text x="32" y="45" text-anchor="middle"
@@ -563,15 +641,19 @@
   </a>
   <div class="nav-right">
     <div class="nav-links">
-      <a href="index.html#show">The Show</a>
-      <a href="index.html#rundown">Inside an Episode</a>
-      <a href="index.html#guests">Who's On</a>
-      <a href="index.html#watch">Watch</a>
-      <a href="index.html#listen">Listen</a>
-      <a href="index.html#merch">Merch</a>
-      <a href="contact.html" class="active">Contact</a>
+      <a href="/#show">The Show</a>
+      <a href="/#rundown">Inside an Episode</a>
+      <a href="/#guests">Who's On</a>
+      <a href="/#watch">Watch</a>
+      <a href="/#listen">Listen</a>
+      <a href="/#merch">Merch</a>
+      <a href="/contact" class="active">Contact</a>
     </div>
     <div class="nav-social">
+      <button class="search-btn" id="searchBtn" aria-label="Search site" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <kbd>&#8984;K</kbd>
+      </button>
       <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8ZM9.6 15.5v-7l6.3 3.5-6.3 3.5Z"/></svg>
       </a>
@@ -584,6 +666,9 @@
       <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.1 0 4.1.1 1.1 0 1.8.2 2.5.5.7.2 1.2.6 1.7 1.1.5.5.9 1 1.1 1.7.3.7.4 1.4.5 2.5 0 1 .1 1.4.1 4.1s0 3.1-.1 4.1c0 1.1-.2 1.8-.5 2.5-.2.7-.6 1.2-1.1 1.7-.5.5-1 .9-1.7 1.1-.7.3-1.4.4-2.5.5-1 0-1.4.1-4.1.1s-3.1 0-4.1-.1c-1.1 0-1.8-.2-2.5-.5a4.6 4.6 0 0 1-1.7-1.1 4.6 4.6 0 0 1-1.1-1.7c-.3-.7-.4-1.4-.5-2.5C2 15.1 2 14.7 2 12s0-3.1.1-4.1c0-1.1.2-1.8.5-2.5.2-.7.6-1.2 1.1-1.7.5-.5 1-.9 1.7-1.1.7-.3 1.4-.4 2.5-.5C8.9 2 9.3 2 12 2Zm0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.3.7.6 1 .3.3.6.5 1 .6.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.6-1a2.7 2.7 0 0 0-1-.6c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1Zm0 3.5a4.7 4.7 0 1 1 0 9.4 4.7 4.7 0 0 1 0-9.4Zm0 1.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Zm5.9-2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0Z"/></svg>
       </a>
+      <a href="#" aria-label="Discord" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M20.3 5.4A19.3 19.3 0 0 0 15.4 4c-.2.4-.5.9-.6 1.3a17.9 17.9 0 0 0-5.5 0C9.1 4.9 8.9 4.4 8.6 4a19.2 19.2 0 0 0-4.9 1.5C1 9.5.4 13.4.7 17.2a19.4 19.4 0 0 0 5.9 3c.5-.6.9-1.3 1.2-2a12.6 12.6 0 0 1-1.9-.9l.5-.4c3.6 1.7 7.6 1.7 11.2 0l.5.4c-.6.4-1.2.7-1.9.9.3.7.7 1.4 1.2 2a19.3 19.3 0 0 0 5.9-3c.4-4.4-.7-8.3-3-11.8ZM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.9 2.2-1.9 2.2Zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2Z"/></svg>
+      </a>
     </div>
   </div>
   <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
@@ -592,13 +677,17 @@
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="index.html#show">The Show</a>
-  <a href="index.html#rundown">Inside an Episode</a>
-  <a href="index.html#guests">Who's On</a>
-  <a href="index.html#watch">Watch</a>
-  <a href="index.html#listen">Listen</a>
-  <a href="index.html#merch">Merch</a>
-  <a href="contact.html" class="active">Contact</a>
+  <button class="mobile-search-btn" id="mobileSearchBtn" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    Search
+  </button>
+  <a href="/#show">The Show</a>
+  <a href="/#rundown">Inside an Episode</a>
+  <a href="/#guests">Who's On</a>
+  <a href="/#watch">Watch</a>
+  <a href="/#listen">Listen</a>
+  <a href="/#merch">Merch</a>
+  <a href="/contact" class="active">Contact</a>
   <div class="footer-social" style="margin-top: 32px;">
     <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8ZM9.6 15.5v-7l6.3 3.5-6.3 3.5Z"/></svg>
@@ -612,6 +701,22 @@
     <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.1 0 4.1.1 1.1 0 1.8.2 2.5.5.7.2 1.2.6 1.7 1.1.5.5.9 1 1.1 1.7.3.7.4 1.4.5 2.5 0 1 .1 1.4.1 4.1s0 3.1-.1 4.1c0 1.1-.2 1.8-.5 2.5-.2.7-.6 1.2-1.1 1.7-.5.5-1 .9-1.7 1.1-.7.3-1.4.4-2.5.5-1 0-1.4.1-4.1.1s-3.1 0-4.1-.1c-1.1 0-1.8-.2-2.5-.5a4.6 4.6 0 0 1-1.7-1.1 4.6 4.6 0 0 1-1.1-1.7c-.3-.7-.4-1.4-.5-2.5C2 15.1 2 14.7 2 12s0-3.1.1-4.1c0-1.1.2-1.8.5-2.5.2-.7.6-1.2 1.1-1.7.5-.5 1-.9 1.7-1.1.7-.3 1.4-.4 2.5-.5C8.9 2 9.3 2 12 2Zm0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.3.7.6 1 .3.3.6.5 1 .6.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.6-1a2.7 2.7 0 0 0-1-.6c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1Zm0 3.5a4.7 4.7 0 1 1 0 9.4 4.7 4.7 0 0 1 0-9.4Zm0 1.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Zm5.9-2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0Z"/></svg>
     </a>
+    <a href="#" aria-label="Discord" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M20.3 5.4A19.3 19.3 0 0 0 15.4 4c-.2.4-.5.9-.6 1.3a17.9 17.9 0 0 0-5.5 0C9.1 4.9 8.9 4.4 8.6 4a19.2 19.2 0 0 0-4.9 1.5C1 9.5.4 13.4.7 17.2a19.4 19.4 0 0 0 5.9 3c.5-.6.9-1.3 1.2-2a12.6 12.6 0 0 1-1.9-.9l.5-.4c3.6 1.7 7.6 1.7 11.2 0l.5.4c-.6.4-1.2.7-1.9.9.3.7.7 1.4 1.2 2a19.3 19.3 0 0 0 5.9-3c.4-4.4-.7-8.3-3-11.8ZM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.9 2.2-1.9 2.2Zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2Z"/></svg>
+    </a>
+  </div>
+</div>
+
+<div class="search-overlay" id="searchOverlay" onclick="if(event.target===this) closeSiteSearch()">
+  <div class="search-panel">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search episodes, crew roles, merch…" autocomplete="off" aria-label="Search site">
+      <button class="search-esc" onclick="closeSiteSearch()" type="button">esc</button>
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-hint">Start typing to search the site — try "hoodie", "FOH", or "cloud".</div>
+    </div>
   </div>
 </div>
 
@@ -635,13 +740,13 @@
       <div class="contact-status" id="contactStatus" role="status"></div>
     </form>
     <div class="contact-fallback">
-      Prefer email? <a href="mailto:contact@proavpodcast.fm">contact@proavpodcast.fm</a>
+      Prefer email? <a href="mailto:contact@proavpodcast.com">contact@proavpodcast.fm</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <a href="index.html" class="footer-word display" aria-label="Back to home">PROAV</a>
+  <a href="/" class="footer-word display" aria-label="Back to home">PROAV</a>
   <div class="footer-tagline">MAINSTAGE &middot; BACKSTAGE &middot; CLOUD</div>
   <div class="footer-social">
     <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
@@ -656,8 +761,22 @@
     <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.1 0 4.1.1 1.1 0 1.8.2 2.5.5.7.2 1.2.6 1.7 1.1.5.5.9 1 1.1 1.7.3.7.4 1.4.5 2.5 0 1 .1 1.4.1 4.1s0 3.1-.1 4.1c0 1.1-.2 1.8-.5 2.5-.2.7-.6 1.2-1.1 1.7-.5.5-1 .9-1.7 1.1-.7.3-1.4.4-2.5.5-1 0-1.4.1-4.1.1s-3.1 0-4.1-.1c-1.1 0-1.8-.2-2.5-.5a4.6 4.6 0 0 1-1.7-1.1 4.6 4.6 0 0 1-1.1-1.7c-.3-.7-.4-1.4-.5-2.5C2 15.1 2 14.7 2 12s0-3.1.1-4.1c0-1.1.2-1.8.5-2.5.2-.7.6-1.2 1.1-1.7.5-.5 1-.9 1.7-1.1.7-.3 1.4-.4 2.5-.5C8.9 2 9.3 2 12 2Zm0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.3.7.6 1 .3.3.6.5 1 .6.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.6-1a2.7 2.7 0 0 0-1-.6c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1Zm0 3.5a4.7 4.7 0 1 1 0 9.4 4.7 4.7 0 0 1 0-9.4Zm0 1.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Zm5.9-2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0Z"/></svg>
     </a>
+    <a href="#" aria-label="Discord" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M20.3 5.4A19.3 19.3 0 0 0 15.4 4c-.2.4-.5.9-.6 1.3a17.9 17.9 0 0 0-5.5 0C9.1 4.9 8.9 4.4 8.6 4a19.2 19.2 0 0 0-4.9 1.5C1 9.5.4 13.4.7 17.2a19.4 19.4 0 0 0 5.9 3c.5-.6.9-1.3 1.2-2a12.6 12.6 0 0 1-1.9-.9l.5-.4c3.6 1.7 7.6 1.7 11.2 0l.5.4c-.6.4-1.2.7-1.9.9.3.7.7 1.4 1.2 2a19.3 19.3 0 0 0 5.9-3c.4-4.4-.7-8.3-3-11.8ZM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.9 2.2-1.9 2.2Zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2Z"/></svg>
+    </a>
   </div>
   <div class="footer-meta">&copy; 2026 ProAV Podcast. All rights reserved.</div>
+  <div class="footer-madein">
+    <svg viewBox="0 0 40 27" aria-hidden="true">
+      <rect width="40" height="27" fill="#F5F5F0"/>
+      <polygon points="10.00,4.70 10.76,6.95 13.14,6.98 11.24,8.40 11.94,10.67 10.00,9.30 8.06,10.67 8.76,8.40 6.86,6.98 9.24,6.95" fill="#BF0A30"/>
+      <polygon points="20.00,4.70 20.76,6.95 23.14,6.98 21.24,8.40 21.94,10.67 20.00,9.30 18.06,10.67 18.76,8.40 16.86,6.98 19.24,6.95" fill="#BF0A30"/>
+      <polygon points="30.00,4.70 30.76,6.95 33.14,6.98 31.24,8.40 31.94,10.67 30.00,9.30 28.06,10.67 28.76,8.40 26.86,6.98 29.24,6.95" fill="#BF0A30"/>
+      <rect x="4" y="14" width="32" height="3.4" fill="#BF0A30"/>
+      <rect x="4" y="20" width="32" height="3.4" fill="#BF0A30"/>
+    </svg>
+    Made in DC
+  </div>
 </footer>
 
 <script>
@@ -720,7 +839,7 @@
   }
   // contact form — submits via FormSubmit's AJAX endpoint, no page reload.
   // NOTE: on the very first real submission, FormSubmit sends a one-time
-  // confirmation email to contact@proavpodcast.fm — that link must be clicked
+  // confirmation email to contact@proavpodcast.com — that link must be clicked
   // once to activate the endpoint before submissions start arriving normally.
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
@@ -733,7 +852,7 @@
       status.textContent = '';
       status.className = 'contact-status';
       try {
-        const res = await fetch('https://formsubmit.co/ajax/contact@proavpodcast.fm', {
+        const res = await fetch('https://formsubmit.co/ajax/contact@proavpodcast.com', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify(Object.fromEntries(new FormData(contactForm)))
@@ -742,9 +861,9 @@
         contactForm.reset();
         status.textContent = "Thanks — we'll get back to you soon. Taking you back home…";
         status.classList.add('success');
-        setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+        setTimeout(() => { window.location.href = '/'; }, 2000);
       } catch (err) {
-        status.textContent = 'Something went wrong — email us directly at contact@proavpodcast.fm.';
+        status.textContent = 'Something went wrong — email us directly at contact@proavpodcast.com.';
         status.classList.add('error');
       } finally {
         btn.disabled = false;
@@ -767,6 +886,151 @@
     hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
   });
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+  // ---------- site search ----------
+  // This page has little unique content of its own, so its index links
+  // back to the homepage's sections plus a couple of contact-specific
+  // entries. The homepage builds its own richer, DOM-derived index.
+  (function initSiteSearch() {
+    const overlay = document.getElementById('searchOverlay');
+    const input = document.getElementById('searchInput');
+    const resultsEl = document.getElementById('searchResults');
+    const openBtns = [document.getElementById('searchBtn'), document.getElementById('mobileSearchBtn')].filter(Boolean);
+    if (!overlay || !input || !resultsEl) return;
+
+    const searchIndex = [
+      { cat: 'Section', title: 'The Show', snippet: 'What ProAV covers, episode to episode.', href: '/#show' },
+      { cat: 'Section', title: 'Inside an Episode', snippet: 'A real rundown, cue by cue.', href: '/#rundown' },
+      { cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', href: '/#guests' },
+      { cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', href: '/#watch' },
+      { cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', href: '/#listen' },
+      { cat: 'Section', title: 'Merch', snippet: 'Tee, hoodie, cap, and sticker — wear the signal.', href: '/#merch' },
+      { cat: 'Page', title: 'Contact', snippet: 'Guest pitches, sponsor inquiries, and general contact.', el: document.querySelector('.contact-block') },
+    ];
+
+    let activeIndex = -1;
+    let currentResults = [];
+
+    function openSiteSearch() {
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      input.value = '';
+      renderResults([]);
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeSiteSearchImpl() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    window.closeSiteSearch = closeSiteSearchImpl;
+
+    function scoreMatch(entry, terms) {
+      const hay = (entry.title + ' ' + entry.cat + ' ' + entry.snippet).toLowerCase();
+      let score = 0;
+      for (const term of terms) {
+        if (!hay.includes(term)) return -1;
+        if (entry.title.toLowerCase().startsWith(term)) score += 3;
+        else if (entry.title.toLowerCase().includes(term)) score += 2;
+        else score += 1;
+      }
+      return score;
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function renderResults(results) {
+      currentResults = results;
+      activeIndex = -1;
+      if (!input.value.trim()) {
+        resultsEl.innerHTML = '<div class="search-hint">Start typing to search the site — try "hoodie", "FOH", or "cloud".</div>';
+        return;
+      }
+      if (results.length === 0) {
+        resultsEl.innerHTML = '<div class="search-empty">No matches. Try a different term.</div>';
+        return;
+      }
+      resultsEl.innerHTML = '';
+      results.forEach((r, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'search-result';
+        btn.type = 'button';
+        btn.dataset.index = i;
+        btn.innerHTML =
+          '<div class="search-result-cat">' + escapeHtml(r.cat) + '</div>' +
+          '<div class="search-result-title">' + escapeHtml(r.title) + '</div>' +
+          (r.snippet ? '<div class="search-result-snippet">' + escapeHtml(r.snippet) + '</div>' : '');
+        btn.addEventListener('click', () => goToResult(r));
+        resultsEl.appendChild(btn);
+      });
+    }
+
+    function goToResult(r) {
+      closeSiteSearchImpl();
+      if (r.href) {
+        window.location.href = r.href;
+        return;
+      }
+      if (!r.el) return;
+      setTimeout(() => { r.el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+    }
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      if (!q) { renderResults([]); return; }
+      const terms = q.split(/\s+/).filter(Boolean);
+      const scored = searchIndex
+        .map(entry => ({ entry, score: scoreMatch(entry, terms) }))
+        .filter(x => x.score >= 0)
+        .sort((a, b) => b.score - a.score)
+        .map(x => x.entry);
+      renderResults(scored);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      const items = resultsEl.querySelectorAll('.search-result');
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIndex = Math.min(activeIndex + 1, items.length - 1);
+        items.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
+        if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIndex = Math.max(activeIndex - 1, 0);
+        items.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
+        if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        if (activeIndex >= 0 && currentResults[activeIndex]) {
+          goToResult(currentResults[activeIndex]);
+        } else if (currentResults[0]) {
+          goToResult(currentResults[0]);
+        }
+      }
+    });
+
+    openBtns.forEach(btn => btn.addEventListener('click', () => {
+      if (typeof closeMenu === 'function') closeMenu();
+      openSiteSearch();
+    }));
+
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      const typing = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        overlay.classList.contains('open') ? closeSiteSearchImpl() : openSiteSearch();
+      } else if (e.key === '/' && !typing && !overlay.classList.contains('open')) {
+        e.preventDefault();
+        openSiteSearch();
+      } else if (e.key === 'Escape' && overlay.classList.contains('open')) {
+        closeSiteSearchImpl();
+      }
+    });
+  })();
 </script>
 </body>
 </html>
