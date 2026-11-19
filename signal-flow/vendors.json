@@ -1,6 +1,56 @@
-{ "updated": "2026-11-19",
+{
+  "updated": "2026-11-19",
   "vendors": [
-    { "key": "barco", "items": [] },
-    { "key": "analogway", "items": [] },
-    { "key": "pixelhue", "items": [] }
-  ] }
+    {
+      "key": "barco",
+      "items": []
+    },
+    {
+      "key": "analogway",
+      "items": []
+    },
+    {
+      "key": "pixelhue",
+      "items": [
+        {
+          "id": "pixelhue-pd3-4k-air-infocomm-2026",
+          "beat": "cloud",
+          "title": "Pixelhue pitches PD3-4K Air for lighter AV-over-IP",
+          "vendor": "Pixelhue",
+          "date": "2026-06-23",
+          "when": "Jun 23, 2026",
+          "brief": "At InfoComm 2026 Pixelhue discussed the PD3-4K Air, a compact AV-over-IP product aimed at enterprise, retail and education.",
+          "status_label": "InfoComm 2026",
+          "what": "Pixelhue spoke about the PD3-4K Air, positioned for deployments that need a compact AV-over-IP solution with easier management and reliable performance over 1Gb networks.",
+          "why": "It signals Pixelhue extending beyond live-event switchers into installed AV-over-IP.",
+          "watch": "Full specs and pricing were not in the source coverage; check Pixelhue before you plan around it.",
+          "sources": [
+            {
+              "label": "Inavate",
+              "url": "https://www.inavateonthenet.net/features/article/pixelhue-calls-for-lighter-avoverip-deployments-in-enterprise-retail-and-education"
+            }
+          ]
+        },
+        {
+          "id": "pixelhue-pixelflow-2-0",
+          "beat": "switching",
+          "title": "PixelFlow 2.0 adds Live Background and Dual Device Link",
+          "vendor": "Pixelhue",
+          "date": "2026-05-06",
+          "when": "May 6, 2026",
+          "brief": "PixelFlow 2.0 brings Live Background to the P80 and Q8, extends Dual Device Link to the Q8, and speeds up preset recall.",
+          "status_label": "Software",
+          "what": "Live Background assigns an input as a background without using dedicated layers (P80 and Q8). Dual Device Link joins two units over optical fiber and shares inputs (P80, now also Q8). The Q8 gains Virtual Processing Units, which redistribute resources between output cards, and shared multiview. A new P80 board adds 8 HDMI inputs. Preset recall is faster and keyframe management is optimized.",
+          "why": "Backgrounds without burning layers and two-unit linking on the Q8 matter on larger blended-screen shows.",
+          "watch": "The source names only the P80 and Q8; it does not say which other models get the update.",
+          "sources": [
+            {
+              "label": "Audio Effetti",
+              "url": "https://audioeffetti.com/en/news/pixelflow-2-0-enhanced-control-new-features-and-improved-performance-for-pixelhue-n219419"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
