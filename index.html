@@ -230,7 +230,9 @@
     position: relative;
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    text-align: center;
+    text-align: left;
+    /* left edge of the 1080px content column (matches the sections below) */
+    --hero-left: calc(max(0px, (100% - 1080px) / 2) + 24px);
     padding: 96px 24px 80px;
     overflow: hidden;
   }
@@ -243,8 +245,8 @@
     pointer-events: none;
   }
   .bracket { position: absolute; width: 64px; height: 64px; border-color: var(--border-quiet); opacity: 0.8; }
-  .bracket.tl { top: 96px; left: 40px; border-top: 2px solid; border-left: 2px solid; }
-  .bracket.br { bottom: 40px; right: 40px; border-bottom: 2px solid; border-right: 2px solid; }
+  .bracket.tl { top: 84px; left: max(8px, calc((100% - 1080px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
+  .bracket.br { bottom: 40px; right: max(8px, calc((100% - 1080px) / 2 + 8px)); border-bottom: 2px solid; border-right: 2px solid; }
 
   .hero-word {
     font-size: clamp(80px, 16vw, 250px);
@@ -252,9 +254,11 @@
     position: relative;
     z-index: 1;
   }
-  .hero-word svg { width: 100%; max-width: 1080px; height: auto; display: block; margin: 0 auto; }
+  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(1032px, calc(100% - var(--hero-left) - 24px)); }
+  .hero-word svg { width: 100%; height: auto; display: block; margin: 0; }
 
   .hero-tagline {
+    align-self: flex-start; margin-left: var(--hero-left);
     margin-top: 22px;
     font-size: clamp(16px, 2.4vw, 24px);
     letter-spacing: 0.35em;
@@ -263,7 +267,7 @@
   }
 
   .signal-line-css {
-    width: min(420px, 70vw); height: 4px; margin: 28px auto 34px; border-radius: 2px;
+    width: min(420px, 70vw); height: 4px; align-self: flex-start; margin: 28px 0 34px var(--hero-left); border-radius: 2px;
     background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
     background-size: 220% 100%;
     animation: heroSignalSweep 4s ease-in-out infinite;
@@ -275,14 +279,16 @@
   }
 
   .hero-hook {
+    align-self: flex-start;
+    width: calc(100% - var(--hero-left) - 24px);
     max-width: 560px;
     font-size: 17px;
     line-height: 1.6;
     color: #cfcfd4;
-    margin: 0 auto 40px;
+    margin: 0 0 40px var(--hero-left);
   }
 
-  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start; align-self: flex-start; margin-left: var(--hero-left); width: calc(100% - var(--hero-left) - 24px); }
 
   .show-in-hero {
     position: relative; z-index: 1;
@@ -709,11 +715,12 @@
   }
 
   @media (max-width: 720px) {
+    .hero { --hero-left: 20px; }
     .segments { grid-template-columns: 1fr; }
     .segment-flow { display: none; }
     section { padding: 84px 20px; }
     .show-in-hero { margin-top: 64px; padding: 0 20px; }
-    .hero-tagline { letter-spacing: 0.18em; font-size: 17px; }
+    .hero-tagline { letter-spacing: 0.1em; font-size: clamp(12px, 3.9vw, 17px); white-space: nowrap; }
     .merch-grid { grid-template-columns: 1fr; }
     .nav { padding: 16px 18px; }
     .video-modal { padding: 12px; }
@@ -754,6 +761,15 @@
   }
   .sf-step:hover:not(:disabled) { border-color: var(--signal-white); color: var(--signal-white); }
   .sf-step:disabled { opacity: 0.35; cursor: default; }
+  .sf-jump { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px; margin: -6px 0 24px; }
+  .sf-jump-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--graphite-light); }
+  .sf-date-input {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--border-quiet); background: transparent; color: var(--signal-white);
+    color-scheme: dark; cursor: pointer; transition: border-color 0.2s ease;
+  }
+  .sf-date-input:hover, .sf-date-input:focus-visible { border-color: var(--signal-white); outline: none; }
+  .sf-note { font-size: 12.5px; color: var(--tungsten-amber); }
   .sf-headline { font-size: clamp(26px, 3.6vw, 38px); line-height: 1.08; margin: 0 0 12px; }
   .sf-topline { font-size: 17px; line-height: 1.75; color: #d8d8dc; margin: 0 0 28px; max-width: 760px; }
   .sf-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -924,7 +940,7 @@
           <rect x="0" y="224" width="1200" height="13" fill="black"/>
         </mask>
       </defs>
-      <text x="600" y="220" text-anchor="middle" font-family="Impact, Haettenschweiler, sans-serif"
+      <text x="0" y="220" text-anchor="start" font-family="Impact, Haettenschweiler, sans-serif"
             font-size="200" fill="#F5F5F0" mask="url(#stencilMask)">PROAV</text>
     </svg>
   </div>
@@ -1801,7 +1817,20 @@
     const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
     const fmt = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
-    let issues = [], idx = 0;
+    let issues = [], idx = 0, jumpNote = '';
+    const fmtShort = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
+    // jump to a specific date; if there is no issue that day, show the newest one before it
+    function jumpTo(v) {
+      if (!v) return;
+      let i = issues.findIndex(it => it.date === v);
+      jumpNote = '';
+      if (i < 0) {
+        i = issues.findIndex(it => it.date < v);
+        if (i < 0) i = issues.length - 1;
+        jumpNote = 'No issue on ' + fmtShort(v) + ' — showing ' + fmtShort(issues[i].date);
+      }
+      idx = i; render();
+    }
 
     function render() {
       const x = issues[idx];
@@ -1813,6 +1842,10 @@
           '<span class="sf-date">' + esc(when) + '</span>' +
           '<button type="button" class="sf-step" id="sfNewer" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Next issue">NEXT ›</button>' +
         '</div></div>' +
+        '<div class="sf-jump"><label class="sf-jump-label" for="sfDate">JUMP TO DATE</label>' +
+          '<input type="date" id="sfDate" class="sf-date-input" min="' + esc(issues[issues.length - 1].date) + '" max="' + esc(issues[0].date) + '" value="' + esc(x.date) + '">' +
+          '<button type="button" class="sf-step" id="sfLatest" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Jump to the latest issue">LATEST</button>' +
+          (jumpNote ? '<span class="sf-note" role="status">' + esc(jumpNote) + '</span>' : '') + '</div>' +
         '<h3 class="sf-headline display">' + esc(x.headline) + '</h3>' +
         '<p class="sf-topline">' + esc(x.topline) + '</p><div class="sf-items">';
       (x.items || []).forEach(it => {
@@ -1843,8 +1876,11 @@
       h += '<div class="sf-foot">Researched and compiled daily with Claude. Check specs with the vendor before you buy.</div>';
       box.innerHTML = h;
       const o = document.getElementById('sfOlder'), n = document.getElementById('sfNewer');
-      if (o) o.onclick = () => { if (idx < issues.length - 1) { idx++; render(); } };
-      if (n) n.onclick = () => { if (idx > 0) { idx--; render(); } };
+      if (o) o.onclick = () => { if (idx < issues.length - 1) { idx++; jumpNote = ''; render(); } };
+      if (n) n.onclick = () => { if (idx > 0) { idx--; jumpNote = ''; render(); } };
+      const l = document.getElementById('sfLatest'), dt = document.getElementById('sfDate');
+      if (l) l.onclick = () => { idx = 0; jumpNote = ''; render(); };
+      if (dt) dt.onchange = () => jumpTo(dt.value);
     }
 
     // Live feed (updated daily by the Signal Flow task); falls back to the
