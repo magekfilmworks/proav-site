@@ -70,10 +70,18 @@
   .nav-bug { width: 36px; height: 36px; display: block; }
   .nav-right { display: flex; align-items: center; gap: 32px; }
   .nav-links { display: flex; gap: 36px; font-size: 14px; font-weight: 500; letter-spacing: 0.03em; }
-  .nav-links a { text-decoration: none; color: var(--graphite-light); transition: color 0.2s; }
+  .nav-links a { text-decoration: none; white-space: nowrap; color: var(--graphite-light); transition: color 0.2s; }
   .nav-links a:hover { color: var(--signal-white); }
   .nav-links a.active { color: var(--tungsten-amber); }
   .nav-social { display: flex; align-items: center; gap: 16px; padding-left: 28px; border-left: 1px solid var(--border-quiet); }
+
+  @media (min-width: 1025px) and (max-width: 1280px) {
+    .nav { padding: 20px 24px; }
+    .nav-right { gap: 18px; }
+    .nav-links { gap: 20px; font-size: 13.5px; letter-spacing: 0.01em; }
+    .nav-social { gap: 11px; padding-left: 16px; }
+    .search-btn kbd { display: none; }
+  }
 
   /* ---------- site search ---------- */
   .search-btn {
@@ -645,7 +653,7 @@
       <a href="/#rundown">Inside an Episode</a>
       <a href="/#guests">Who's On</a>
       <a href="/#watch">Watch</a>
-      <a href="/#signal-flow">Signal Flow Daily</a>
+      <a href="/#signal-flow">Signal Flow</a>
       <a href="/#listen">Listen</a>
       <a href="/#merch">Merch</a>
       <a href="/contact" class="active">Contact</a>
@@ -686,7 +694,7 @@
   <a href="/#rundown">Inside an Episode</a>
   <a href="/#guests">Who's On</a>
   <a href="/#watch">Watch</a>
-      <a href="/#signal-flow">Signal Flow Daily</a>
+  <a href="/#signal-flow">Signal Flow</a>
   <a href="/#listen">Listen</a>
   <a href="/#merch">Merch</a>
   <a href="/contact" class="active">Contact</a>
