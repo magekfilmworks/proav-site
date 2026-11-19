@@ -3,11 +3,105 @@
   "vendors": [
     {
       "key": "barco",
-      "items": []
+      "items": [],
+      "label": "Barco",
+      "match": "Barco",
+      "newsroom": [
+        "https://www.barco.com/en/news"
+      ]
     },
     {
       "key": "analogway",
-      "items": []
+      "items": [
+        {
+          "id": "analogway-coreplay-tetra",
+          "beat": "replay",
+          "title": "Analog Way launches CorePlay Tetra quad-output playback engine",
+          "vendor": "Analog Way",
+          "date": "2026-10-22",
+          "when": "Oct 22, 2026",
+          "brief": "CorePlay Tetra is a 2U media playback engine with four DisplayPort 1.4a outputs, built to work natively with Aquilon switchers.",
+          "status_label": "New product",
+          "spec": "4 x DisplayPort 1.4a; up to 16 players, 32 viewports; 2 TB NVMe; 32-ch Dante",
+          "what": "Plays H.264, H.265/HEVC, ProRes, HAP, HAP-Q, HAP Alpha, AWX, DPX and stills natively, with no re-encoding. Outputs stay synchronized without external genlock when display configurations match. For Aquilon, Preview and Program feeds can be mapped to the switcher configuration with familiar Preview / Program / TAKE controls, and outputs can also drive displays and LED processors directly. Control options include CorePlay RCS, an API, a Bitfocus Companion module and Stream Deck.",
+          "why": "It puts the media server and the switcher on one control surface for shows that run lots of playback.",
+          "watch": "Maximum resolution, frame rate, pricing and availability are not stated on the product page.",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/analog-way-launches-coreplay-tetra-a-quad-output-media-playback-engine-for-live-production"
+            },
+            {
+              "label": "Product page",
+              "url": "https://www.analogway.com/products/tetra"
+            }
+          ]
+        },
+        {
+          "id": "analogway-konstanz-powerwall-aquilon-cplus",
+          "beat": "switching",
+          "title": "Aquilon C+ drives the Powerwall at Germany's University of Konstanz",
+          "vendor": "Analog Way",
+          "date": "2026-10-14",
+          "when": "Oct 14, 2026",
+          "brief": "The University of Konstanz bought an Aquilon C+ to drive its high-resolution Samsung videowall.",
+          "status_label": "Customer story",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/powerwall-at-germanys-university-of-konstanz"
+            }
+          ]
+        },
+        {
+          "id": "analogway-mbc-aquilon-rs4-election",
+          "beat": "switching",
+          "title": "MBC runs Aquilon RS4 systems for live countrywide election coverage",
+          "vendor": "Analog Way",
+          "date": "2026-08-25",
+          "when": "Aug 25, 2026",
+          "brief": "Korean broadcaster MBC used a pair of Aquilon RS4 systems for its telecast of the Ninth Local Elections results in June.",
+          "status_label": "Customer story",
+          "spec": "Native 4K outputs; 10+ simultaneous layers",
+          "what": "The systems, supplied by LDS Co., Ltd., handled multi-layer, multi-screen compositions with multiple live sources for coverage of more than 4,000 offices. Analog Way reports the coverage ran without interruption and MBC's telecast took the top viewership rating at 9.8 percent. MBC also used Analog Way systems for its 2025 Presidential Election returns.",
+          "why": "A clear example of Aquilon RS4 on a high-pressure, multi-source live broadcast.",
+          "watch": "Screen count and detailed workflow are not stated in the coverage.",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/mbc-deploys-aquilon-rs4-for-korea-election-coverage"
+            },
+            {
+              "label": "Live Design",
+              "url": "https://www.livedesignonline.com/news/korean-broadcaster-mbc-deploys-analog-way-aquilon-rs4-systems-live-countrywide-election"
+            }
+          ]
+        },
+        {
+          "id": "analogway-aquilon-firmware-6-2",
+          "beat": "switching",
+          "title": "Aquilon firmware 6.2 adds stereoscopic 3D and backup groups",
+          "vendor": "Analog Way",
+          "date": "2026-07-16",
+          "when": "Jul 16, 2026",
+          "brief": "Firmware 6.2 adds native stereoscopic 3D, backup groups for one-action failover, and more DisplayPort formats including 8K at 30 Hz.",
+          "status_label": "Firmware",
+          "what": "3D is supported up to UHD at 60 Hz per eye, and frame-sequential 3D with embedded sync up to 3840x2160 at 120 Hz, 4:4:4, 8-bit, using the ACC-AQL-IN-DP and ACC-AQL-OUT-DP cards. 2D and 3D can be mixed in one composition. Backup Groups switch grouped input and background backups together, manually or automatically when a member fails, and can be controlled from Web RCS or a custom key on the RC400T. Custom Formats now support VESA CVT Reduced Blanking v2.0.",
+          "why": "Group failover cuts the number of moves an operator needs when a source drops mid-show.",
+          "watch": "The page doesn't list which Aquilon models support each feature. The page also shows more than one date; Analog Way's news list dates it Jul 16, 2026.",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/aquilon-firmware-6-2-stereoscopic-3d-and-backup-groups"
+            }
+          ]
+        }
+      ],
+      "label": "Analog Way",
+      "match": "analog ?way|aquilon|livepremier",
+      "newsroom": [
+        "https://www.analogway.com/news-center"
+      ]
     },
     {
       "key": "pixelhue",
@@ -50,6 +144,11 @@
             }
           ]
         }
+      ],
+      "label": "PixelHue",
+      "match": "pixel ?hue|\\b(q8|p80|p20)\\b",
+      "newsroom": [
+        "https://pixelhue.com"
       ]
     }
   ]

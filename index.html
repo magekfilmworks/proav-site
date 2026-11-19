@@ -462,16 +462,20 @@
   .video-meta { padding: 16px 18px 18px; }
 
   /* ---------- watch hero player ---------- */
-  .watch-hero { max-width: 760px; margin: 0 auto; }
-  .watch-hero .video-meta { padding: 18px 22px 24px; }
-  .watch-hero .video-title { font-size: 18px; }
+  /* tiles sit left-aligned in a grid: two or more across on desktop, more rows as videos are added */
+  .watch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 320px)); gap: 24px; justify-content: start; }
+  .watch-hero { margin: 0; }
+  .watch-hero .video-meta { padding: 14px 16px 18px; }
+  .watch-hero .video-title { font-size: 16px; }
+  .watch-hero .play-btn { width: 48px; height: 48px; }
+  .watch-hero .play-btn svg { width: 18px; height: 18px; }
   .watch-segments {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    padding: 20px 20px 16px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding: 14px 14px 12px;
   }
   .watch-seg-btn {
-    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em;
-    padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border-quiet);
+    font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em;
+    padding: 7px 11px; border-radius: 999px; border: 1px solid var(--border-quiet);
     background: transparent; color: var(--graphite-light); cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
   }
@@ -1172,6 +1176,8 @@
 <section id="watch">
   <div class="section-eyebrow reveal">WATCH</div>
   <h2 class="section-title display reveal">The gear, on screen.</h2>
+  <!-- Each .video-card.watch-hero is one tile. Copy a whole tile to add a video; the grid fills across, then down. -->
+  <div class="watch-grid">
   <div class="video-card watch-hero reveal">
     <div class="watch-segments" role="tablist" aria-label="Jump to episode segment">
       <button type="button" class="watch-seg-btn" data-seg="mainstage" data-start="180" onclick="setWatchSegment(this)">MAINSTAGE</button>
@@ -1192,6 +1198,7 @@
       <div class="video-eyebrow backstage" id="watchActiveLabel">BACKSTAGE</div>
       <div class="video-title">The Art of Cutting Live</div>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1494,13 +1501,14 @@
     document.body.style.overflow = 'hidden';
   }
   function setWatchSegment(btn) {
-    document.querySelectorAll('.watch-seg-btn').forEach(b => b.classList.remove('active'));
+    const card = btn.closest('.watch-hero') || document;
+    card.querySelectorAll('.watch-seg-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const seg = btn.getAttribute('data-seg');
     const start = btn.getAttribute('data-start');
-    const embed = document.querySelector('.watch-hero .video-embed');
+    const embed = card.querySelector('.video-embed');
     if (embed) embed.setAttribute('data-start', start);
-    const label = document.getElementById('watchActiveLabel');
+    const label = card.querySelector('.video-eyebrow') || document.getElementById('watchActiveLabel');
     if (label) {
       label.textContent = seg.toUpperCase();
       label.className = 'video-eyebrow ' + seg;
@@ -1846,8 +1854,11 @@
       switching: { label: 'SWITCHING',        seg: 'mainstage' },
       replay:    { label: 'REPLAY / RECORD',  seg: 'mainstage' },
       cloud:     { label: 'IP / CLOUD',       seg: 'cloud' },
-      field:     { label: 'FIELD',            seg: 'backstage' }
+      field:     { label: 'FIELD',            seg: 'backstage' },
+      graphics:  { label: 'MOTION GRAPHICS',  seg: 'mainstage' }
     };
+    // Blackmagic Fusion (and Fusion Studio) items are always tagged MOTION GRAPHICS
+    const beatOf = it => (/\bfusion\b/i.test(it.title || '') && /blackmagic/i.test((it.vendor || '') + ' ' + (it.title || ''))) ? 'graphics' : it.beat;
     const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
     const fmt = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
@@ -1867,7 +1878,7 @@
     }
 
     function itemHtml(it, when) {
-      const b = BEATS[it.beat] || BEATS.field;
+      const b = BEATS[beatOf(it)] || BEATS.field;
       let h = '<article class="sf-item"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
         (when ? '<span class="sf-when">' + esc(when) + '</span>' : '') +
         (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
@@ -1963,8 +1974,20 @@
     // copy bundled with the site if the feed can't be reached.
     const FEED_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/issues.json';
     const loadJson = u => fetch(u, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
-    const loadVendors = loadJson('/signal-flow/vendors.json')
-      .then(d => { (d.vendors || []).forEach(v => { vendorData[v.key] = v; }); })
+    // Curated vendor items (Barco, Analog Way, PixelHue): live copy from the feed, bundled copy as backup.
+    const VENDORS_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/vendors.json';
+    const loadVendors = loadJson(VENDORS_URL)
+      .catch(() => loadJson('/signal-flow/vendors.json'))
+      .then(d => {
+        (d.vendors || []).forEach(v => {
+          vendorData[v.key] = v;
+          // A vendor that isn't built in gets its own tab: give it "label" (and optionally "match", a regex tested against item vendor/title) in vendors.json.
+          if (!VENDORS.some(x => x.key === v.key) && (v.items || []).length) {
+            let re = null; try { re = v.match ? new RegExp(v.match, 'i') : null; } catch (e) {}
+            VENDORS.push({ key: v.key, label: String(v.label || v.key).toUpperCase(), test: it => !!re && (re.test(it.vendor || '') || re.test(it.title || '')) });
+          }
+        });
+      })
       .catch(() => {});
     loadJson(FEED_URL)
       .catch(() => loadJson('/signal-flow/issues.json'))
