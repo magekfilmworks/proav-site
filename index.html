@@ -821,6 +821,20 @@
   }
   .sf-coming time { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--tungsten-amber); }
   .sf-coming .place { color: var(--graphite-light); }
+  .sf-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
+  .sf-tab {
+    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em;
+    padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border-quiet);
+    background: transparent; color: var(--graphite-light); cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .sf-tab:hover { border-color: var(--signal-white); color: var(--signal-white); }
+  .sf-tab.active { background: rgba(255,156,61,0.15); border-color: var(--tungsten-amber); color: var(--tungsten-amber); }
+  .sf-bm { margin-top: 48px; }
+  .sf-bm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .sf-bm h3.sf-bm-title { font-size: clamp(22px, 3vw, 30px); line-height: 1.1; margin: 0; }
+  .sf-bm-note { font-size: 12.5px; color: var(--graphite-light); }
+  .sf-when { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--tungsten-amber); letter-spacing: 0.04em; }
   .sf-foot { margin-top: 22px; font-size: 12.5px; color: var(--graphite-light); }
   .sf-empty { color: var(--graphite-light); font-size: 15px; }
   @media (max-width: 720px) {
@@ -1209,9 +1223,17 @@
   <div class="section-eyebrow reveal">SIGNAL FLOW DAILY</div>
   <h2 class="section-title display reveal">What changed in live production.</h2>
   <p class="sf-lede reveal">LED processing, switching, replay and venue-to-cloud news, sourced and checked every morning.</p>
-  <!-- Filled from /signal-flow/issues.json by the Signal Flow script near the bottom of this file. -->
+  <!-- Filled from the Signal Flow feed (falls back to /signal-flow/issues.json) by the Signal Flow script near the bottom of this file. -->
   <div class="sf-issue" id="sfIssue" aria-live="polite">
     <p class="sf-empty">Loading today's briefing…</p>
+  </div>
+  <div class="sf-bm" id="sfVendors" hidden>
+    <div class="sf-bm-head">
+      <h3 class="sf-bm-title display">Latest.</h3>
+      <div class="sf-bm-note">Four newest per tab. Dates are as published by the source where known.</div>
+    </div>
+    <div class="sf-tabs" id="sfTabs" role="tablist" aria-label="Choose a vendor"></div>
+    <div class="sf-items" id="sfBmItems"></div>
   </div>
   <noscript><p class="sf-empty">Turn on JavaScript to read Signal Flow Daily.</p></noscript>
 </section>
@@ -1841,6 +1863,66 @@
       idx = i; render();
     }
 
+    function itemHtml(it, when) {
+      const b = BEATS[it.beat] || BEATS.field;
+      let h = '<article class="sf-item"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
+        (when ? '<span class="sf-when">' + esc(when) + '</span>' : '') +
+        (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
+        (it.price ? '<span class="sf-status">' + esc(it.price) + '</span>' : '') + '</div>' +
+        '<h3>' + esc(it.title) + '</h3><div class="sf-vendor">' + esc(it.vendor) + '</div>' +
+        '<p class="sf-brief">' + esc(it.brief) + '</p>' +
+        (it.spec ? '<p class="sf-spec">' + esc(it.spec) + '</p>' : '');
+      if (it.what || it.why || it.watch) {
+        h += '<details><summary>WHAT \u00b7 WHY \u00b7 WATCH</summary><dl class="sf-detail">' +
+          (it.what ? '<dt>WHAT</dt><dd>' + esc(it.what) + '</dd>' : '') +
+          (it.why ? '<dt>WHY</dt><dd>' + esc(it.why) + '</dd>' : '') +
+          (it.watch ? '<dt>WATCH</dt><dd>' + esc(it.watch) + '</dd>' : '') + '</dl></details>';
+      }
+      if (it.sources && it.sources.length) {
+        h += '<div class="sf-sources">' + it.sources.map(s => '<a href="' + esc(safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.label || 'Source') + ' \u2197</a>').join('') + '</div>';
+      }
+      return h + '</article>';
+    }
+
+    /* Latest by vendor: tabs for Blackmagic, Barco, Analog Way, PixelHue (four cards each).
+       Items come from /signal-flow/vendors.json (curated, dated by the source) merged with any briefing item
+       whose lead vendor matches. Duplicates by title are dropped, curated items win. */
+    const VENDORS = [
+      { key: 'blackmagic', label: 'BLACKMAGIC', test: it => /^\s*blackmagic/i.test(it.vendor || '') || /blackmagic/i.test(it.title || '') },
+      { key: 'barco',      label: 'BARCO',      test: it => /^\s*barco/i.test(it.vendor || '') || /\bbarco\b/i.test(it.title || '') },
+      { key: 'analogway',  label: 'ANALOG WAY', test: it => /^\s*analog ?way/i.test(it.vendor || '') || /aquilon|analog ?way/i.test(it.title || '') },
+      { key: 'pixelhue',   label: 'PIXELHUE',   test: it => /^\s*pixel ?hue/i.test(it.vendor || '') || /pixelhue|\b(q8|p80|p20)\b/i.test(it.title || '') }
+    ];
+    const LIMIT = 4;
+    let vendorData = {}, activeVendor = null;
+    const keyOf = t => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+    function vendorItems(v) {
+      const seen = new Set(), out = [];
+      const add = (it, date, when) => {
+        const k = keyOf(it.title); if (seen.has(k)) return;
+        seen.add(k); out.push({ it: it, date: date || '', when: when || (date ? fmt(date) : '') });
+      };
+      ((vendorData[v.key] || {}).items || []).forEach(it => add(it, it.date, it.when));
+      issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(it, iss.date); }));
+      out.sort((a, b) => a.date < b.date ? 1 : -1);
+      return out.slice(0, LIMIT);
+    }
+
+    function renderVendors() {
+      const wrap = document.getElementById('sfVendors'), grid = document.getElementById('sfBmItems'), tabs = document.getElementById('sfTabs');
+      if (!wrap || !grid || !tabs) return;
+      const have = VENDORS.map(v => ({ v: v, items: vendorItems(v) })).filter(x => x.items.length);
+      if (!have.length) { wrap.hidden = true; return; }
+      if (!activeVendor || !have.some(x => x.v.key === activeVendor)) activeVendor = have[0].v.key;
+      tabs.innerHTML = have.map(x => '<button type="button" role="tab" class="sf-tab' + (x.v.key === activeVendor ? ' active' : '') +
+        '" data-v="' + x.v.key + '" aria-selected="' + (x.v.key === activeVendor) + '">' + esc(x.v.label) + '</button>').join('');
+      const cur = have.find(x => x.v.key === activeVendor);
+      grid.innerHTML = cur.items.map(o => itemHtml(o.it, o.when)).join('');
+      tabs.querySelectorAll('.sf-tab').forEach(btn => btn.onclick = () => { activeVendor = btn.dataset.v; renderVendors(); });
+      wrap.hidden = false;
+    }
+
     function render() {
       const x = issues[idx];
       if (!x) { box.innerHTML = '<p class="sf-empty">No briefing yet.</p>'; return; }
@@ -1857,25 +1939,7 @@
           (jumpNote ? '<span class="sf-note" role="status">' + esc(jumpNote) + '</span>' : '') + '</div>' +
         '<h3 class="sf-headline display">' + esc(x.headline) + '</h3>' +
         '<p class="sf-topline">' + esc(x.topline) + '</p><div class="sf-items">';
-      (x.items || []).forEach(it => {
-        const b = BEATS[it.beat] || BEATS.field;
-        h += '<article class="sf-item"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
-          (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
-          (it.price ? '<span class="sf-status">' + esc(it.price) + '</span>' : '') + '</div>' +
-          '<h3>' + esc(it.title) + '</h3><div class="sf-vendor">' + esc(it.vendor) + '</div>' +
-          '<p class="sf-brief">' + esc(it.brief) + '</p>' +
-          (it.spec ? '<p class="sf-spec">' + esc(it.spec) + '</p>' : '');
-        if (it.what || it.why || it.watch) {
-          h += '<details><summary>WHAT · WHY · WATCH</summary><dl class="sf-detail">' +
-            (it.what ? '<dt>WHAT</dt><dd>' + esc(it.what) + '</dd>' : '') +
-            (it.why ? '<dt>WHY</dt><dd>' + esc(it.why) + '</dd>' : '') +
-            (it.watch ? '<dt>WATCH</dt><dd>' + esc(it.watch) + '</dd>' : '') + '</dl></details>';
-        }
-        if (it.sources && it.sources.length) {
-          h += '<div class="sf-sources">' + it.sources.map(s => '<a href="' + esc(safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.label || 'Source') + ' ↗</a>').join('') + '</div>';
-        }
-        h += '</article>';
-      });
+      (x.items || []).forEach(it => { h += itemHtml(it); });
       h += '</div>';
       if (x.watch && x.watch.length) {
         h += '<div class="sf-coming"><div class="sf-coming-label">COMING UP</div><ul>' + x.watch.map(w =>
@@ -1896,9 +1960,13 @@
     // copy bundled with the site if the feed can't be reached.
     const FEED_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/issues.json';
     const loadJson = u => fetch(u, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    const loadVendors = loadJson('/signal-flow/vendors.json')
+      .then(d => { (d.vendors || []).forEach(v => { vendorData[v.key] = v; }); })
+      .catch(() => {});
     loadJson(FEED_URL)
       .catch(() => loadJson('/signal-flow/issues.json'))
-      .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); })
+      .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); return loadVendors; })
+      .then(() => renderVendors())
       .catch(() => { box.innerHTML = '<p class="sf-empty">Signal Flow Daily is unavailable right now.</p>'; });
   })();
 </script>

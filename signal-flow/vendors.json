@@ -1,0 +1,6 @@
+{ "updated": "2026-11-19",
+  "vendors": [
+    { "key": "barco", "items": [] },
+    { "key": "analogway", "items": [] },
+    { "key": "pixelhue", "items": [] }
+  ] }
