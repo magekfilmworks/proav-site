@@ -625,6 +625,28 @@
     html { scroll-behavior: auto; }
     .reveal { transition: none; opacity: 1; transform: none; }
   }
+  /* ---------- signal flow ticker under the menu (hover / scroll) ---------- */
+  .sf-ticker {
+    position: fixed; left: 0; right: 0; top: 76px; z-index: 49;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px 18px;
+    padding: 10px 40px;
+    background: rgba(19,19,22,0.94); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-quiet);
+    font-size: 13px; line-height: 1.4;
+    opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+  .sf-ticker.show { opacity: 1; visibility: visible; transform: translateY(0); }
+  .sf-ticker-label { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--tungsten-amber); }
+  .sf-ticker-date { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--graphite-light); }
+  .sf-ticker-head { color: var(--signal-white); text-decoration: none; font-weight: 600; }
+  .sf-ticker-head:hover { color: var(--tungsten-amber); }
+  .sf-ticker-links { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-left: auto; }
+  .sf-ticker-links a { color: var(--graphite-light); text-decoration: none; border-bottom: 1px solid var(--border-quiet); font-size: 12.5px; }
+  .sf-ticker-links a:hover { color: var(--signal-white); border-color: var(--signal-white); }
+  @media (max-width: 1024px) { .sf-ticker { padding: 10px 24px; } }
+  @media (max-width: 720px) { .sf-ticker { padding: 10px 18px; } .sf-ticker-links { margin-left: 0; } }
+  @media (prefers-reduced-motion: reduce) { .sf-ticker { transition: none; transform: none; } }
 </style>
 </head>
 <body>
@@ -676,6 +698,15 @@
     <span></span><span></span><span></span>
   </button>
 </nav>
+<div class="sf-ticker" id="sfTicker" role="region" aria-label="Signal Flow Daily headline">
+  <span class="sf-ticker-label">SIGNAL FLOW DAILY</span>
+  <span class="sf-ticker-date" id="sfTickerDate"></span>
+  <a class="sf-ticker-head" id="sfTickerHead" href="/#signal-flow">Today's briefing</a>
+  <span class="sf-ticker-links">
+    <a href="/#signal-flow">Daily briefing</a>
+    <a href="/#sfVendors">Latest from the vendors</a>
+  </span>
+</div>
 
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-search-btn" id="mobileSearchBtn" type="button">
@@ -1033,6 +1064,42 @@
         closeSiteSearchImpl();
       }
     });
+  })();
+</script>
+<script>
+  /* Signal Flow ticker: today's headline slides in under the menu on hover/focus, and briefly while scrolling. */
+  (function () {
+    const bar = document.getElementById('sfTicker'), nav = document.querySelector('.nav');
+    if (!bar || !nav) return;
+    const FEED = 'https://magekfilmworks.github.io/proav-signal-flow-feed/issues.json';
+    const get = u => fetch(u, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    let ready = false, overBar = false, overNav = false, hideTimer = null, lastY = window.scrollY;
+    get(FEED).catch(() => get('/signal-flow/issues.json')).then(d => {
+      const x = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1)[0];
+      if (!x) return;
+      document.getElementById('sfTickerHead').textContent = x.headline || "Today's briefing";
+      try { document.getElementById('sfTickerDate').textContent = new Date(x.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); } catch (e) {}
+      ready = true;
+    }).catch(() => {});
+    const place = () => { bar.style.top = nav.offsetHeight + 'px'; };
+    const show = () => { if (!ready) return; place(); bar.classList.add('show'); };
+    const hideSoon = ms => { clearTimeout(hideTimer); hideTimer = setTimeout(() => { if (!overBar && !overNav) bar.classList.remove('show'); }, ms); };
+    nav.addEventListener('mouseover', () => { overNav = true; show(); clearTimeout(hideTimer); });
+    nav.addEventListener('mouseleave', () => { overNav = false; hideSoon(300); });
+    nav.addEventListener('focusin', () => { overNav = true; show(); clearTimeout(hideTimer); });
+    nav.addEventListener('focusout', () => { overNav = false; hideSoon(300); });
+    bar.addEventListener('mouseenter', () => { overBar = true; clearTimeout(hideTimer); });
+    bar.addEventListener('mouseleave', () => { overBar = false; hideSoon(300); });
+    bar.addEventListener('focusin', () => { overBar = true; clearTimeout(hideTimer); });
+    bar.addEventListener('focusout', () => { overBar = false; hideSoon(300); });
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y > 160 && Math.abs(y - lastY) > 4) { show(); hideSoon(2800); }
+      if (y <= 160) { bar.classList.remove('show'); }
+      lastY = y;
+    }, { passive: true });
+    window.addEventListener('resize', place);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') bar.classList.remove('show'); });
   })();
 </script>
 </body>
