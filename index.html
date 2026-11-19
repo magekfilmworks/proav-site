@@ -98,7 +98,7 @@
   .nav-bug { width: 36px; height: 36px; display: block; }
   .nav-right { display: flex; align-items: center; gap: 32px; }
   .nav-links { display: flex; gap: 36px; font-size: 14px; font-weight: 500; letter-spacing: 0.03em; }
-  .nav-links a { text-decoration: none; white-space: nowrap; color: var(--graphite-light); transition: color 0.2s; }
+  .nav-links a { white-space: nowrap; text-decoration: none; color: var(--graphite-light); transition: color 0.2s; }
   .nav-links a:hover { color: var(--signal-white); }
   .nav-links a.active { color: var(--tungsten-amber); }
   .nav-social { display: flex; align-items: center; gap: 16px; padding-left: 28px; border-left: 1px solid var(--border-quiet); }
@@ -230,8 +230,10 @@
     position: relative;
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    text-align: center;
-    padding: 96px 24px 80px;
+    text-align: left;
+    /* left edge of the 1080px content column (matches the sections below) */
+    --hero-left: calc(max(0px, (100% - 1080px) / 2) + 24px);
+    padding: 108px 24px 64px;
     overflow: hidden;
   }
   .hero::before {
@@ -243,8 +245,8 @@
     pointer-events: none;
   }
   .bracket { position: absolute; width: 64px; height: 64px; border-color: var(--border-quiet); opacity: 0.8; }
-  .bracket.tl { top: 96px; left: 40px; border-top: 2px solid; border-left: 2px solid; }
-  .bracket.br { bottom: 40px; right: 40px; border-bottom: 2px solid; border-right: 2px solid; }
+  .bracket.tl { top: 92px; width: 36px; height: 36px; left: max(8px, calc((100% - 1080px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
+  .bracket.br { bottom: 40px; right: max(8px, calc((100% - 1080px) / 2 + 8px)); border-bottom: 2px solid; border-right: 2px solid; }
 
   .hero-word {
     font-size: clamp(80px, 16vw, 250px);
@@ -252,18 +254,26 @@
     position: relative;
     z-index: 1;
   }
-  .hero-word svg { width: 100%; max-width: 1080px; height: auto; display: block; margin: 0 auto; }
+  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(340px, calc(100% - var(--hero-left) - 24px)); }
+  .hero-word svg { width: 100%; height: auto; display: block; margin: 0; }
 
+  /* tagline + signal line sit in one block, so the line runs exactly as wide as the tagline */
+  .hero-lockup {
+    align-self: flex-start; margin-left: var(--hero-left);
+    width: fit-content; max-width: calc(100% - var(--hero-left) - 24px);
+    font-size: 14px;
+    --track: 0.35em;
+  }
   .hero-tagline {
-    margin-top: 22px;
-    font-size: clamp(16px, 2.4vw, 24px);
-    letter-spacing: 0.35em;
+    margin-top: 14px;
+    font-size: inherit;
+    letter-spacing: var(--track);
     color: var(--graphite-light);
     font-weight: 600;
   }
 
   .signal-line-css {
-    width: min(420px, 70vw); height: 4px; margin: 28px auto 34px; border-radius: 2px;
+    width: calc(100% - var(--track)); height: 3px; margin: 16px 0 24px; border-radius: 2px; /* minus the trailing letter-space so it ends at the "d" of Cloud */
     background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
     background-size: 220% 100%;
     animation: heroSignalSweep 4s ease-in-out infinite;
@@ -275,14 +285,16 @@
   }
 
   .hero-hook {
+    align-self: flex-start;
+    width: calc(100% - var(--hero-left) - 24px);
     max-width: 560px;
     font-size: 17px;
     line-height: 1.6;
     color: #cfcfd4;
-    margin: 0 auto 40px;
+    margin: 0 0 28px var(--hero-left);
   }
 
-  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start; align-self: flex-start; margin-left: var(--hero-left); width: calc(100% - var(--hero-left) - 24px); }
 
   .show-in-hero {
     position: relative; z-index: 1;
@@ -709,11 +721,13 @@
   }
 
   @media (max-width: 720px) {
+    .hero { --hero-left: 20px; }
     .segments { grid-template-columns: 1fr; }
     .segment-flow { display: none; }
     section { padding: 84px 20px; }
     .show-in-hero { margin-top: 64px; padding: 0 20px; }
-    .hero-tagline { letter-spacing: 0.18em; font-size: 17px; }
+    .hero-lockup { --track: 0.1em; font-size: clamp(11px, 3.4vw, 14px); }
+    .hero-tagline { white-space: nowrap; }
     .merch-grid { grid-template-columns: 1fr; }
     .nav { padding: 16px 18px; }
     .video-modal { padding: 12px; }
@@ -724,7 +738,6 @@
     .segments { grid-template-columns: repeat(2, 1fr); }
     section { padding: 96px 24px; }
   }
-
 
   /* ---------- signal flow daily ---------- */
   .sf-lede { max-width: 680px; font-size: 17px; line-height: 1.75; color: #d8d8dc; margin: 0 0 40px; }
@@ -755,6 +768,15 @@
   }
   .sf-step:hover:not(:disabled) { border-color: var(--signal-white); color: var(--signal-white); }
   .sf-step:disabled { opacity: 0.35; cursor: default; }
+  .sf-jump { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px; margin: -6px 0 24px; }
+  .sf-jump-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--graphite-light); }
+  .sf-date-input {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--border-quiet); background: transparent; color: var(--signal-white);
+    color-scheme: dark; cursor: pointer; transition: border-color 0.2s ease;
+  }
+  .sf-date-input:hover, .sf-date-input:focus-visible { border-color: var(--signal-white); outline: none; }
+  .sf-note { font-size: 12.5px; color: var(--tungsten-amber); }
   .sf-headline { font-size: clamp(26px, 3.6vw, 38px); line-height: 1.08; margin: 0 0 12px; }
   .sf-topline { font-size: 17px; line-height: 1.75; color: #d8d8dc; margin: 0 0 28px; max-width: 760px; }
   .sf-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -799,11 +821,6 @@
   }
   .sf-coming time { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--tungsten-amber); }
   .sf-coming .place { color: var(--graphite-light); }
-  .sf-bm { margin-top: 48px; }
-  .sf-bm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
-  .sf-bm h3.sf-bm-title { font-size: clamp(22px, 3vw, 30px); line-height: 1.1; margin: 0; }
-  .sf-bm-note { font-size: 12.5px; color: var(--graphite-light); }
-  .sf-when { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--tungsten-amber); letter-spacing: 0.04em; }
   .sf-foot { margin-top: 22px; font-size: 12.5px; color: var(--graphite-light); }
   .sf-empty { color: var(--graphite-light); font-size: 15px; }
   @media (max-width: 720px) {
@@ -838,9 +855,9 @@
       <a href="#show">The Show</a>
       <a href="#rundown">Inside an Episode</a>
       <a href="#guests">Who's On</a>
-      <a href="#watch">Watch</a>
-      <a href="#signal-flow">Signal Flow</a>
       <a href="#listen">Listen</a>
+      <a href="#watch">Watch</a>
+      <a href="#signal-flow">Signal Flow Daily</a>
       <a href="#merch">Merch</a>
       <a href="/contact">Contact</a>
     </div>
@@ -879,9 +896,9 @@
   <a href="#show">The Show</a>
   <a href="#rundown">Inside an Episode</a>
   <a href="#guests">Who's On</a>
-  <a href="#watch">Watch</a>
-  <a href="#signal-flow">Signal Flow</a>
   <a href="#listen">Listen</a>
+  <a href="#watch">Watch</a>
+      <a href="#signal-flow">Signal Flow Daily</a>
   <a href="#merch">Merch</a>
   <a href="/contact">Contact</a>
   <div class="footer-social" style="margin-top: 32px;">
@@ -921,7 +938,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
-    <svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
           <rect width="1200" height="300" fill="white"/>
@@ -930,12 +947,14 @@
           <rect x="0" y="224" width="1200" height="13" fill="black"/>
         </mask>
       </defs>
-      <text x="600" y="220" text-anchor="middle" font-family="Impact, Haettenschweiler, sans-serif"
+      <text x="0" y="220" text-anchor="start" font-family="Impact, Haettenschweiler, sans-serif"
             font-size="200" fill="#F5F5F0" mask="url(#stencilMask)">PROAV</text>
     </svg>
   </div>
-  <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
-  <div class="signal-line-css" aria-hidden="true"></div>
+  <div class="hero-lockup">
+    <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
+    <div class="signal-line-css" aria-hidden="true"></div>
+  </div>
   <p class="hero-hook">
     Real gear, real crews, real conversations — from the rig on stage to the
     cloud infrastructure taking live production remote. Audio &amp; video,
@@ -1122,6 +1141,17 @@
   </div>
 </section>
 
+<section id="listen">
+  <div class="section-eyebrow reveal">LISTEN</div>
+  <h2 class="section-title display reveal">Wherever you already are.</h2>
+  <div class="listen-grid reveal">
+    <a href="#" class="platform-btn"><span>Apple Podcasts</span><span class="arrow">&rarr;</span></a>
+    <a href="#" class="platform-btn"><span>Spotify</span><span class="arrow">&rarr;</span></a>
+    <a href="#" class="platform-btn"><span>YouTube Channel</span><span class="arrow">&rarr;</span></a>
+    <a href="#" class="platform-btn"><span>RSS Feed</span><span class="arrow">&rarr;</span></a>
+  </div>
+</section>
+
 <section id="watch">
   <div class="section-eyebrow reveal">WATCH</div>
   <h2 class="section-title display reveal">The gear, on screen.</h2>
@@ -1183,28 +1213,7 @@
   <div class="sf-issue" id="sfIssue" aria-live="polite">
     <p class="sf-empty">Loading today's briefing…</p>
   </div>
-  <div class="sf-bm" id="sfBlackmagic" hidden>
-    <div class="sf-bm-head">
-      <div>
-        <div class="section-eyebrow">BLACKMAGIC DESIGN</div>
-        <h3 class="sf-bm-title display">Latest from Blackmagic.</h3>
-      </div>
-      <div class="sf-bm-note">Newest first, from the last 30 briefings.</div>
-    </div>
-    <div class="sf-items" id="sfBmItems"></div>
-  </div>
   <noscript><p class="sf-empty">Turn on JavaScript to read Signal Flow Daily.</p></noscript>
-</section>
-
-<section id="listen">
-  <div class="section-eyebrow reveal">LISTEN</div>
-  <h2 class="section-title display reveal">Wherever you already are.</h2>
-  <div class="listen-grid reveal">
-    <a href="#" class="platform-btn"><span>Apple Podcasts</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>Spotify</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>YouTube Channel</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>RSS Feed</span><span class="arrow">&rarr;</span></a>
-  </div>
 </section>
 
 <section id="merch">
@@ -1588,9 +1597,9 @@
       index.push({ cat: 'Section', title: 'The Show', snippet: 'What ProAV covers, episode to episode.', el: document.getElementById('show') });
       index.push({ cat: 'Section', title: 'Inside an Episode', snippet: 'A real rundown, cue by cue.', el: document.getElementById('rundown') });
       index.push({ cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', el: document.getElementById('guests') });
+      index.push({ cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', el: document.getElementById('listen') });
       index.push({ cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
       index.push({ cat: 'Section', title: 'Signal Flow Daily', snippet: 'Daily live production and ProAV news.', el: document.getElementById('signal-flow') });
-      index.push({ cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', el: document.getElementById('listen') });
       index.push({ cat: 'Section', title: 'Merch', snippet: 'Wear the signal.', el: document.getElementById('merch') });
 
       // show segments (Mainstage / Backstage / Cloud cards)
@@ -1636,16 +1645,11 @@
         if (card) index.push({ cat: 'Watch', title: t.textContent.trim(), snippet: 'Watch this episode segment.', el: card });
       });
 
-      // signal flow daily items (current issue)
-      document.querySelectorAll('#sfIssue .sf-item').forEach(item => {
+      // signal flow items
+      document.querySelectorAll('.sf-item').forEach(item => {
         const h3 = item.querySelector('h3');
         const brief = item.querySelector('.sf-brief');
         if (h3) index.push({ cat: 'Signal Flow', title: h3.textContent.trim(), snippet: brief ? brief.textContent.trim() : '', el: item });
-      });
-      document.querySelectorAll('#sfBmItems .sf-item').forEach(item => {
-        const h3 = item.querySelector('h3');
-        const brief = item.querySelector('.sf-brief');
-        if (h3) index.push({ cat: 'Blackmagic', title: h3.textContent.trim(), snippet: brief ? brief.textContent.trim() : '', el: item });
       });
 
       // listen platforms
@@ -1805,11 +1809,10 @@
     });
   })();
 </script>
-
 <script>
   /* ---------- Signal Flow Daily ----------
-     Reads /signal-flow/issues.json ({ updated, issues: [...] }, newest first).
-     To update: replace that one file. No other edits needed. */
+     Reads the live feed (see FEED_URL below), falling back to /signal-flow/issues.json
+     ({ updated, issues: [...] }, newest first). */
   (function () {
     const box = document.getElementById('sfIssue');
     if (!box) return;
@@ -1823,45 +1826,19 @@
     const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
     const fmt = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
-    let issues = [], idx = 0;
-
-    function itemHtml(it, when) {
-      const b = BEATS[it.beat] || BEATS.field;
-      let h = '<article class="sf-item"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
-        (when ? '<span class="sf-when">' + esc(when) + '</span>' : '') +
-        (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
-        (it.price ? '<span class="sf-status">' + esc(it.price) + '</span>' : '') + '</div>' +
-        '<h3>' + esc(it.title) + '</h3><div class="sf-vendor">' + esc(it.vendor) + '</div>' +
-        '<p class="sf-brief">' + esc(it.brief) + '</p>' +
-        (it.spec ? '<p class="sf-spec">' + esc(it.spec) + '</p>' : '');
-      if (it.what || it.why || it.watch) {
-        h += '<details><summary>WHAT · WHY · WATCH</summary><dl class="sf-detail">' +
-          (it.what ? '<dt>WHAT</dt><dd>' + esc(it.what) + '</dd>' : '') +
-          (it.why ? '<dt>WHY</dt><dd>' + esc(it.why) + '</dd>' : '') +
-          (it.watch ? '<dt>WATCH</dt><dd>' + esc(it.watch) + '</dd>' : '') + '</dl></details>';
+    let issues = [], idx = 0, jumpNote = '';
+    const fmtShort = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
+    // jump to a specific date; if there is no issue that day, show the newest one before it
+    function jumpTo(v) {
+      if (!v) return;
+      let i = issues.findIndex(it => it.date === v);
+      jumpNote = '';
+      if (i < 0) {
+        i = issues.findIndex(it => it.date < v);
+        if (i < 0) i = issues.length - 1;
+        jumpNote = 'No issue on ' + fmtShort(v) + ' — showing ' + fmtShort(issues[i].date);
       }
-      if (it.sources && it.sources.length) {
-        h += '<div class="sf-sources">' + it.sources.map(s => '<a href="' + esc(safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.label || 'Source') + ' ↗</a>').join('') + '</div>';
-      }
-      return h + '</article>';
-    }
-
-    /* Latest from Blackmagic: every stored item that names Blackmagic Design,
-       newest first, one card per story (a story repeated in a weekly or later issue shows once). */
-    function renderBlackmagic() {
-      const wrap = document.getElementById('sfBlackmagic'), grid = document.getElementById('sfBmItems');
-      if (!wrap || !grid) return;
-      const seen = new Set(), out = [];
-      issues.forEach(iss => (iss.items || []).forEach(it => {
-        // Blackmagic must be the lead vendor or named in the title, so multi-vendor stories that only mention it don't count.
-        if (!(/^\s*blackmagic/i.test(it.vendor || '') || /blackmagic/i.test(it.title || ''))) return;
-        const key = String(it.title || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-        if (seen.has(key)) return;
-        seen.add(key); out.push({ it: it, date: iss.date });
-      }));
-      if (!out.length) { wrap.hidden = true; return; }
-      grid.innerHTML = out.slice(0, 6).map(o => itemHtml(o.it, fmt(o.date))).join('');
-      wrap.hidden = false;
+      idx = i; render();
     }
 
     function render() {
@@ -1874,9 +1851,31 @@
           '<span class="sf-date">' + esc(when) + '</span>' +
           '<button type="button" class="sf-step" id="sfNewer" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Next issue">NEXT ›</button>' +
         '</div></div>' +
+        '<div class="sf-jump"><label class="sf-jump-label" for="sfDate">JUMP TO DATE</label>' +
+          '<input type="date" id="sfDate" class="sf-date-input" min="' + esc(issues[issues.length - 1].date) + '" max="' + esc(issues[0].date) + '" value="' + esc(x.date) + '">' +
+          '<button type="button" class="sf-step" id="sfLatest" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Jump to the latest issue">LATEST</button>' +
+          (jumpNote ? '<span class="sf-note" role="status">' + esc(jumpNote) + '</span>' : '') + '</div>' +
         '<h3 class="sf-headline display">' + esc(x.headline) + '</h3>' +
         '<p class="sf-topline">' + esc(x.topline) + '</p><div class="sf-items">';
-      (x.items || []).forEach(it => { h += itemHtml(it); });
+      (x.items || []).forEach(it => {
+        const b = BEATS[it.beat] || BEATS.field;
+        h += '<article class="sf-item"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
+          (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
+          (it.price ? '<span class="sf-status">' + esc(it.price) + '</span>' : '') + '</div>' +
+          '<h3>' + esc(it.title) + '</h3><div class="sf-vendor">' + esc(it.vendor) + '</div>' +
+          '<p class="sf-brief">' + esc(it.brief) + '</p>' +
+          (it.spec ? '<p class="sf-spec">' + esc(it.spec) + '</p>' : '');
+        if (it.what || it.why || it.watch) {
+          h += '<details><summary>WHAT · WHY · WATCH</summary><dl class="sf-detail">' +
+            (it.what ? '<dt>WHAT</dt><dd>' + esc(it.what) + '</dd>' : '') +
+            (it.why ? '<dt>WHY</dt><dd>' + esc(it.why) + '</dd>' : '') +
+            (it.watch ? '<dt>WATCH</dt><dd>' + esc(it.watch) + '</dd>' : '') + '</dl></details>';
+        }
+        if (it.sources && it.sources.length) {
+          h += '<div class="sf-sources">' + it.sources.map(s => '<a href="' + esc(safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.label || 'Source') + ' ↗</a>').join('') + '</div>';
+        }
+        h += '</article>';
+      });
       h += '</div>';
       if (x.watch && x.watch.length) {
         h += '<div class="sf-coming"><div class="sf-coming-label">COMING UP</div><ul>' + x.watch.map(w =>
@@ -1886,13 +1885,20 @@
       h += '<div class="sf-foot">Researched and compiled daily with Claude. Check specs with the vendor before you buy.</div>';
       box.innerHTML = h;
       const o = document.getElementById('sfOlder'), n = document.getElementById('sfNewer');
-      if (o) o.onclick = () => { if (idx < issues.length - 1) { idx++; render(); } };
-      if (n) n.onclick = () => { if (idx > 0) { idx--; render(); } };
+      if (o) o.onclick = () => { if (idx < issues.length - 1) { idx++; jumpNote = ''; render(); } };
+      if (n) n.onclick = () => { if (idx > 0) { idx--; jumpNote = ''; render(); } };
+      const l = document.getElementById('sfLatest'), dt = document.getElementById('sfDate');
+      if (l) l.onclick = () => { idx = 0; jumpNote = ''; render(); };
+      if (dt) dt.onchange = () => jumpTo(dt.value);
     }
 
-    fetch('/signal-flow/issues.json', { cache: 'no-cache' })
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); renderBlackmagic(); })
+    // Live feed (updated daily by the Signal Flow task); falls back to the
+    // copy bundled with the site if the feed can't be reached.
+    const FEED_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/issues.json';
+    const loadJson = u => fetch(u, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    loadJson(FEED_URL)
+      .catch(() => loadJson('/signal-flow/issues.json'))
+      .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); })
       .catch(() => { box.innerHTML = '<p class="sf-empty">Signal Flow Daily is unavailable right now.</p>'; });
   })();
 </script>
