@@ -233,7 +233,7 @@
     text-align: left;
     /* left edge of the 1080px content column (matches the sections below) */
     --hero-left: calc(max(0px, (100% - 1080px) / 2) + 24px);
-    padding: 96px 24px 80px;
+    padding: 124px 24px 80px;
     overflow: hidden;
   }
   .hero::before {
@@ -245,7 +245,7 @@
     pointer-events: none;
   }
   .bracket { position: absolute; width: 64px; height: 64px; border-color: var(--border-quiet); opacity: 0.8; }
-  .bracket.tl { top: 84px; left: max(8px, calc((100% - 1080px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
+  .bracket.tl { top: 104px; left: max(8px, calc((100% - 1080px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
   .bracket.br { bottom: 40px; right: max(8px, calc((100% - 1080px) / 2 + 8px)); border-bottom: 2px solid; border-right: 2px solid; }
 
   .hero-word {
@@ -254,20 +254,26 @@
     position: relative;
     z-index: 1;
   }
-  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(1032px, calc(100% - var(--hero-left) - 24px)); }
+  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(680px, calc(100% - var(--hero-left) - 24px)); }
   .hero-word svg { width: 100%; height: auto; display: block; margin: 0; }
 
-  .hero-tagline {
+  /* tagline + signal line sit in one block, so the line runs exactly as wide as the tagline */
+  .hero-lockup {
     align-self: flex-start; margin-left: var(--hero-left);
-    margin-top: 22px;
+    width: fit-content; max-width: calc(100% - var(--hero-left) - 24px);
     font-size: clamp(16px, 2.4vw, 24px);
-    letter-spacing: 0.35em;
+    --track: 0.35em;
+  }
+  .hero-tagline {
+    margin-top: 22px;
+    font-size: inherit;
+    letter-spacing: var(--track);
     color: var(--graphite-light);
     font-weight: 600;
   }
 
   .signal-line-css {
-    width: min(420px, 70vw); height: 4px; align-self: flex-start; margin: 28px 0 34px var(--hero-left); border-radius: 2px;
+    width: calc(100% - var(--track)); height: 4px; margin: 28px 0 34px; border-radius: 2px; /* minus the trailing letter-space so it ends at the "d" of Cloud */
     background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
     background-size: 220% 100%;
     animation: heroSignalSweep 4s ease-in-out infinite;
@@ -720,7 +726,8 @@
     .segment-flow { display: none; }
     section { padding: 84px 20px; }
     .show-in-hero { margin-top: 64px; padding: 0 20px; }
-    .hero-tagline { letter-spacing: 0.1em; font-size: clamp(12px, 3.9vw, 17px); white-space: nowrap; }
+    .hero-lockup { --track: 0.1em; font-size: clamp(12px, 3.9vw, 17px); }
+    .hero-tagline { white-space: nowrap; }
     .merch-grid { grid-template-columns: 1fr; }
     .nav { padding: 16px 18px; }
     .video-modal { padding: 12px; }
@@ -931,7 +938,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
-    <svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
           <rect width="1200" height="300" fill="white"/>
@@ -944,8 +951,10 @@
             font-size="200" fill="#F5F5F0" mask="url(#stencilMask)">PROAV</text>
     </svg>
   </div>
-  <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
-  <div class="signal-line-css" aria-hidden="true"></div>
+  <div class="hero-lockup">
+    <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
+    <div class="signal-line-css" aria-hidden="true"></div>
+  </div>
   <p class="hero-hook">
     Real gear, real crews, real conversations — from the rig on stage to the
     cloud infrastructure taking live production remote. Audio &amp; video,
