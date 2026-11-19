@@ -233,7 +233,7 @@
     text-align: left;
     /* left edge of the 1080px content column (matches the sections below) */
     --hero-left: calc(max(0px, (100% - 1080px) / 2) + 24px);
-    padding: 124px 24px 80px;
+    padding: 108px 24px 64px;
     overflow: hidden;
   }
   .hero::before {
@@ -245,7 +245,7 @@
     pointer-events: none;
   }
   .bracket { position: absolute; width: 64px; height: 64px; border-color: var(--border-quiet); opacity: 0.8; }
-  .bracket.tl { top: 104px; left: max(8px, calc((100% - 1080px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
+  .bracket.tl { top: 92px; width: 36px; height: 36px; left: max(8px, calc((100% - 1080px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
   .bracket.br { bottom: 40px; right: max(8px, calc((100% - 1080px) / 2 + 8px)); border-bottom: 2px solid; border-right: 2px solid; }
 
   .hero-word {
@@ -254,18 +254,18 @@
     position: relative;
     z-index: 1;
   }
-  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(680px, calc(100% - var(--hero-left) - 24px)); }
+  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(340px, calc(100% - var(--hero-left) - 24px)); }
   .hero-word svg { width: 100%; height: auto; display: block; margin: 0; }
 
   /* tagline + signal line sit in one block, so the line runs exactly as wide as the tagline */
   .hero-lockup {
     align-self: flex-start; margin-left: var(--hero-left);
     width: fit-content; max-width: calc(100% - var(--hero-left) - 24px);
-    font-size: clamp(16px, 2.4vw, 24px);
+    font-size: 14px;
     --track: 0.35em;
   }
   .hero-tagline {
-    margin-top: 22px;
+    margin-top: 14px;
     font-size: inherit;
     letter-spacing: var(--track);
     color: var(--graphite-light);
@@ -273,7 +273,7 @@
   }
 
   .signal-line-css {
-    width: calc(100% - var(--track)); height: 4px; margin: 28px 0 34px; border-radius: 2px; /* minus the trailing letter-space so it ends at the "d" of Cloud */
+    width: calc(100% - var(--track)); height: 3px; margin: 16px 0 24px; border-radius: 2px; /* minus the trailing letter-space so it ends at the "d" of Cloud */
     background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
     background-size: 220% 100%;
     animation: heroSignalSweep 4s ease-in-out infinite;
@@ -291,7 +291,7 @@
     font-size: 17px;
     line-height: 1.6;
     color: #cfcfd4;
-    margin: 0 0 40px var(--hero-left);
+    margin: 0 0 28px var(--hero-left);
   }
 
   .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start; align-self: flex-start; margin-left: var(--hero-left); width: calc(100% - var(--hero-left) - 24px); }
@@ -726,7 +726,7 @@
     .segment-flow { display: none; }
     section { padding: 84px 20px; }
     .show-in-hero { margin-top: 64px; padding: 0 20px; }
-    .hero-lockup { --track: 0.1em; font-size: clamp(12px, 3.9vw, 17px); }
+    .hero-lockup { --track: 0.1em; font-size: clamp(11px, 3.4vw, 14px); }
     .hero-tagline { white-space: nowrap; }
     .merch-grid { grid-template-columns: 1fr; }
     .nav { padding: 16px 18px; }
