@@ -370,6 +370,171 @@
           "pinned": true
         }
       ]
+    },
+    {
+      "key": "panasonic",
+      "label": "Panasonic",
+      "match": "panasonic|lumix|kairos",
+      "newsroom": [
+        "https://pro-av.panasonic.net/en/whatsnew/"
+      ],
+      "direct": true,
+      "items": [
+        {
+          "id": "panasonic-au-shx1-au-lpu1",
+          "beat": "field",
+          "title": "AU-SHX1 4K Video Camera and AU-LPU1 Live Production Unit",
+          "vendor": "Panasonic Connect",
+          "date": "2026-11-17",
+          "when": "Nov 17, 2026",
+          "brief": "New LUMIX-based compact cinema camera plus a live production unit for multi-camera events.",
+          "status_label": "New",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/au-shx1-lpu1/"
+            },
+            {
+              "label": "Panasonic press release",
+              "url": "https://news.panasonic.com/global/press/en261117-1"
+            }
+          ],
+          "spec": "6K full-frame sensor · L-Mount · Blackmagic RAW and ProRes RAW · 4K 120p",
+          "what": "Panasonic lists the AU-SHX1 as a 4K video camera built on the full-frame LUMIX S Series imaging system, with a 6K (24.1MP) full-frame partially stacked CMOS sensor and the L-Mount. It records Blackmagic RAW to an external SSD, ProRes RAW and unlimited 4K 120p. The AU-LPU1 Live Production Unit, sold separately, is designed for multi-camera recording at live events and adds live streaming and remote control. Price and release date are not stated on the page."
+        },
+        {
+          "id": "panasonic-kairos-alliance-media-links",
+          "beat": "switching",
+          "title": "Media Links joins the KAIROS Alliance Partners",
+          "vendor": "Panasonic Connect",
+          "date": "2026-11-10",
+          "when": "Nov 10, 2026",
+          "brief": "Media Links was added to Panasonic's KAIROS Alliance Partners list.",
+          "status_label": "KAIROS",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/whatsnew/"
+            }
+          ]
+        },
+        {
+          "id": "panasonic-kairos-firmware-2-1-6",
+          "beat": "switching",
+          "title": "KAIROS firmware ver. 2.1.6",
+          "vendor": "Panasonic Connect",
+          "date": "2026-10-20",
+          "when": "Oct 20, 2026",
+          "brief": "Firmware for the KAIROS IT/IP platform was updated to ver. 2.1.6.",
+          "status_label": "Firmware 2.1.6",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/whatsnew/"
+            }
+          ],
+          "what": "Panasonic's What's New list shows the KAIROS firmware updated to ver. 2.1.6. The change notes sit behind Panasonic's support login, so what changed is not stated here."
+        },
+        {
+          "id": "panasonic-aw-ue5",
+          "beat": "field",
+          "title": "AW-UE5W/K 4K Integrated Camera",
+          "vendor": "Panasonic Connect",
+          "date": "2026-07-07",
+          "when": "Jul 7, 2026",
+          "brief": "Compact 4K PTZ camera with an ultra-wide 121 degree lens and NDI HX.",
+          "status_label": "Released",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-ue5/"
+            }
+          ],
+          "spec": "4K · 121° horizontal field of view · PoE · NDI HX · RTMP/RTMPS",
+          "what": "Panasonic lists the AW-UE5W (white) and AW-UE5K (black) as a compact 4K integrated PTZ camera with smooth 4K/60p video output, an ultra-wide lens, PoE power and certified NDI HX, plus RTMP and RTMPS streaming. Price and sensor details are not stated on the page."
+        },
+        {
+          "id": "panasonic-aw-rp200gj",
+          "beat": "field",
+          "title": "AW-RP200GJ Remote Camera Controller",
+          "vendor": "Panasonic Connect",
+          "date": "2026-02-13",
+          "when": "Feb 13, 2026",
+          "brief": "New remote camera controller for Panasonic PTZ systems.",
+          "status_label": "Released",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-rp200gj/"
+            }
+          ]
+        },
+        {
+          "id": "panasonic-aw-ue200k",
+          "beat": "field",
+          "title": "AW-UE200K 4K PTZ camera with a global shutter MOS sensor",
+          "vendor": "Panasonic Connect",
+          "date": "2026-09-02",
+          "when": "Sep 2, 2026",
+          "brief": "4K PTZ with a 1.2-inch global shutter 5K sensor and 22x zoom; AW-UE210 adds ST 2110 and Dante.",
+          "status_label": "Feb 2027",
+          "spec": "1.2-inch 5K global shutter · 4K out · 22x optical · 80° wide · HD 120/180 fps",
+          "what": "Panasonic announced the AW-UE200 series (AW-UE200W and AW-UE200K) as what it calls the world's first PTZ cameras with a global shutter MOS sensor: a 1.2-inch 5K sensor with 5K oversampling for 4K output, a 22x optical zoom (f=22.5–500 mm, 35 mm equivalent) with an 80° horizontal angle at wide, and pan/tilt speeds up to 400 deg/s. HD high-speed shooting is 120 fps and 180 fps, with 180 fps needing a future update. The AW-UE210 models add SMPTE ST 2110 with uncompressed 4K output and Dante audio, with redundant connections; JPEG XS low-latency transmission needs a future firmware update. The AW-UE200 series is scheduled for February 2027 and the roll-capable AW-UER200 series for Q2 CY2027. Price is not stated.",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-ue200-210/"
+            },
+            {
+              "label": "Panasonic press release",
+              "url": "https://news.panasonic.com/global/press/en260902-4"
+            }
+          ]
+        }
+      ],
+      "curated": [
+        {
+          "id": "panasonic-kairos-firmware-2-1-6",
+          "beat": "switching",
+          "title": "KAIROS firmware ver. 2.1.6",
+          "vendor": "Panasonic Connect",
+          "date": "2026-10-20",
+          "when": "Oct 20, 2026",
+          "brief": "Firmware for the KAIROS IT/IP platform was updated to ver. 2.1.6.",
+          "status_label": "Pinned",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/whatsnew/"
+            }
+          ],
+          "what": "Panasonic's What's New list shows the KAIROS firmware updated to ver. 2.1.6. The change notes sit behind Panasonic's support login, so what changed is not stated here.",
+          "pinned": true
+        },
+        {
+          "id": "panasonic-aw-ue200k",
+          "beat": "field",
+          "title": "AW-UE200K 4K PTZ camera with a global shutter MOS sensor",
+          "vendor": "Panasonic Connect",
+          "date": "2026-09-02",
+          "when": "Sep 2, 2026",
+          "brief": "4K PTZ with a 1.2-inch global shutter 5K sensor and 22x zoom; AW-UE210 adds ST 2110 and Dante.",
+          "status_label": "Pinned",
+          "spec": "1.2-inch 5K global shutter · 4K out · 22x optical · 80° wide · HD 120/180 fps",
+          "what": "Panasonic announced the AW-UE200 series (AW-UE200W and AW-UE200K) as what it calls the world's first PTZ cameras with a global shutter MOS sensor: a 1.2-inch 5K sensor with 5K oversampling for 4K output, a 22x optical zoom (f=22.5–500 mm, 35 mm equivalent) with an 80° horizontal angle at wide, and pan/tilt speeds up to 400 deg/s. HD high-speed shooting is 120 fps and 180 fps, with 180 fps needing a future update. The AW-UE210 models add SMPTE ST 2110 with uncompressed 4K output and Dante audio, with redundant connections; JPEG XS low-latency transmission needs a future firmware update. The AW-UE200 series is scheduled for February 2027 and the roll-capable AW-UER200 series for Q2 CY2027. Price is not stated.",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-ue200-210/"
+            },
+            {
+              "label": "Panasonic press release",
+              "url": "https://news.panasonic.com/global/press/en260902-4"
+            }
+          ],
+          "pinned": true
+        }
+      ]
     }
   ]
 }
