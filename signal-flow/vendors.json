@@ -2,12 +2,124 @@
   "updated": "2026-11-19",
   "vendors": [
     {
+      "key": "blackmagic",
+      "label": "Blackmagic",
+      "match": "blackmagic",
+      "newsroom": [
+        "https://www.blackmagicdesign.com/media/",
+        "https://www.blackmagicdesign.com/media/release/archive"
+      ],
+      "items": [
+        {
+          "id": "blackmagic-ambisonic-microphone",
+          "beat": "field",
+          "title": "Blackmagic Ambisonic Microphone",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-12",
+          "when": "Nov 12, 2026",
+          "brief": "First Blackmagic microphone: a 7th order ambisonic array for immersive and spatial audio.",
+          "status_label": "Dec 2026",
+          "spec": "108 MEMS capsules · 7th order · USB-C · US$1,695",
+          "what": "Blackmagic Design announced its first standalone microphone, a 7th order ambisonic array with 108 digital MEMS capsules. A built-in processor converts all capsules to 7th order ambisonics in real time over a single class-compliant USB-C cable. It records spatial audio into URSA Cine Immersive files and also works with Fairlight Live and the Blackmagic Camera app on iPhone.",
+          "why": "A single-cable spatial audio source that drops into Fairlight Live and immersive camera workflows without a breakout box or encoding software.",
+          "watch": "A USB to SMPTE-2110 converter is planned for broadcast workflows; the mic is due in December at US$1,695 from resellers.",
+          "sources": [
+            {
+              "label": "TV Tech",
+              "url": "https://www.tvtechnology.com/production/live-production/blackmagic-design-announces-blackmagic-ambisonic-microphone"
+            },
+            {
+              "label": "SVG",
+              "url": "https://www.sportsvideo.org/2026/11/13/blackmagic-design-announces-ambisonic-microphone-for-immersive-spatial-audio/"
+            }
+          ]
+        },
+        {
+          "id": "davinci-resolve-21-1",
+          "beat": "field",
+          "title": "DaVinci Resolve 21.1",
+          "vendor": "Blackmagic Design",
+          "date": "2026-09-08",
+          "when": "Sep 8, 2026",
+          "brief": "Free update adds AI assistant integration, 25+ new Fusion tools and 100+ edit and color tools.",
+          "status_label": "Free update",
+          "spec": "Announced at IBC 2026",
+          "what": "Blackmagic Design announced DaVinci Resolve 21.1 at IBC 2026. It adds AI assistant integration, expanded camera support on the Photo page, more than 25 new Krokodove tools for Fusion's 3D and shape toolkit, and over 100 new tools and controls for editing and color grading.",
+          "why": "A free update for the post side of event work: edit, color and Fusion graphics in the same project.",
+          "watch": "Release notes list exact fixes and supported cameras for each build.",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/davinciresolve/whatsnew"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "key": "barco",
       "items": [],
       "label": "Barco",
       "match": "Barco",
       "newsroom": [
-        "https://www.barco.com/en/news"
+        "https://www.barco.com/en/news/news-insights?productCategory=barco-dxp:product/product-category/projection,barco-dxp:product/product-category/image-processing,barco-dxp:product/product-category/video-walls",
+        "https://www.barco.com/en/news/news-insights/live-events"
+      ],
+      "curated": [
+        {
+          "id": "barco-encore3-update-v10-0-2",
+          "beat": "switching",
+          "title": "Encore3 update: building together, growing stronger",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/news/news-insights/live-events/encore3-toolsetv1002"
+            }
+          ],
+          "pinned": true,
+          "status_label": "Pinned"
+        },
+        {
+          "id": "barco-encore3-10-2",
+          "beat": "switching",
+          "title": "Faster builds, smarter workflows, bigger shows: the Encore3 10.2 software version",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/news/news-insights/live-events/encore3-toolsetv102"
+            }
+          ]
+        },
+        {
+          "id": "barco-qdx-rentex",
+          "beat": "field",
+          "title": "A QDX boost for the Rentex projection fleet",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/news/news-insights/live-events/qdx-rentex"
+            }
+          ]
+        },
+        {
+          "id": "barco-qdx-fuse",
+          "beat": "field",
+          "title": "Fuse expands its creative toolkit with 45 Barco QDX projectors",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/inspiration/news-insights/live-events/qdx-fuse"
+            }
+          ]
+        }
       ]
     },
     {

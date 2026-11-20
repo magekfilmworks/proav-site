@@ -1935,15 +1935,19 @@
     const keyOf = t => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
     function vendorItems(v) {
-      const seen = new Set(), out = [];
-      const add = (it, date, when) => {
+      // order: pinned (owner-curated, always first) > dated items newest first > curated fillers (only until the tab holds LIMIT cards)
+      const seen = new Set(), pin = [], out = [], fill = [];
+      const add = (arr, it, date, when) => {
         const k = keyOf(it.title); if (seen.has(k)) return;
-        seen.add(k); out.push({ it: it, date: date || '', when: when || (date ? fmt(date) : '') });
+        seen.add(k); arr.push({ it: it, date: date || '', when: when || (date ? fmt(date) : '') });
       };
-      ((vendorData[v.key] || {}).items || []).forEach(it => add(it, it.date, it.when));
-      issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(it, iss.date); }));
+      const vd = vendorData[v.key] || {}, cur = vd.curated || [];
+      cur.filter(c => c.pinned).forEach(c => add(pin, c, c.date, c.when));
+      (vd.items || []).forEach(it => add(out, it, it.date, it.when));
+      issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(out, it, iss.date); }));
       out.sort((a, b) => a.date < b.date ? 1 : -1);
-      return out.slice(0, LIMIT);
+      cur.filter(c => !c.pinned).forEach(c => add(fill, c, c.date, c.when));
+      return pin.concat(out, fill).slice(0, LIMIT);
     }
 
     function renderVendors() {
