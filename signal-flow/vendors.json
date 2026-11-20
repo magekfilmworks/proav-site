@@ -17,22 +17,70 @@
           "vendor": "Blackmagic Design",
           "date": "2026-11-12",
           "when": "Nov 12, 2026",
-          "brief": "First Blackmagic microphone: a 7th order ambisonic array for immersive and spatial audio.",
+          "brief": "Blackmagic's first microphone: a 7th order ambisonic array with a built-in spatial encoder.",
           "status_label": "Dec 2026",
-          "spec": "108 MEMS capsules · 7th order · USB-C · US$1,695",
-          "what": "Blackmagic Design announced its first standalone microphone, a 7th order ambisonic array with 108 digital MEMS capsules. A built-in processor converts all capsules to 7th order ambisonics in real time over a single class-compliant USB-C cable. It records spatial audio into URSA Cine Immersive files and also works with Fairlight Live and the Blackmagic Camera app on iPhone.",
-          "why": "A single-cable spatial audio source that drops into Fairlight Live and immersive camera workflows without a breakout box or encoding software.",
-          "watch": "A USB to SMPTE-2110 converter is planned for broadcast workflows; the mic is due in December at US$1,695 from resellers.",
           "sources": [
             {
-              "label": "TV Tech",
-              "url": "https://www.tvtechnology.com/production/live-production/blackmagic-design-announces-blackmagic-ambisonic-microphone"
-            },
-            {
-              "label": "SVG",
-              "url": "https://www.sportsvideo.org/2026/11/13/blackmagic-design-announces-ambisonic-microphone-for-immersive-spatial-audio/"
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/blackmagicambisonic"
             }
-          ]
+          ],
+          "spec": "108 MEMS microphones · 7th order · single USB-C · US$1,909 (kit US$2,405)",
+          "what": "Blackmagic Design lists it as the world's first 7th order ambisonic microphone, with 108 MEMS microphones and a built-in spatial encoder, connecting over a single USB-C cable. The kit adds a windshield and a locking USB-C cable. MSRP excludes sales tax and shipping."
+        },
+        {
+          "id": "blackmagic-ultrastudio-express-hd",
+          "beat": "replay",
+          "title": "UltraStudio Express HD",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-03",
+          "when": "Nov 3, 2026",
+          "brief": "Bus-powered 3G-SDI capture and playback over USB4/Thunderbolt 4, with reference in and RS-422.",
+          "status_label": "New",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/ultrastudio"
+            }
+          ],
+          "spec": "3G-SDI, HDMI, analog · ref in · RS-422 · up to 1080p60, 10-bit · US$639",
+          "what": "Blackmagic Design lists UltraStudio Express HD with 3G-SDI, HDMI and analog connections, video reference and RS-422 remote control, and dual SDI outputs that can switch to fill and key. It connects to Mac, Windows or Linux over USB4 or Thunderbolt 4 and draws power from the connection. MSRP excludes sales tax and shipping."
+        },
+        {
+          "id": "blackmagic-fusion-studio-21-1-2",
+          "beat": "graphics",
+          "title": "Fusion Studio 21.1.2 (OGraf)",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-02",
+          "when": "Nov 2, 2026",
+          "brief": "Up to 4x faster OGraf playback, more template controls and OGraf and Lottie on Linux.",
+          "status_label": "Fusion 21.1.2",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/support/partial/llm-release-notes-summary"
+            }
+          ],
+          "spec": "OGraf up to 4x faster · select and multi-select template controls · Linux OGraf and Lottie",
+          "what": "Blackmagic Design's release notes list up to 4x faster OGraf playback, support for select and multi-select template controls, OGraf templates that adapt to aspect ratio, and OGraf and Lottie graphics support on Linux. They also add custom clip input and output labels for OpenFX."
+        },
+        {
+          "id": "blackmagic-ethernet-switch-820",
+          "beat": "cloud",
+          "title": "Blackmagic Ethernet Switch 820",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-02",
+          "when": "Nov 2, 2026",
+          "brief": "100G switch with redundant PTP clock ports and basic SMPTE 2110 routing, at US$2,525.",
+          "status_label": "New",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/blackmagicethernetswitch"
+            }
+          ],
+          "spec": "8x 100G QSFP · 2x 10G · 2 PTP clock ports · NMOS control port · redundant PSU · US$2,525",
+          "what": "Blackmagic Design lists the Ethernet Switch 820 with eight 100G QSFP ports, two 10G ports, two redundant PTP clock ports, a dedicated NMOS control port and a separate management port, with dual redundant power supplies. It offers basic SMPTE 2110 routing with simple router control. MSRP includes duties and excludes sales tax and shipping."
         },
         {
           "id": "davinci-resolve-21-1",
@@ -43,18 +91,17 @@
           "when": "Sep 8, 2026",
           "brief": "Free update adds AI assistant integration, 25+ new Fusion tools and 100+ edit and color tools.",
           "status_label": "Free update",
-          "spec": "Announced at IBC 2026",
-          "what": "Blackmagic Design announced DaVinci Resolve 21.1 at IBC 2026. It adds AI assistant integration, expanded camera support on the Photo page, more than 25 new Krokodove tools for Fusion's 3D and shape toolkit, and over 100 new tools and controls for editing and color grading.",
-          "why": "A free update for the post side of event work: edit, color and Fusion graphics in the same project.",
-          "watch": "Release notes list exact fixes and supported cameras for each build.",
           "sources": [
             {
               "label": "Blackmagic Design",
               "url": "https://www.blackmagicdesign.com/products/davinciresolve/whatsnew"
             }
-          ]
+          ],
+          "spec": "Announced at IBC 2026",
+          "what": "Blackmagic Design announced DaVinci Resolve 21.1 at IBC 2026. It adds AI assistant integration, expanded camera support on the Photo page, more than 25 new Krokodove tools for Fusion's 3D and shape toolkit, and over 100 new tools and controls for editing and color grading."
         }
-      ]
+      ],
+      "direct": true
     },
     {
       "key": "barco",
@@ -261,6 +308,67 @@
       "match": "pixel ?hue|\\b(q8|p80|p20)\\b",
       "newsroom": [
         "https://pixelhue.com"
+      ]
+    },
+    {
+      "key": "smpte",
+      "label": "SMPTE ST 2110",
+      "match": "smpte|st[ -]?2110",
+      "newsroom": [
+        "https://www.smpte.org/blog/tag/st-2110"
+      ],
+      "items": [
+        {
+          "id": "smpte-content-provenance-authenticity-ai",
+          "beat": "field",
+          "title": "SMPTE Identifies Key Requirements for Content Provenance and Authenticity in the Age of AI",
+          "vendor": "SMPTE",
+          "date": "2026-11-19",
+          "when": "Nov 19, 2026",
+          "brief": "SMPTE shares survey findings and recommendations for trusted, interoperable media workflows as AI raises questions about content authenticity.",
+          "status_label": "SMPTE blog",
+          "sources": [
+            {
+              "label": "SMPTE",
+              "url": "https://www.smpte.org/blog/smpte-identifies-key-requirements-for-content-provenance-and-authenticity-in-the-age-of-ai"
+            }
+          ]
+        },
+        {
+          "id": "smpte-bh-riedel-mts-solutions-hub",
+          "beat": "cloud",
+          "title": "The Studio B&H and Riedel Communications Power the SMPTE MTS Solutions Hub with Advanced Video Infrastructure and Communications Technology",
+          "vendor": "SMPTE",
+          "date": "2026-11-12",
+          "when": "Nov 12, 2026",
+          "brief": "B&H and Riedel built a live-broadcast infrastructure at the SMPTE MTS Solutions Hub that showcases ST 2110 and IP networking.",
+          "status_label": "SMPTE blog",
+          "sources": [
+            {
+              "label": "SMPTE",
+              "url": "https://www.smpte.org/blog/the-studio-bh-and-riedel-communications-power-the-smpte-mts-solutions-hub-with-advanced-video-infrastructure-and-communications-technology"
+            }
+          ]
+        }
+      ],
+      "curated": [
+        {
+          "id": "smpte-content-provenance-authenticity-ai",
+          "beat": "field",
+          "title": "SMPTE Identifies Key Requirements for Content Provenance and Authenticity in the Age of AI",
+          "vendor": "SMPTE",
+          "date": "2026-11-19",
+          "when": "Nov 19, 2026",
+          "brief": "SMPTE shares survey findings and recommendations for trusted, interoperable media workflows as AI raises questions about content authenticity.",
+          "status_label": "Pinned",
+          "sources": [
+            {
+              "label": "SMPTE",
+              "url": "https://www.smpte.org/blog/smpte-identifies-key-requirements-for-content-provenance-and-authenticity-in-the-age-of-ai"
+            }
+          ],
+          "pinned": true
+        }
       ]
     }
   ]

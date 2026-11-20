@@ -1944,7 +1944,8 @@
       const vd = vendorData[v.key] || {}, cur = vd.curated || [];
       cur.filter(c => c.pinned).forEach(c => add(pin, c, c.date, c.when));
       (vd.items || []).forEach(it => add(out, it, it.date, it.when));
-      issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(out, it, iss.date); }));
+      // a vendor flagged "direct" in vendors.json shows only its own curated list, never briefing items from trade coverage
+      if (!vd.direct) issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(out, it, iss.date); }));
       out.sort((a, b) => a.date < b.date ? 1 : -1);
       cur.filter(c => !c.pinned).forEach(c => add(fill, c, c.date, c.when));
       return pin.concat(out, fill).slice(0, LIMIT);
