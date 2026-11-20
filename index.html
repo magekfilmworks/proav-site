@@ -1029,22 +1029,19 @@
   .sf-item { background: var(--stage-black); border: 1px solid var(--border-quiet); border-radius: 0; padding: 22px 22px 20px; transition: border-top-color 0.2s ease; }
   .sf-item:hover, .sf-item:focus-within { border-color: var(--border-quiet); border-top-color: var(--tungsten-amber); box-shadow: inset 0 1px 0 var(--tungsten-amber); }
   .sf-item:nth-child(even):hover, .sf-item:nth-child(even):focus-within { border-top-color: var(--data-cyan); box-shadow: inset 0 1px 0 var(--data-cyan); }
-  /* v64: slow color sweep keeps the section headers moving (amber and cyan travel slowly through the white) */
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .section-title.display {
-      background-image: linear-gradient(100deg,
-        rgba(245,245,240,var(--dim,1)) 0%, rgba(245,245,240,var(--dim,1)) 30%,
-        rgba(255,156,61,var(--dim,1)) 44%, rgba(42,217,236,var(--dim,1)) 56%,
-        rgba(245,245,240,var(--dim,1)) 70%, rgba(245,245,240,var(--dim,1)) 100%);
-      background-size: 260% 100%;
-      background-position: 100% 0;
-      -webkit-background-clip: text; background-clip: text;
-      color: transparent; -webkit-text-fill-color: transparent;
-      animation: hdrFlow 22s ease-in-out infinite alternate;
-    }
+  /* v67: video plays only through the PROAV letters (same stencil cuts as the wordmark) */
+  .hero-word { position: relative; }
+  .hero-word-video {
+    position: absolute; inset: 0; pointer-events: none;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%2050%201200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%221200%22%20height%3D%22300%22%3E%3Crect%20width%3D%221200%22%20height%3D%22300%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22135%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22180%22%20width%3D%221200%22%20height%3D%2212%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22224%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3C%2Fmask%3E%3C%2Fdefs%3E%3Ctext%20x%3D%220%22%20y%3D%22220%22%20font-family%3D%22Impact%2C%20Haettenschweiler%2C%20sans-serif%22%20font-size%3D%22200%22%20fill%3D%22black%22%20mask%3D%22url%28%23m%29%22%3EPROAV%3C%2Ftext%3E%3C%2Fsvg%3E"); mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%2050%201200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%221200%22%20height%3D%22300%22%3E%3Crect%20width%3D%221200%22%20height%3D%22300%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22135%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22180%22%20width%3D%221200%22%20height%3D%2212%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22224%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3C%2Fmask%3E%3C%2Fdefs%3E%3Ctext%20x%3D%220%22%20y%3D%22220%22%20font-family%3D%22Impact%2C%20Haettenschweiler%2C%20sans-serif%22%20font-size%3D%22200%22%20fill%3D%22black%22%20mask%3D%22url%28%23m%29%22%3EPROAV%3C%2Ftext%3E%3C%2Fsvg%3E");
+    -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    opacity: 0; transition: opacity 0.6s ease;
   }
-  @keyframes hdrFlow { from { background-position: 100% 0; } to { background-position: 0% 0; } }
-  @media (prefers-reduced-motion: reduce) { .section-title.display { animation: none; } }
+  .hero-word-video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-word.video-on .hero-word-video { opacity: 1; }
+  .hero-word.video-on svg { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .hero-word-video { display: none; } .hero-word.video-on svg { opacity: 1; } }
 </style>
 </head>
 <body>
@@ -1145,6 +1142,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
+    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-letters.mp4" autoplay muted loop playsinline preload="auto"></video></div>
     <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
@@ -2186,6 +2184,23 @@
       clearTimeout(t);
       t = setTimeout(() => root.classList.remove('is-scrolling'), 200);
     }, { passive: true });
+  })();
+
+  // play the clip through the PROAV letters; show the plain white wordmark until it is actually playing
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const word = document.querySelector('.hero-word');
+    const v = word && word.querySelector('video');
+    if (!v) return;
+    const SPEED = 1;  // playback speed of the clip (1 = normal); lower is slower
+    v.defaultPlaybackRate = SPEED; v.playbackRate = SPEED;
+    v.addEventListener('loadedmetadata', () => { v.playbackRate = SPEED; });
+    v.addEventListener('playing', () => { v.playbackRate = SPEED; word.classList.add('video-on'); });
+    v.addEventListener('error', () => word.classList.remove('video-on'));
+    const check = () => { if (!v.paused && v.readyState >= 3) { v.playbackRate = SPEED; word.classList.add('video-on'); } };
+    ['canplay', 'timeupdate'].forEach(ev => v.addEventListener(ev, check));
+    const p = v.play(); if (p && p.catch) p.catch(() => {});
+    check();
   })();
 </script>
 </body>
