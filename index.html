@@ -1017,7 +1017,7 @@
   /* v56: larger section eyebrows */
   .section-eyebrow { font-size: clamp(16px, 1.5vw, 20px); letter-spacing: .28em; margin-bottom: 14px; }
   /* v57: section headers dim as they scroll up and away */
-  .section-title.display { color: rgba(245,245,240,var(--dim, 1)); }
+  .section-title.display { color: rgba(var(--tc, 245,245,240), var(--dim, 1)); }
   /* v60: guest descriptions only open when the cursor rests on a tag, never while scrolling */
   .guest-tag:hover .guest-tooltip { transition-delay: 0.25s; }
   .guest-tag:focus-within .guest-tooltip { transition-delay: 0s; }
@@ -1047,6 +1047,10 @@
   .sf-coming-label { font-size: clamp(16px, 1.5vw, 20px); letter-spacing: 0.22em; color: #d8d8dc; margin-bottom: 16px; }
   /* v93: larger wordmark on phones (the SVG has empty space right of the letters, so the box runs wider than the screen; the letters fill the width) */
   @media (max-width: 720px) { .hero-word { width: calc((100% - var(--hero-left) - 24px) * 1.65); } }
+  /* v97: steadier scrolling on phones — the hero height ignores the collapsing browser toolbar, and the video layer gets its own compositing layer */
+  .hero { min-height: 100vh; min-height: 100svh; }
+  body::before { top: 100vh; top: 100svh; }
+  .hero-word-video { transform: translateZ(0); -webkit-transform: translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 </style>
 </head>
 <body>
@@ -1147,7 +1151,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
-    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-photos-v93.mp4" autoplay muted loop playsinline preload="auto"></video></div>
+    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-photos-v103.mp4" autoplay muted loop playsinline preload="auto"></video></div>
     <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
@@ -2173,6 +2177,14 @@
         const p = Math.min(1, Math.max(0, r.bottom / start));
         const v = (Math.round((0.15 + 0.85 * p) * 40) / 40).toFixed(3);
         if (t._dim !== v) { t._dim = v; t.style.setProperty('--dim', v); }
+        // starts white, then shifts through amber to cyan as the title rises
+        const h = Math.round((1 - p) * 40) / 40;
+        if (t._h !== h) {
+          t._h = h;
+          const W = [245, 245, 240], A = [255, 156, 61], C = [42, 217, 236];
+          const f = h < 0.5 ? h * 2 : (h - 0.5) * 2, a = h < 0.5 ? W : A, b = h < 0.5 ? A : C;
+          t.style.setProperty('--tc', a.map((x, i) => Math.round(x + (b[i] - x) * f)).join(','));
+        }
       });
     }
     window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
@@ -2218,7 +2230,8 @@
     }
     fitVideo();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitVideo);
-    window.addEventListener('resize', fitVideo);
+    let lastW = window.innerWidth;
+    window.addEventListener('resize', () => { if (window.innerWidth !== lastW) { lastW = window.innerWidth; fitVideo(); } });
     const SPEED = 1;  // playback speed of the clip (1 = normal); lower is slower
     v.defaultPlaybackRate = SPEED; v.playbackRate = SPEED;
     v.addEventListener('loadedmetadata', () => { v.playbackRate = SPEED; });
