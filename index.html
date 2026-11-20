@@ -1045,6 +1045,8 @@
   /* v88: Signal Flow sub-titles (Daily Briefing / Weekly Roundup / Coming Up) read as real sub-headings */
   .sf-kind { font-size: clamp(16px, 1.5vw, 20px); letter-spacing: 0.22em; color: #d8d8dc; }
   .sf-coming-label { font-size: clamp(16px, 1.5vw, 20px); letter-spacing: 0.22em; color: #d8d8dc; margin-bottom: 16px; }
+  /* v93: larger wordmark on phones (the SVG has empty space right of the letters, so the box runs wider than the screen; the letters fill the width) */
+  @media (max-width: 720px) { .hero-word { width: calc((100% - var(--hero-left) - 24px) * 1.55); } }
 </style>
 </head>
 <body>
