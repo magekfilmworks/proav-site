@@ -356,7 +356,7 @@
     max-width: none;
   }
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal.visible { opacity: 1; transform: none; }
 
   /* ---------- the show / segment chips ---------- */
   .show-copy { max-width: 1000px; font-size: 17px; line-height: 1.75; color: #d8d8dc; margin-bottom: 28px; }
@@ -893,6 +893,136 @@
     html { scroll-behavior: auto; }
     .reveal { transition: none; opacity: 1; transform: none; }
   }
+  .community-band { margin-top: 48px; padding: 28px 32px; border: 1px solid var(--border-quiet); border-left: 3px solid var(--tungsten-amber); border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; background: var(--stage-black-raised); }
+  .community-copy { flex: 1 1 420px; font-size: 17px; line-height: 1.55; color: #d8d8dc; }
+  .community-copy strong { display: block; font-family: 'Barlow Condensed', sans-serif; font-size: 26px; letter-spacing: 0.02em; text-transform: uppercase; color: var(--signal-white); margin-bottom: 4px; }
+  .community-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ---------- v46 clean futuristic: open layout, hairlines, light type ---------- */
+  section { position: relative; border-top: 1px solid rgba(245,245,240,0.08); padding-top: 72px; padding-bottom: 72px; }
+  section::before { content: ""; position: absolute; top: -1px; left: 24px; width: 64px; height: 1px; background: var(--tungsten-amber); }
+  .section-eyebrow { display: block; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; font-weight: 500; letter-spacing: 0.2em; color: var(--tungsten-amber); margin-bottom: 18px; }
+  .section-eyebrow::before, .section-eyebrow::after { content: none; }
+  .section-title.display {
+    font-family: 'Inter', sans-serif; font-weight: 300; text-transform: none;
+    letter-spacing: -0.035em; line-height: 1.04; font-size: clamp(38px, 5.4vw, 76px);
+    margin: 0 0 40px; max-width: 18ch;
+  }
+  .section-title.display { text-wrap: balance; }
+  .btn { border-radius: 999px; letter-spacing: 0.04em; }
+  /* tiles become open columns with a hairline, not boxes */
+  .segment-card, .video-card, .merch-card, .guest-tag, .community-band {
+    background: transparent; border-radius: 0; box-shadow: none;
+  }
+  .segment-card { border: 0; border-top: 1px solid rgba(245,245,240,0.22); padding: 22px 4px 8px 0; }
+  .segment-card:hover { border-top-color: var(--tungsten-amber); }
+  .segment-card h3 { font-size: 22px; font-weight: 400; letter-spacing: -0.01em; }
+  .video-card { border: 0; border-top: 1px solid rgba(245,245,240,0.22); }
+  .merch-card { border: 0; border-top: 1px solid rgba(245,245,240,0.22); }
+  .merch-card:hover { border-top-color: var(--tungsten-amber); }
+  .merch-meta { padding: 16px 0 20px; }
+  .guest-tag { border: 1px solid rgba(245,245,240,0.12); }
+  .guest-tag:hover, .guest-tag:focus-within { border-color: var(--tungsten-amber); }
+  .guest-badge { border-radius: 2px; background: transparent; border-color: rgba(245,245,240,0.2); }
+  .community-band { border: 0; border-top: 1px solid rgba(245,245,240,0.22); padding: 32px 0 0; }
+  .community-copy strong { font-family: 'Inter', sans-serif; font-weight: 300; text-transform: none; letter-spacing: -0.02em; font-size: 34px; }
+  .platform-btn { font-family: 'Inter', sans-serif; font-weight: 300; text-transform: none; letter-spacing: -0.03em; font-size: clamp(30px, 4.4vw, 56px); }
+  /* v46b: rows instead of boxes */
+  .listen-grid { display: block; border-top: 1px solid rgba(245,245,240,0.22); }
+  .listen-grid > * { grid-column: auto; }
+  .platform-btn { display: flex; align-items: center; justify-content: space-between; width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(245,245,240,0.12); border-radius: 0; padding: 22px 4px; text-align: left; color: var(--signal-white); line-height: 1.1; transition: color 0.2s ease, padding 0.2s ease; }
+  .platform-btn:hover { color: var(--tungsten-amber); padding-left: 14px; background: transparent; }
+  .guest-tag { border: 0; border-bottom: 1px solid rgba(245,245,240,0.12); padding: 10px 0; }
+  .guest-tag:hover, .guest-tag:focus-within { border-bottom-color: var(--tungsten-amber); }
+
+  /* ---------- v48: big type, colour bands, stickers, scroll drift ---------- */
+  body { overflow-x: clip; }
+  section::before { content: none; }
+  section { border-top: 0; padding-top: 96px; padding-bottom: 96px; clip-path: inset(0 -100vmax); }
+  section.band-black { background: var(--stage-black); box-shadow: 0 0 0 100vmax var(--stage-black); }
+  section.band-raised { background: var(--stage-black-raised); box-shadow: 0 0 0 100vmax var(--stage-black-raised); }
+  section.band-cream { background: var(--signal-white); box-shadow: 0 0 0 100vmax var(--signal-white); color: var(--stage-black); }
+  .section-eyebrow { display: block; padding: 0; border: 0; background: none; width: auto; margin-bottom: 20px; letter-spacing: 0.2em; color: var(--tungsten-amber); }
+  .section-eyebrow::before, .section-eyebrow::after { content: none; }
+  .section-title.display {
+    font-family: 'Inter', sans-serif; font-weight: 700; text-transform: none;
+    letter-spacing: -0.05em; line-height: 0.95; font-size: clamp(46px, 8.4vw, 128px);
+    max-width: 12ch; margin: 0 0 56px; text-wrap: balance;
+  }
+  #signal-flow .section-title.display, .show-in-hero .section-title.display { font-size: clamp(40px, 6vw, 88px); max-width: 16ch; }
+  /* cream band */
+  .band-cream .section-eyebrow { color: #B35E0A; }
+  .band-cream .section-title { color: var(--stage-black); }
+  .band-cream .listen-grid { border-top-color: rgba(11,11,13,0.25); }
+  .band-cream .platform-btn { color: var(--stage-black); border-bottom-color: rgba(11,11,13,0.18); }
+  .band-cream .platform-btn .arrow { color: rgba(11,11,13,0.5); }
+  .band-cream .platform-btn:hover { color: #B35E0A; }
+  /* hero wordmark at full width */
+  .hero-word { width: min(1392px, calc(100% - var(--hero-left) - 24px)); }
+
+  /* ---------- v51: light show-set — inverts the dark business-site look ---------- */
+  section.band-light  { background: #F5F5F0; box-shadow: 0 0 0 100vmax #F5F5F0; }
+  section.band-light2 { background: #E9E9E1; box-shadow: 0 0 0 100vmax #E9E9E1; }
+  section.band-amber  { background: #FF9C3D; box-shadow: 0 0 0 100vmax #FF9C3D; }
+  .band-light, .band-light2 {
+    --signal-white: #0B0B0D; --stage-black: #F5F5F0; --stage-black-raised: #FFFFFF;
+    --graphite-light: #55555c; --border-quiet: rgba(11,11,13,0.16);
+    --tungsten-amber: #B35E0A; --data-cyan: #0A7F8C; color: #0B0B0D;
+  }
+  .band-amber {
+    --signal-white: #0B0B0D; --stage-black: #FF9C3D; --stage-black-raised: #FFB366;
+    --graphite-light: #3b2a12; --border-quiet: rgba(11,11,13,0.3);
+    --tungsten-amber: #0B0B0D; --data-cyan: #0B0B0D; color: #0B0B0D;
+  }
+  .band-light .section-title, .band-light2 .section-title, .band-amber .section-title { color: #0B0B0D; }
+  .band-light .segment-card, .band-light2 .segment-card, .band-light .video-card, .band-light2 .video-card,
+  .band-light .merch-card, .band-light2 .merch-card, .band-light .community-band, .band-light2 .community-band { border-top-color: rgba(11,11,13,0.28); }
+  .band-light .guest-tag, .band-light2 .guest-tag { border-bottom-color: rgba(11,11,13,0.16); }
+  .band-light .guest-tag span, .band-light2 .guest-tag span, .band-light .community-copy, .band-light2 .community-copy,
+  .band-light .watch-aside-row, .band-light2 .watch-aside-row, .band-light .cue-desc, .band-light2 .cue-desc { color: #2b2b30; }
+  .band-light .guest-badge, .band-light2 .guest-badge { color: #0B0B0D; border-color: rgba(11,11,13,0.25); }
+  .band-light .community-copy strong, .band-light2 .community-copy strong { color: #0B0B0D; }
+  .band-light .btn-primary, .band-light2 .btn-primary { background: #0B0B0D; color: #F5F5F0; border-color: #0B0B0D; }
+  .band-light .btn-secondary, .band-light2 .btn-secondary { color: #0B0B0D; border-color: rgba(11,11,13,0.35); }
+  .band-light .shape, .band-light2 .shape { background: #E9E9E1; }
+  .band-amber .listen-grid { border-top-color: rgba(11,11,13,0.45); }
+  .band-amber .platform-btn { color: #0B0B0D; border-bottom-color: rgba(11,11,13,0.3); }
+  .band-amber .platform-btn .arrow { color: #0B0B0D; }
+  .band-amber .platform-btn:hover { color: #FFFFFF; }
+  .band-amber .section-eyebrow { color: #0B0B0D; }
+
+  /* ---------- v52: back to the v39 colour theme (dark, glow showing through) ---------- */
+  section.band-plain { background: none; box-shadow: none; }
+
+  /* ---------- v53: ProAV's own type — Barlow Condensed caps, v39 section heads (not the business-site grotesque) ---------- */
+  section { padding-top: 64px; padding-bottom: 64px; }
+  .section-eyebrow {
+    display: block; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.25em; color: var(--graphite-light); margin-bottom: 14px; text-transform: uppercase;
+  }
+  .section-eyebrow::before, .section-eyebrow::after { content: none; }
+  .section-title.display, #signal-flow .section-title.display, .show-in-hero .section-title.display {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.02em; line-height: 1.05; font-size: clamp(32px, 5vw, 52px);
+    max-width: none; margin: 0 0 28px; text-wrap: initial;
+  }
+  .platform-btn { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; font-size: clamp(26px, 3.6vw, 40px); }
+  .community-copy strong { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; font-size: 26px; }
+  .band-plain .section-eyebrow { color: var(--graphite-light); }
+
+  /* v55: larger section headers */
+  .section-title.display, #signal-flow .section-title.display, .show-in-hero .section-title.display {
+    font-size: clamp(44px, 7.2vw, 104px); line-height: 1; margin-bottom: 36px;
+  }
+  /* v56: larger section eyebrows */
+  .section-eyebrow { font-size: clamp(16px, 1.5vw, 20px); letter-spacing: .28em; margin-bottom: 14px; }
+  /* v57: section headers dim as they scroll up and away */
+  .section-title.display { color: rgba(245,245,240,var(--dim, 1)); }
+  /* v60: guest descriptions only open when the cursor rests on a tag, never while scrolling */
+  .guest-tag:hover .guest-tooltip { transition-delay: 0.25s; }
+  .guest-tag:focus-within .guest-tooltip { transition-delay: 0s; }
+  html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip { max-height: 0; opacity: 0; margin-top: 0; transition-delay: 0s; }
+  html.is-scrolling .guest-tag:hover:not(:focus-within) { border-color: rgba(245,245,240,0.12); }
 </style>
 </head>
 <body>
@@ -910,7 +1040,6 @@
   <div class="nav-right">
     <div class="nav-links">
       <a href="#show">The Show</a>
-      <a href="#rundown">Inside an Episode</a>
       <a href="#guests">Who's On</a>
       <a href="#listen">Listen</a>
       <a href="#watch">Watch</a>
@@ -951,7 +1080,6 @@
     Search
   </button>
   <a href="#show">The Show</a>
-  <a href="#rundown">Inside an Episode</a>
   <a href="#guests">Who's On</a>
   <a href="#listen">Listen</a>
   <a href="#watch">Watch</a>
@@ -1020,7 +1148,6 @@
   <div class="hero-ctas">
     <a href="#listen" class="btn btn-primary">Listen Now</a>
     <a href="#watch" class="btn btn-secondary">Watch Episodes</a>
-    <a href="#rundown" class="btn btn-secondary">See How a Show Runs</a>
   </div>
 
   <div class="show-in-hero" id="show">
@@ -1067,37 +1194,9 @@
 </header>
 
 
-<section id="rundown">
-  <div class="section-eyebrow reveal">INSIDE AN EPISODE</div>
-  <h2 class="section-title display reveal">A real rundown, not a highlight reel.</h2>
-  <div class="rundown reveal">
-    <div class="rundown-pulse" id="rundownPulse" aria-hidden="true"></div>
-    <div class="cue">
-      <div class="cue-time mono">0:00</div>
-      <div class="cue-label neutral">COLD OPEN</div>
-      <div class="cue-desc">The best moment of the conversation, no setup needed.</div>
-    </div>
-    <div class="cue">
-      <div class="cue-time mono">~3:00</div>
-      <div class="cue-label mainstage">MAINSTAGE</div>
-      <div class="cue-desc">A focused demo of the gear driving the show — not the full rig.</div>
-    </div>
-    <div class="cue">
-      <div class="cue-time mono">~31:00</div>
-      <div class="cue-label backstage">BACKSTAGE</div>
-      <div class="cue-desc">The real conversation — decisions, pressure, and what almost went wrong.</div>
-    </div>
-    <div class="cue">
-      <div class="cue-time mono">~58:00</div>
-      <div class="cue-label neutral">CLOSE</div>
-      <div class="cue-desc">One takeaway, and a look at what's next.</div>
-    </div>
-  </div>
-  <p class="rundown-note reveal">A typical rundown. Times change from episode to episode.</p>
-</section>
 
-<section id="guests">
-  <div class="section-eyebrow reveal">WHO'S ON THE SHOW</div>
+
+<section id="guests" class="band-plain">  <div class="section-eyebrow reveal">WHO'S ON THE SHOW</div>
   <h2 class="section-title display reveal">Built by the people who run it.</h2>
   <div class="guest-grid reveal">
     <div class="guest-tag" tabindex="0">
@@ -1197,10 +1296,13 @@
       <div class="guest-tooltip">The hosts and performers the whole production is built to support.</div>
     </div>
   </div>
+  <div class="community-band reveal">
+    <div class="community-copy"><strong>This show belongs to the people in it.</strong> Work in live production? Come on the show, suggest a topic, or tell us what your crew is dealing with.</div>
+    <div class="community-actions"><a class="btn btn-primary" href="/contact">Be a guest</a><a class="btn btn-secondary" href="/contact">Suggest a topic</a></div>
+  </div>
 </section>
 
-<section id="listen">
-  <div class="section-eyebrow reveal">LISTEN</div>
+<section id="listen" class="band-plain">  <div class="section-eyebrow reveal">LISTEN</div>
   <h2 class="section-title display reveal">Wherever you already are.</h2>
   <div class="listen-grid reveal">
     <a href="#" class="platform-btn"><span>Apple Podcasts</span><span class="arrow">&rarr;</span></a>
@@ -1209,8 +1311,7 @@
   </div>
 </section>
 
-<section id="watch">
-  <div class="section-eyebrow reveal">WATCH</div>
+<section id="watch" class="band-plain">  <div class="section-eyebrow reveal">WATCH</div>
   <h2 class="section-title display reveal">The gear, on screen.</h2>
   <!-- Each .video-card.watch-hero is one tile. Copy a whole tile to add a video; the grid fills across, then down. -->
   <div class="watch-grid">
@@ -1265,7 +1366,7 @@
   </div>
 </div>
 
-<section id="signal-flow">
+<section id="signal-flow" class="band-plain">
   <div class="section-eyebrow reveal">SIGNAL FLOW DAILY</div>
   <h2 class="section-title display reveal">What changed in live production.</h2>
   <p class="sf-lede reveal">LED processing, switching, replay and venue-to-cloud news, sourced and checked every morning.</p>
@@ -1284,8 +1385,7 @@
   <noscript><p class="sf-empty">Turn on JavaScript to read Signal Flow Daily.</p></noscript>
 </section>
 
-<section id="merch">
-  <div class="section-eyebrow reveal">MERCH</div>
+<section id="merch" class="band-plain">  <div class="section-eyebrow reveal">MERCH</div>
   <h2 class="section-title display reveal">Wear the signal.</h2>
   <div class="merch-grid reveal">
     <div class="merch-card">
@@ -1519,11 +1619,6 @@
     }, { threshold: 0.3, rootMargin: '0px 0px -10% 0px' });
     startObserver.observe(rundown);
 
-    // restart the sequence from cue 1 whenever an "Inside an Episode" link
-    // is used to jump to the section (desktop nav, mobile nav, hero CTA).
-    document.querySelectorAll('a[href="#rundown"]').forEach(link => {
-      link.addEventListener('click', () => startSequence());
-    });
   })();
 
   // video modal: click a thumbnail to play, close via button, backdrop click, or Escape
@@ -1664,7 +1759,6 @@
 
       // section-level entries (nav destinations)
       index.push({ cat: 'Section', title: 'The Show', snippet: 'What ProAV covers, episode to episode.', el: document.getElementById('show') });
-      index.push({ cat: 'Section', title: 'Inside an Episode', snippet: 'A real rundown, cue by cue.', el: document.getElementById('rundown') });
       index.push({ cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', el: document.getElementById('guests') });
       index.push({ cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', el: document.getElementById('listen') });
       index.push({ cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
@@ -2035,6 +2129,41 @@
       .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); return loadVendors; })
       .then(() => renderVendors())
       .catch(() => { box.innerHTML = '<p class="sf-empty">Signal Flow Daily is unavailable right now.</p>'; });
+  })();
+
+  // dim section headers as they scroll up toward the top of the screen
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const titles = Array.from(document.querySelectorAll('.section-title.display'));
+    if (!titles.length) return;
+    let ticking = false;
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight;
+      titles.forEach(t => {
+        const r = t.getBoundingClientRect();
+        // full brightness only while the title's bottom is in the lower quarter of the screen;
+        // fades to 15% as its bottom reaches the top edge
+        const start = vh * 0.75;
+        const p = Math.min(1, Math.max(0, r.bottom / start));
+        const v = (Math.round((0.15 + 0.85 * p) * 40) / 40).toFixed(3);
+        if (t._dim !== v) { t._dim = v; t.style.setProperty('--dim', v); }
+      });
+    }
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+
+  // mark the page as scrolling so hover effects don't fire under a stationary cursor
+  (function () {
+    let t;
+    const root = document.documentElement;
+    window.addEventListener('scroll', () => {
+      root.classList.add('is-scrolling');
+      clearTimeout(t);
+      t = setTimeout(() => root.classList.remove('is-scrolling'), 200);
+    }, { passive: true });
   })();
 </script>
 </body>
