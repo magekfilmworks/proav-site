@@ -75,6 +75,25 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* ---------- page background: the hero's glow carried down the page, plus a faint dot grid (static) ---------- */
+  body { position: relative; }
+  body::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 100vh; bottom: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 900px 700px at 6% 18%, rgba(255,156,61,0.13), transparent 70%),
+      radial-gradient(ellipse 900px 700px at 94% 68%, rgba(42,217,236,0.11), transparent 70%);
+    background-size: 100% 2200px;
+    background-repeat: repeat-y;
+  }
+  body::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 100vh; bottom: 0; z-index: -1; pointer-events: none;
+    background-image: radial-gradient(rgba(245,245,240,0.10) 1px, transparent 1.4px);
+    background-size: 28px 28px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 360px);
+            mask-image: linear-gradient(to bottom, transparent, #000 360px);
+  }
+  .hero { background: var(--stage-black); }
+
   .display { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
   .mono { font-family: 'JetBrains Mono', monospace; }
   .sr-only {
