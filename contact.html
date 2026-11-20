@@ -38,7 +38,7 @@
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; zoom: 0.95; }
   body {
     margin: 0;
     background: var(--stage-black);
@@ -73,6 +73,18 @@
   .nav-links a { text-decoration: none; color: var(--graphite-light); transition: color 0.2s; }
   .nav-links a:hover { color: var(--signal-white); }
   .nav-links a.active { color: var(--tungsten-amber); }
+  /* Signal line under each menu link: shows on hover/focus and on the section currently in view (scroll). */
+  .nav-links a { position: relative; padding-bottom: 6px; }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
+    background-size: 220% 100%; animation: navSignalSweep 4s ease-in-out infinite;
+    opacity: 0; transform: scaleX(0.4); transform-origin: left center;
+    transition: opacity 0.25s ease, transform 0.3s ease;
+  }
+  .nav-links a:hover::after, .nav-links a:focus-visible::after, .nav-links a.active::after { opacity: 1; transform: scaleX(1); }
+  @keyframes navSignalSweep { 0% { background-position: 100% 0; } 50% { background-position: 0% 0; } 100% { background-position: 100% 0; } }
+  @media (prefers-reduced-motion: reduce) { .nav-links a::after { animation: none; transition: none; } }
   .nav-social { display: flex; align-items: center; gap: 16px; padding-left: 28px; border-left: 1px solid var(--border-quiet); }
 
   /* ---------- site search ---------- */
@@ -209,7 +221,7 @@
     position: relative;
     z-index: 1;
   }
-  .hero-word svg { width: 100%; max-width: 1080px; height: auto; display: block; margin: 0 auto; }
+  .hero-word svg { width: 100%; max-width: 1440px; height: auto; display: block; margin: 0 auto; }
 
   .hero-tagline {
     margin-top: 22px;
@@ -233,7 +245,7 @@
 
   .show-in-hero {
     position: relative; z-index: 1;
-    width: 100%; max-width: 1080px;
+    width: 100%; max-width: 1440px;
     margin: 96px auto 0;
     padding: 0 24px;
     text-align: left;
@@ -255,7 +267,7 @@
   .btn-secondary:hover { border-color: var(--signal-white); }
 
   /* ---------- section shell ---------- */
-  section { padding: 120px 24px; max-width: 1080px; margin: 0 auto; }
+  section { padding: 72px 24px; max-width: 1440px; margin: 0 auto; }
   .section-eyebrow {
     font-size: 13px; letter-spacing: 0.25em; color: var(--graphite-light);
     font-weight: 600; margin-bottom: 14px;
@@ -644,8 +656,9 @@
       <a href="/#show">The Show</a>
       <a href="/#rundown">Inside an Episode</a>
       <a href="/#guests">Who's On</a>
-      <a href="/#watch">Watch</a>
       <a href="/#listen">Listen</a>
+      <a href="/#watch">Watch</a>
+      <a href="/#signal-flow">Signal Flow Daily</a>
       <a href="/#merch">Merch</a>
       <a href="/contact" class="active">Contact</a>
     </div>
@@ -684,8 +697,9 @@
   <a href="/#show">The Show</a>
   <a href="/#rundown">Inside an Episode</a>
   <a href="/#guests">Who's On</a>
-  <a href="/#watch">Watch</a>
   <a href="/#listen">Listen</a>
+  <a href="/#watch">Watch</a>
+      <a href="/#signal-flow">Signal Flow Daily</a>
   <a href="/#merch">Merch</a>
   <a href="/contact" class="active">Contact</a>
   <div class="footer-social" style="margin-top: 32px;">
@@ -903,6 +917,7 @@
       { cat: 'Section', title: 'Inside an Episode', snippet: 'A real rundown, cue by cue.', href: '/#rundown' },
       { cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', href: '/#guests' },
       { cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', href: '/#watch' },
+      { cat: 'Section', title: 'Signal Flow Daily', snippet: 'Daily live production and ProAV news.', href: '/#signal-flow' },
       { cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', href: '/#listen' },
       { cat: 'Section', title: 'Merch', snippet: 'Tee, hoodie, cap, and sticker — wear the signal.', href: '/#merch' },
       { cat: 'Page', title: 'Contact', snippet: 'Guest pitches, sponsor inquiries, and general contact.', el: document.querySelector('.contact-block') },

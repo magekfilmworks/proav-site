@@ -1,0 +1,540 @@
+{
+  "updated": "2026-11-19",
+  "vendors": [
+    {
+      "key": "blackmagic",
+      "label": "Blackmagic",
+      "match": "blackmagic",
+      "newsroom": [
+        "https://www.blackmagicdesign.com/media/",
+        "https://www.blackmagicdesign.com/media/release/archive"
+      ],
+      "items": [
+        {
+          "id": "blackmagic-ambisonic-microphone",
+          "beat": "field",
+          "title": "Blackmagic Ambisonic Microphone",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-12",
+          "when": "Nov 12, 2026",
+          "brief": "Blackmagic's first microphone: a 7th order ambisonic array with a built-in spatial encoder.",
+          "status_label": "Dec 2026",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/blackmagicambisonic"
+            }
+          ],
+          "spec": "108 MEMS microphones · 7th order · single USB-C · US$1,909 (kit US$2,405)",
+          "what": "Blackmagic Design lists it as the world's first 7th order ambisonic microphone, with 108 MEMS microphones and a built-in spatial encoder, connecting over a single USB-C cable. The kit adds a windshield and a locking USB-C cable. MSRP excludes sales tax and shipping."
+        },
+        {
+          "id": "blackmagic-ultrastudio-express-hd",
+          "beat": "replay",
+          "title": "UltraStudio Express HD",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-03",
+          "when": "Nov 3, 2026",
+          "brief": "Bus-powered 3G-SDI capture and playback over USB4/Thunderbolt 4, with reference in and RS-422.",
+          "status_label": "New",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/ultrastudio"
+            }
+          ],
+          "spec": "3G-SDI, HDMI, analog · ref in · RS-422 · up to 1080p60, 10-bit · US$639",
+          "what": "Blackmagic Design lists UltraStudio Express HD with 3G-SDI, HDMI and analog connections, video reference and RS-422 remote control, and dual SDI outputs that can switch to fill and key. It connects to Mac, Windows or Linux over USB4 or Thunderbolt 4 and draws power from the connection. MSRP excludes sales tax and shipping."
+        },
+        {
+          "id": "blackmagic-fusion-studio-21-1-2",
+          "beat": "graphics",
+          "title": "Fusion Studio 21.1.2 (OGraf)",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-02",
+          "when": "Nov 2, 2026",
+          "brief": "Up to 4x faster OGraf playback, more template controls and OGraf and Lottie on Linux.",
+          "status_label": "Fusion 21.1.2",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/support/partial/llm-release-notes-summary"
+            }
+          ],
+          "spec": "OGraf up to 4x faster · select and multi-select template controls · Linux OGraf and Lottie",
+          "what": "Blackmagic Design's release notes list up to 4x faster OGraf playback, support for select and multi-select template controls, OGraf templates that adapt to aspect ratio, and OGraf and Lottie graphics support on Linux. They also add custom clip input and output labels for OpenFX."
+        },
+        {
+          "id": "blackmagic-ethernet-switch-820",
+          "beat": "cloud",
+          "title": "Blackmagic Ethernet Switch 820",
+          "vendor": "Blackmagic Design",
+          "date": "2026-11-02",
+          "when": "Nov 2, 2026",
+          "brief": "100G switch with redundant PTP clock ports and basic SMPTE 2110 routing, at US$2,525.",
+          "status_label": "New",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/blackmagicethernetswitch"
+            }
+          ],
+          "spec": "8x 100G QSFP · 2x 10G · 2 PTP clock ports · NMOS control port · redundant PSU · US$2,525",
+          "what": "Blackmagic Design lists the Ethernet Switch 820 with eight 100G QSFP ports, two 10G ports, two redundant PTP clock ports, a dedicated NMOS control port and a separate management port, with dual redundant power supplies. It offers basic SMPTE 2110 routing with simple router control. MSRP includes duties and excludes sales tax and shipping."
+        },
+        {
+          "id": "davinci-resolve-21-1",
+          "beat": "field",
+          "title": "DaVinci Resolve 21.1",
+          "vendor": "Blackmagic Design",
+          "date": "2026-09-08",
+          "when": "Sep 8, 2026",
+          "brief": "Free update adds AI assistant integration, 25+ new Fusion tools and 100+ edit and color tools.",
+          "status_label": "Free update",
+          "sources": [
+            {
+              "label": "Blackmagic Design",
+              "url": "https://www.blackmagicdesign.com/products/davinciresolve/whatsnew"
+            }
+          ],
+          "spec": "Announced at IBC 2026",
+          "what": "Blackmagic Design announced DaVinci Resolve 21.1 at IBC 2026. It adds AI assistant integration, expanded camera support on the Photo page, more than 25 new Krokodove tools for Fusion's 3D and shape toolkit, and over 100 new tools and controls for editing and color grading."
+        }
+      ],
+      "direct": true
+    },
+    {
+      "key": "barco",
+      "items": [],
+      "label": "Barco",
+      "match": "Barco",
+      "newsroom": [
+        "https://www.barco.com/en/news/news-insights?productCategory=barco-dxp:product/product-category/projection,barco-dxp:product/product-category/image-processing,barco-dxp:product/product-category/video-walls",
+        "https://www.barco.com/en/news/news-insights/live-events"
+      ],
+      "curated": [
+        {
+          "id": "barco-encore3-update-v10-0-2",
+          "beat": "switching",
+          "title": "Encore3 update: building together, growing stronger",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/news/news-insights/live-events/encore3-toolsetv1002"
+            }
+          ],
+          "pinned": true,
+          "status_label": "Pinned"
+        },
+        {
+          "id": "barco-encore3-10-2",
+          "beat": "switching",
+          "title": "Faster builds, smarter workflows, bigger shows: the Encore3 10.2 software version",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/news/news-insights/live-events/encore3-toolsetv102"
+            }
+          ]
+        },
+        {
+          "id": "barco-qdx-rentex",
+          "beat": "field",
+          "title": "A QDX boost for the Rentex projection fleet",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/news/news-insights/live-events/qdx-rentex"
+            }
+          ]
+        },
+        {
+          "id": "barco-qdx-fuse",
+          "beat": "field",
+          "title": "Fuse expands its creative toolkit with 45 Barco QDX projectors",
+          "vendor": "Barco",
+          "brief": "From Barco's news portal. Open the article for the details.",
+          "sources": [
+            {
+              "label": "Barco",
+              "url": "https://www.barco.com/en/inspiration/news-insights/live-events/qdx-fuse"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "analogway",
+      "items": [
+        {
+          "id": "analogway-coreplay-tetra",
+          "beat": "replay",
+          "title": "Analog Way launches CorePlay Tetra quad-output playback engine",
+          "vendor": "Analog Way",
+          "date": "2026-10-22",
+          "when": "Oct 22, 2026",
+          "brief": "CorePlay Tetra is a 2U media playback engine with four DisplayPort 1.4a outputs, built to work natively with Aquilon switchers.",
+          "status_label": "New product",
+          "spec": "4 x DisplayPort 1.4a; up to 16 players, 32 viewports; 2 TB NVMe; 32-ch Dante",
+          "what": "Plays H.264, H.265/HEVC, ProRes, HAP, HAP-Q, HAP Alpha, AWX, DPX and stills natively, with no re-encoding. Outputs stay synchronized without external genlock when display configurations match. For Aquilon, Preview and Program feeds can be mapped to the switcher configuration with familiar Preview / Program / TAKE controls, and outputs can also drive displays and LED processors directly. Control options include CorePlay RCS, an API, a Bitfocus Companion module and Stream Deck.",
+          "why": "It puts the media server and the switcher on one control surface for shows that run lots of playback.",
+          "watch": "Maximum resolution, frame rate, pricing and availability are not stated on the product page.",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/analog-way-launches-coreplay-tetra-a-quad-output-media-playback-engine-for-live-production"
+            },
+            {
+              "label": "Product page",
+              "url": "https://www.analogway.com/products/tetra"
+            }
+          ]
+        },
+        {
+          "id": "analogway-konstanz-powerwall-aquilon-cplus",
+          "beat": "switching",
+          "title": "Aquilon C+ drives the Powerwall at Germany's University of Konstanz",
+          "vendor": "Analog Way",
+          "date": "2026-10-14",
+          "when": "Oct 14, 2026",
+          "brief": "The University of Konstanz bought an Aquilon C+ to drive its high-resolution Samsung videowall.",
+          "status_label": "Customer story",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/powerwall-at-germanys-university-of-konstanz"
+            }
+          ]
+        },
+        {
+          "id": "analogway-mbc-aquilon-rs4-election",
+          "beat": "switching",
+          "title": "MBC runs Aquilon RS4 systems for live countrywide election coverage",
+          "vendor": "Analog Way",
+          "date": "2026-08-25",
+          "when": "Aug 25, 2026",
+          "brief": "Korean broadcaster MBC used a pair of Aquilon RS4 systems for its telecast of the Ninth Local Elections results in June.",
+          "status_label": "Customer story",
+          "spec": "Native 4K outputs; 10+ simultaneous layers",
+          "what": "The systems, supplied by LDS Co., Ltd., handled multi-layer, multi-screen compositions with multiple live sources for coverage of more than 4,000 offices. Analog Way reports the coverage ran without interruption and MBC's telecast took the top viewership rating at 9.8 percent. MBC also used Analog Way systems for its 2025 Presidential Election returns.",
+          "why": "A clear example of Aquilon RS4 on a high-pressure, multi-source live broadcast.",
+          "watch": "Screen count and detailed workflow are not stated in the coverage.",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/mbc-deploys-aquilon-rs4-for-korea-election-coverage"
+            },
+            {
+              "label": "Live Design",
+              "url": "https://www.livedesignonline.com/news/korean-broadcaster-mbc-deploys-analog-way-aquilon-rs4-systems-live-countrywide-election"
+            }
+          ]
+        },
+        {
+          "id": "analogway-aquilon-firmware-6-2",
+          "beat": "switching",
+          "title": "Aquilon firmware 6.2 adds stereoscopic 3D and backup groups",
+          "vendor": "Analog Way",
+          "date": "2026-07-16",
+          "when": "Jul 16, 2026",
+          "brief": "Firmware 6.2 adds native stereoscopic 3D, backup groups for one-action failover, and more DisplayPort formats including 8K at 30 Hz.",
+          "status_label": "Firmware",
+          "what": "3D is supported up to UHD at 60 Hz per eye, and frame-sequential 3D with embedded sync up to 3840x2160 at 120 Hz, 4:4:4, 8-bit, using the ACC-AQL-IN-DP and ACC-AQL-OUT-DP cards. 2D and 3D can be mixed in one composition. Backup Groups switch grouped input and background backups together, manually or automatically when a member fails, and can be controlled from Web RCS or a custom key on the RC400T. Custom Formats now support VESA CVT Reduced Blanking v2.0.",
+          "why": "Group failover cuts the number of moves an operator needs when a source drops mid-show.",
+          "watch": "The page doesn't list which Aquilon models support each feature. The page also shows more than one date; Analog Way's news list dates it Jul 16, 2026.",
+          "sources": [
+            {
+              "label": "Analog Way",
+              "url": "https://www.analogway.com/news-center/aquilon-firmware-6-2-stereoscopic-3d-and-backup-groups"
+            }
+          ]
+        }
+      ],
+      "label": "Analog Way",
+      "match": "analog ?way|aquilon|livepremier",
+      "newsroom": [
+        "https://www.analogway.com/news-center"
+      ]
+    },
+    {
+      "key": "pixelhue",
+      "items": [
+        {
+          "id": "pixelhue-pd3-4k-air-infocomm-2026",
+          "beat": "cloud",
+          "title": "Pixelhue pitches PD3-4K Air for lighter AV-over-IP",
+          "vendor": "Pixelhue",
+          "date": "2026-06-23",
+          "when": "Jun 23, 2026",
+          "brief": "At InfoComm 2026 Pixelhue discussed the PD3-4K Air, a compact AV-over-IP product aimed at enterprise, retail and education.",
+          "status_label": "InfoComm 2026",
+          "what": "Pixelhue spoke about the PD3-4K Air, positioned for deployments that need a compact AV-over-IP solution with easier management and reliable performance over 1Gb networks.",
+          "why": "It signals Pixelhue extending beyond live-event switchers into installed AV-over-IP.",
+          "watch": "Full specs and pricing were not in the source coverage; check Pixelhue before you plan around it.",
+          "sources": [
+            {
+              "label": "Inavate",
+              "url": "https://www.inavateonthenet.net/features/article/pixelhue-calls-for-lighter-avoverip-deployments-in-enterprise-retail-and-education"
+            }
+          ]
+        },
+        {
+          "id": "pixelhue-pixelflow-2-0",
+          "beat": "switching",
+          "title": "PixelFlow 2.0 adds Live Background and Dual Device Link",
+          "vendor": "Pixelhue",
+          "date": "2026-05-06",
+          "when": "May 6, 2026",
+          "brief": "PixelFlow 2.0 brings Live Background to the P80 and Q8, extends Dual Device Link to the Q8, and speeds up preset recall.",
+          "status_label": "Software",
+          "what": "Live Background assigns an input as a background without using dedicated layers (P80 and Q8). Dual Device Link joins two units over optical fiber and shares inputs (P80, now also Q8). The Q8 gains Virtual Processing Units, which redistribute resources between output cards, and shared multiview. A new P80 board adds 8 HDMI inputs. Preset recall is faster and keyframe management is optimized.",
+          "why": "Backgrounds without burning layers and two-unit linking on the Q8 matter on larger blended-screen shows.",
+          "watch": "The source names only the P80 and Q8; it does not say which other models get the update.",
+          "sources": [
+            {
+              "label": "Audio Effetti",
+              "url": "https://audioeffetti.com/en/news/pixelflow-2-0-enhanced-control-new-features-and-improved-performance-for-pixelhue-n219419"
+            }
+          ]
+        }
+      ],
+      "label": "PixelHue",
+      "match": "pixel ?hue|\\b(q8|p80|p20)\\b",
+      "newsroom": [
+        "https://pixelhue.com"
+      ]
+    },
+    {
+      "key": "smpte",
+      "label": "SMPTE ST 2110",
+      "match": "smpte|st[ -]?2110",
+      "newsroom": [
+        "https://www.smpte.org/blog/tag/st-2110"
+      ],
+      "items": [
+        {
+          "id": "smpte-content-provenance-authenticity-ai",
+          "beat": "field",
+          "title": "SMPTE Identifies Key Requirements for Content Provenance and Authenticity in the Age of AI",
+          "vendor": "SMPTE",
+          "date": "2026-11-19",
+          "when": "Nov 19, 2026",
+          "brief": "SMPTE shares survey findings and recommendations for trusted, interoperable media workflows as AI raises questions about content authenticity.",
+          "status_label": "SMPTE blog",
+          "sources": [
+            {
+              "label": "SMPTE",
+              "url": "https://www.smpte.org/blog/smpte-identifies-key-requirements-for-content-provenance-and-authenticity-in-the-age-of-ai"
+            }
+          ]
+        },
+        {
+          "id": "smpte-bh-riedel-mts-solutions-hub",
+          "beat": "cloud",
+          "title": "The Studio B&H and Riedel Communications Power the SMPTE MTS Solutions Hub with Advanced Video Infrastructure and Communications Technology",
+          "vendor": "SMPTE",
+          "date": "2026-11-12",
+          "when": "Nov 12, 2026",
+          "brief": "B&H and Riedel built a live-broadcast infrastructure at the SMPTE MTS Solutions Hub that showcases ST 2110 and IP networking.",
+          "status_label": "SMPTE blog",
+          "sources": [
+            {
+              "label": "SMPTE",
+              "url": "https://www.smpte.org/blog/the-studio-bh-and-riedel-communications-power-the-smpte-mts-solutions-hub-with-advanced-video-infrastructure-and-communications-technology"
+            }
+          ]
+        }
+      ],
+      "curated": [
+        {
+          "id": "smpte-content-provenance-authenticity-ai",
+          "beat": "field",
+          "title": "SMPTE Identifies Key Requirements for Content Provenance and Authenticity in the Age of AI",
+          "vendor": "SMPTE",
+          "date": "2026-11-19",
+          "when": "Nov 19, 2026",
+          "brief": "SMPTE shares survey findings and recommendations for trusted, interoperable media workflows as AI raises questions about content authenticity.",
+          "status_label": "Pinned",
+          "sources": [
+            {
+              "label": "SMPTE",
+              "url": "https://www.smpte.org/blog/smpte-identifies-key-requirements-for-content-provenance-and-authenticity-in-the-age-of-ai"
+            }
+          ],
+          "pinned": true
+        }
+      ]
+    },
+    {
+      "key": "panasonic",
+      "label": "Panasonic",
+      "match": "panasonic|lumix|kairos",
+      "newsroom": [
+        "https://pro-av.panasonic.net/en/whatsnew/"
+      ],
+      "direct": true,
+      "items": [
+        {
+          "id": "panasonic-au-shx1-au-lpu1",
+          "beat": "field",
+          "title": "AU-SHX1 4K Video Camera and AU-LPU1 Live Production Unit",
+          "vendor": "Panasonic Connect",
+          "date": "2026-11-17",
+          "when": "Nov 17, 2026",
+          "brief": "New LUMIX-based compact cinema camera plus a live production unit for multi-camera events.",
+          "status_label": "New",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/au-shx1-lpu1/"
+            },
+            {
+              "label": "Panasonic press release",
+              "url": "https://news.panasonic.com/global/press/en261117-1"
+            }
+          ],
+          "spec": "6K full-frame sensor · L-Mount · Blackmagic RAW and ProRes RAW · 4K 120p",
+          "what": "Panasonic lists the AU-SHX1 as a 4K video camera built on the full-frame LUMIX S Series imaging system, with a 6K (24.1MP) full-frame partially stacked CMOS sensor and the L-Mount. It records Blackmagic RAW to an external SSD, ProRes RAW and unlimited 4K 120p. The AU-LPU1 Live Production Unit, sold separately, is designed for multi-camera recording at live events and adds live streaming and remote control. Price and release date are not stated on the page."
+        },
+        {
+          "id": "panasonic-kairos-alliance-media-links",
+          "beat": "switching",
+          "title": "Media Links joins the KAIROS Alliance Partners",
+          "vendor": "Panasonic Connect",
+          "date": "2026-11-10",
+          "when": "Nov 10, 2026",
+          "brief": "Media Links was added to Panasonic's KAIROS Alliance Partners list.",
+          "status_label": "KAIROS",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/whatsnew/"
+            }
+          ]
+        },
+        {
+          "id": "panasonic-kairos-firmware-2-1-6",
+          "beat": "switching",
+          "title": "KAIROS firmware ver. 2.1.6",
+          "vendor": "Panasonic Connect",
+          "date": "2026-10-20",
+          "when": "Oct 20, 2026",
+          "brief": "Firmware for the KAIROS IT/IP platform was updated to ver. 2.1.6.",
+          "status_label": "Firmware 2.1.6",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/whatsnew/"
+            }
+          ],
+          "what": "Panasonic's What's New list shows the KAIROS firmware updated to ver. 2.1.6. The change notes sit behind Panasonic's support login, so what changed is not stated here."
+        },
+        {
+          "id": "panasonic-aw-ue5",
+          "beat": "field",
+          "title": "AW-UE5W/K 4K Integrated Camera",
+          "vendor": "Panasonic Connect",
+          "date": "2026-07-07",
+          "when": "Jul 7, 2026",
+          "brief": "Compact 4K PTZ camera with an ultra-wide 121 degree lens and NDI HX.",
+          "status_label": "Released",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-ue5/"
+            }
+          ],
+          "spec": "4K · 121° horizontal field of view · PoE · NDI HX · RTMP/RTMPS",
+          "what": "Panasonic lists the AW-UE5W (white) and AW-UE5K (black) as a compact 4K integrated PTZ camera with smooth 4K/60p video output, an ultra-wide lens, PoE power and certified NDI HX, plus RTMP and RTMPS streaming. Price and sensor details are not stated on the page."
+        },
+        {
+          "id": "panasonic-aw-rp200gj",
+          "beat": "field",
+          "title": "AW-RP200GJ Remote Camera Controller",
+          "vendor": "Panasonic Connect",
+          "date": "2026-02-13",
+          "when": "Feb 13, 2026",
+          "brief": "New remote camera controller for Panasonic PTZ systems.",
+          "status_label": "Released",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-rp200gj/"
+            }
+          ]
+        },
+        {
+          "id": "panasonic-aw-ue200k",
+          "beat": "field",
+          "title": "AW-UE200K 4K PTZ camera with a global shutter MOS sensor",
+          "vendor": "Panasonic Connect",
+          "date": "2026-09-02",
+          "when": "Sep 2, 2026",
+          "brief": "4K PTZ with a 1.2-inch global shutter 5K sensor and 22x zoom; AW-UE210 adds ST 2110 and Dante.",
+          "status_label": "Feb 2027",
+          "spec": "1.2-inch 5K global shutter · 4K out · 22x optical · 80° wide · HD 120/180 fps",
+          "what": "Panasonic announced the AW-UE200 series (AW-UE200W and AW-UE200K) as what it calls the world's first PTZ cameras with a global shutter MOS sensor: a 1.2-inch 5K sensor with 5K oversampling for 4K output, a 22x optical zoom (f=22.5–500 mm, 35 mm equivalent) with an 80° horizontal angle at wide, and pan/tilt speeds up to 400 deg/s. HD high-speed shooting is 120 fps and 180 fps, with 180 fps needing a future update. The AW-UE210 models add SMPTE ST 2110 with uncompressed 4K output and Dante audio, with redundant connections; JPEG XS low-latency transmission needs a future firmware update. The AW-UE200 series is scheduled for February 2027 and the roll-capable AW-UER200 series for Q2 CY2027. Price is not stated.",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-ue200-210/"
+            },
+            {
+              "label": "Panasonic press release",
+              "url": "https://news.panasonic.com/global/press/en260902-4"
+            }
+          ]
+        }
+      ],
+      "curated": [
+        {
+          "id": "panasonic-kairos-firmware-2-1-6",
+          "beat": "switching",
+          "title": "KAIROS firmware ver. 2.1.6",
+          "vendor": "Panasonic Connect",
+          "date": "2026-10-20",
+          "when": "Oct 20, 2026",
+          "brief": "Firmware for the KAIROS IT/IP platform was updated to ver. 2.1.6.",
+          "status_label": "Pinned",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/whatsnew/"
+            }
+          ],
+          "what": "Panasonic's What's New list shows the KAIROS firmware updated to ver. 2.1.6. The change notes sit behind Panasonic's support login, so what changed is not stated here.",
+          "pinned": true
+        },
+        {
+          "id": "panasonic-aw-ue200k",
+          "beat": "field",
+          "title": "AW-UE200K 4K PTZ camera with a global shutter MOS sensor",
+          "vendor": "Panasonic Connect",
+          "date": "2026-09-02",
+          "when": "Sep 2, 2026",
+          "brief": "4K PTZ with a 1.2-inch global shutter 5K sensor and 22x zoom; AW-UE210 adds ST 2110 and Dante.",
+          "status_label": "Pinned",
+          "spec": "1.2-inch 5K global shutter · 4K out · 22x optical · 80° wide · HD 120/180 fps",
+          "what": "Panasonic announced the AW-UE200 series (AW-UE200W and AW-UE200K) as what it calls the world's first PTZ cameras with a global shutter MOS sensor: a 1.2-inch 5K sensor with 5K oversampling for 4K output, a 22x optical zoom (f=22.5–500 mm, 35 mm equivalent) with an 80° horizontal angle at wide, and pan/tilt speeds up to 400 deg/s. HD high-speed shooting is 120 fps and 180 fps, with 180 fps needing a future update. The AW-UE210 models add SMPTE ST 2110 with uncompressed 4K output and Dante audio, with redundant connections; JPEG XS low-latency transmission needs a future firmware update. The AW-UE200 series is scheduled for February 2027 and the roll-capable AW-UER200 series for Q2 CY2027. Price is not stated.",
+          "sources": [
+            {
+              "label": "Panasonic Connect",
+              "url": "https://pro-av.panasonic.net/en/products/aw-ue200-210/"
+            },
+            {
+              "label": "Panasonic press release",
+              "url": "https://news.panasonic.com/global/press/en260902-4"
+            }
+          ],
+          "pinned": true
+        }
+      ]
+    }
+  ]
+}

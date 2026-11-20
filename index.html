@@ -66,7 +66,7 @@
   }
 
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; zoom: 0.95; }
   body {
     margin: 0;
     background: var(--stage-black);
@@ -98,10 +98,30 @@
   .nav-bug { width: 36px; height: 36px; display: block; }
   .nav-right { display: flex; align-items: center; gap: 32px; }
   .nav-links { display: flex; gap: 36px; font-size: 14px; font-weight: 500; letter-spacing: 0.03em; }
-  .nav-links a { text-decoration: none; color: var(--graphite-light); transition: color 0.2s; }
+  .nav-links a { white-space: nowrap; text-decoration: none; color: var(--graphite-light); transition: color 0.2s; }
   .nav-links a:hover { color: var(--signal-white); }
   .nav-links a.active { color: var(--tungsten-amber); }
+  /* Signal line under each menu link: shows on hover/focus and on the section currently in view (scroll). */
+  .nav-links a { position: relative; padding-bottom: 6px; }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
+    background-size: 220% 100%; animation: navSignalSweep 4s ease-in-out infinite;
+    opacity: 0; transform: scaleX(0.4); transform-origin: left center;
+    transition: opacity 0.25s ease, transform 0.3s ease;
+  }
+  .nav-links a:hover::after, .nav-links a:focus-visible::after, .nav-links a.active::after { opacity: 1; transform: scaleX(1); }
+  @keyframes navSignalSweep { 0% { background-position: 100% 0; } 50% { background-position: 0% 0; } 100% { background-position: 100% 0; } }
+  @media (prefers-reduced-motion: reduce) { .nav-links a::after { animation: none; transition: none; } }
   .nav-social { display: flex; align-items: center; gap: 16px; padding-left: 28px; border-left: 1px solid var(--border-quiet); }
+
+  @media (min-width: 1025px) and (max-width: 1280px) {
+    .nav { padding: 20px 24px; }
+    .nav-right { gap: 18px; }
+    .nav-links { gap: 20px; font-size: 13.5px; letter-spacing: 0.01em; }
+    .nav-social { gap: 11px; padding-left: 16px; }
+    .search-btn kbd { display: none; }
+  }
 
   /* ---------- site search ---------- */
   .search-btn {
@@ -222,8 +242,10 @@
     position: relative;
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    text-align: center;
-    padding: 96px 24px 80px;
+    text-align: left;
+    /* left edge of the 1440px content column (matches the sections below) */
+    --hero-left: calc(max(0px, (100% - 1440px) / 2) + 24px);
+    padding: 108px 0 80px;
     overflow: hidden;
   }
   .hero::before {
@@ -235,8 +257,8 @@
     pointer-events: none;
   }
   .bracket { position: absolute; width: 64px; height: 64px; border-color: var(--border-quiet); opacity: 0.8; }
-  .bracket.tl { top: 96px; left: 40px; border-top: 2px solid; border-left: 2px solid; }
-  .bracket.br { bottom: 40px; right: 40px; border-bottom: 2px solid; border-right: 2px solid; }
+  .bracket.tl { top: 92px; width: 36px; height: 36px; left: max(8px, calc((100% - 1440px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
+  .bracket.br { width: 36px; height: 36px; bottom: 20px; right: max(24px, calc((100% - 1440px) / 2 + 24px)); border-bottom: 2px solid; border-right: 2px solid; }
 
   .hero-word {
     font-size: clamp(80px, 16vw, 250px);
@@ -244,18 +266,26 @@
     position: relative;
     z-index: 1;
   }
-  .hero-word svg { width: 100%; max-width: 1080px; height: auto; display: block; margin: 0 auto; }
+  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(340px, calc(100% - var(--hero-left) - 24px)); }
+  .hero-word svg { width: 100%; height: auto; display: block; margin: 0; }
 
+  /* tagline + signal line sit in one block, so the line runs exactly as wide as the tagline */
+  .hero-lockup {
+    align-self: flex-start; margin-left: var(--hero-left);
+    width: fit-content; max-width: calc(100% - var(--hero-left) - 24px);
+    font-size: 14px;
+    --track: 0.35em;
+  }
   .hero-tagline {
-    margin-top: 22px;
-    font-size: clamp(16px, 2.4vw, 24px);
-    letter-spacing: 0.35em;
+    margin-top: 14px;
+    font-size: inherit;
+    letter-spacing: var(--track);
     color: var(--graphite-light);
     font-weight: 600;
   }
 
   .signal-line-css {
-    width: min(420px, 70vw); height: 4px; margin: 28px auto 34px; border-radius: 2px;
+    width: calc(100% - var(--track)); height: 3px; margin: 16px 0 24px; border-radius: 2px; /* minus the trailing letter-space so it ends at the "d" of Cloud */
     background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
     background-size: 220% 100%;
     animation: heroSignalSweep 4s ease-in-out infinite;
@@ -267,19 +297,21 @@
   }
 
   .hero-hook {
-    max-width: 560px;
+    align-self: flex-start;
+    width: calc(100% - var(--hero-left) - 24px);
+    max-width: 860px;
     font-size: 17px;
     line-height: 1.6;
     color: #cfcfd4;
-    margin: 0 auto 40px;
+    margin: 0 0 28px var(--hero-left);
   }
 
-  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start; align-self: flex-start; margin-left: var(--hero-left); width: calc(100% - var(--hero-left) - 24px); }
 
   .show-in-hero {
     position: relative; z-index: 1;
-    width: 100%; max-width: 1080px;
-    margin: 96px auto 0;
+    width: 100%; max-width: 1440px;
+    margin: 112px auto 0;
     padding: 0 24px;
     text-align: left;
   }
@@ -300,7 +332,7 @@
   .btn-secondary:hover { border-color: var(--signal-white); }
 
   /* ---------- section shell ---------- */
-  section { padding: 120px 24px; max-width: 1080px; margin: 0 auto; }
+  section { padding: 56px 24px; max-width: 1440px; margin: 0 auto; }
   .section-eyebrow {
     font-size: 13px; letter-spacing: 0.25em; color: var(--graphite-light);
     font-weight: 600; margin-bottom: 14px;
@@ -309,18 +341,18 @@
     font-size: clamp(32px, 5vw, 52px);
     line-height: 1.05;
     margin: 0 0 28px;
-    max-width: 720px;
+    max-width: none;
   }
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* ---------- the show / segment chips ---------- */
-  .show-copy { max-width: 680px; font-size: 17px; line-height: 1.75; color: #d8d8dc; margin-bottom: 56px; }
+  .show-copy { max-width: 1000px; font-size: 17px; line-height: 1.75; color: #d8d8dc; margin-bottom: 28px; }
 
   .segments-wrap { position: relative; }
   .segment-flow { position: relative; height: 22px; margin-bottom: 14px; }
   .segment-flow .flow-line {
-    position: absolute; top: 50%; left: 16.7%; right: 16.7%; height: 2px;
+    position: absolute; top: 50%; left: 0; right: 0; height: 2px;
     transform: translateY(-50%);
     background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
     background-size: 220% 100%;
@@ -336,7 +368,7 @@
     50%  { background-position: 0% 0; }
     100% { background-position: 100% 0; }
   }
-  .segments { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .segments { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
   .segment-card {
     background: var(--stage-black-raised);
     border: 1px solid var(--border-quiet);
@@ -377,6 +409,7 @@
     border-radius: 50%; background: var(--stage-black); border: 2px solid var(--signal-white);
   }
   .cue-time { font-size: 13px; color: var(--graphite-light); margin-bottom: 4px; }
+  .rundown-note { margin-top: 20px; font-size: 13.5px; color: var(--graphite-light); }
   .cue-label { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; margin-bottom: 6px; }
   .cue-label.mainstage { color: var(--tungsten-amber); }
   .cue-label.backstage { color: var(--data-cyan); }
@@ -384,10 +417,10 @@
   .cue-desc { font-size: 15.5px; color: #d8d8dc; }
 
   /* ---------- guests ---------- */
-  .guest-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .guest-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; align-items: start; }
   .guest-tag {
     position: relative;
-    display: flex; align-items: center; gap: 12px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px;
     background: var(--stage-black-raised); border: 1px solid var(--border-quiet);
     border-radius: 8px; padding: 14px 16px;
     cursor: default;
@@ -402,23 +435,18 @@
   }
   .guest-tag span { font-size: 14px; font-weight: 500; color: #d8d8dc; }
   .guest-tooltip {
-    position: absolute; left: 0; right: 0; bottom: calc(100% + 10px);
-    background: var(--stage-black); border: 1px solid var(--border-quiet);
-    border-radius: 8px; padding: 12px 14px;
+    flex: 0 0 100%;
     font-size: 13px; line-height: 1.5; color: #d8d8dc;
-    opacity: 0; visibility: hidden; transform: translateY(4px);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    z-index: 5;
-    pointer-events: none;
+    max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
   }
   .guest-tag:hover .guest-tooltip,
   .guest-tag:focus-within .guest-tooltip {
-    opacity: 1; visibility: visible; transform: translateY(0);
+    max-height: 140px; opacity: 1; margin-top: 12px;
   }
 
   /* ---------- watch / video embeds ---------- */
-  .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+  .video-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
   .video-card {
     background: var(--stage-black-raised);
     border: 1px solid var(--border-quiet);
@@ -442,16 +470,20 @@
   .video-meta { padding: 16px 18px 18px; }
 
   /* ---------- watch hero player ---------- */
-  .watch-hero { max-width: 760px; margin: 0 auto; }
-  .watch-hero .video-meta { padding: 18px 22px 24px; }
-  .watch-hero .video-title { font-size: 18px; }
+  /* tiles sit left-aligned in a grid: two or more across on desktop, more rows as videos are added */
+  .watch-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
+  .watch-hero { margin: 0; }
+  .watch-hero .video-meta { padding: 14px 16px 18px; }
+  .watch-hero .video-title { font-size: 16px; }
+  .watch-hero .play-btn { width: 48px; height: 48px; }
+  .watch-hero .play-btn svg { width: 18px; height: 18px; }
   .watch-segments {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    padding: 20px 20px 16px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+    padding: 14px 14px 12px;
   }
   .watch-seg-btn {
-    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em;
-    padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border-quiet);
+    font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em;
+    padding: 7px 11px; border-radius: 999px; border: 1px solid var(--border-quiet);
     background: transparent; color: var(--graphite-light); cursor: pointer;
     transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
   }
@@ -489,7 +521,7 @@
     font-size: 11.5px; color: var(--graphite-light); line-height: 1.4;
     margin: 2px 0 14px; font-style: italic;
   }
-  .merch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  .merch-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
   .merch-card {
     background: var(--stage-black-raised);
     border: 1px solid var(--border-quiet);
@@ -510,7 +542,7 @@
     position: absolute; inset: 0; z-index: 1;
     width: 100%; height: 100%;
     object-fit: contain;
-    padding: 24px;
+    padding: 16px;
     box-sizing: border-box;
     transition: opacity 0.4s ease;
   }
@@ -599,7 +631,7 @@
   .merch-btn:hover { border-color: var(--signal-white); background: rgba(245,245,240,0.06); }
 
   /* ---------- listen ---------- */
-  .listen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .listen-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
   .platform-btn {
     display: flex; align-items: center; justify-content: space-between;
     padding: 20px 22px; border-radius: 10px;
@@ -701,20 +733,145 @@
   }
 
   @media (max-width: 720px) {
-    .segments { grid-template-columns: 1fr; }
+    .hero { --hero-left: 20px; }
+    .bracket.br { right: 20px; }
     .segment-flow { display: none; }
-    section { padding: 84px 20px; }
-    .show-in-hero { margin-top: 64px; padding: 0 20px; }
-    .hero-tagline { letter-spacing: 0.18em; font-size: 17px; }
-    .merch-grid { grid-template-columns: 1fr; }
+    section { padding: 56px 20px; }
+    .show-in-hero { margin-top: 56px; padding: 0 20px; }
+    .hero-lockup { --track: 0.1em; font-size: clamp(11px, 3.4vw, 14px); }
+    .hero-tagline { white-space: nowrap; }
     .nav { padding: 16px 18px; }
     .video-modal { padding: 12px; }
     .contact-block { padding: 28px 22px; }
   }
 
   @media (max-width: 1024px) and (min-width: 721px) {
-    .segments { grid-template-columns: repeat(2, 1fr); }
-    section { padding: 96px 24px; }
+    section { padding: 56px 24px; }
+  }
+
+
+  /* ---------- 12-column grid: every grid above is 12 columns; children span the counts below ---------- */
+  .segments > *, .video-grid > * { grid-column: span 4; }
+  .guest-grid > *, .watch-grid > * { grid-column: span 3; }
+  .listen-grid > * { grid-column: span 4; }
+  .sf-items > * { grid-column: span 6; }
+  .merch-grid > * { grid-column: span 3; }
+  @media (max-width: 1024px) {
+    .segment-flow { display: none; }
+    .segments > *, .video-grid > *, .watch-grid > *, .guest-grid > * { grid-column: span 6; }
+    .listen-grid > *, .merch-grid > * { grid-column: span 6; }
+  }
+  @media (max-width: 720px) {
+    .segments > *, .video-grid > *, .watch-grid > *, .listen-grid > *, .sf-items > * { grid-column: span 12; }
+    .guest-grid > *, .merch-grid > * { grid-column: span 6; }
+    .merch-grid { gap: 14px; }
+    .merch-meta { padding: 12px 12px 16px; }
+  }
+
+  /* ---------- signal flow daily ---------- */
+  .sf-lede { max-width: 1000px; font-size: 17px; line-height: 1.75; color: #d8d8dc; margin: 0 0 28px; }
+  .sf-issue {
+    position: relative;
+    background: var(--stage-black-raised);
+    border: 1px solid var(--border-quiet);
+    border-radius: 10px;
+    padding: 28px 28px 24px;
+    overflow: hidden;
+  }
+  .sf-issue::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
+  }
+  .sf-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--border-quiet);
+  }
+  .sf-kind { font-size: 11.5px; font-weight: 700; letter-spacing: 0.18em; color: var(--graphite-light); }
+  .sf-nav { display: flex; align-items: center; gap: 10px; }
+  .sf-date { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--signal-white); }
+  .sf-step {
+    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em;
+    padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border-quiet);
+    background: transparent; color: var(--graphite-light); cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .sf-step:hover:not(:disabled) { border-color: var(--signal-white); color: var(--signal-white); }
+  .sf-step:disabled { opacity: 0.35; cursor: default; }
+  .sf-jump { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px; margin: -6px 0 24px; }
+  .sf-jump-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--graphite-light); }
+  .sf-date-input {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 7px 14px; border-radius: 999px;
+    border: 1px solid var(--border-quiet); background: transparent; color: var(--signal-white);
+    color-scheme: dark; cursor: pointer; transition: border-color 0.2s ease;
+  }
+  .sf-date-input:hover, .sf-date-input:focus-visible { border-color: var(--signal-white); outline: none; }
+  .sf-note { font-size: 12.5px; color: var(--tungsten-amber); }
+  .sf-headline { font-size: clamp(26px, 3.6vw, 38px); line-height: 1.08; margin: 0 0 12px; }
+  .sf-topline { font-size: 17px; line-height: 1.75; color: #d8d8dc; margin: 0 0 28px; max-width: 1000px; }
+  .sf-items { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+  .sf-item {
+    background: var(--stage-black);
+    border: 1px solid var(--border-quiet);
+    border-radius: 10px;
+    padding: 22px 22px 20px;
+    transition: border-color 0.2s ease;
+  }
+  .sf-item:hover, .sf-item:focus-within { border-color: var(--signal-white); }
+  .sf-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .sf-item .segment-chip { margin-bottom: 0; }
+  .sf-status {
+    display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border-quiet); color: var(--graphite-light);
+  }
+  .sf-item h3 { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 600; margin: 0 0 4px; line-height: 1.35; }
+  .sf-vendor { font-size: 13px; color: var(--graphite-light); margin-bottom: 10px; }
+  .sf-brief { font-size: 14.5px; line-height: 1.6; color: #d8d8dc; margin: 0; }
+  .sf-spec { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; color: var(--graphite-light); margin: 10px 0 0; }
+  .sf-item details { margin-top: 14px; border-top: 1px solid var(--border-quiet); padding-top: 12px; }
+  .sf-item summary {
+    cursor: pointer; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--signal-white);
+    list-style: none;
+  }
+  .sf-item summary::-webkit-details-marker { display: none; }
+  .sf-item summary::before { content: "+ "; color: var(--tungsten-amber); }
+  .sf-item details[open] summary::before { content: "– "; }
+  .sf-detail { margin: 12px 0 0; }
+  .sf-detail dt { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--graphite-light); margin-top: 10px; }
+  .sf-detail dd { margin: 4px 0 0; font-size: 14.5px; line-height: 1.6; color: #d8d8dc; }
+  .sf-sources { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 14px; font-size: 13px; }
+  .sf-sources a { color: var(--graphite-light); text-decoration: none; border-bottom: 1px solid var(--border-quiet); }
+  .sf-sources a:hover { color: var(--signal-white); border-color: var(--signal-white); }
+  .sf-coming { margin-top: 32px; }
+  .sf-coming-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.18em; color: var(--graphite-light); margin-bottom: 12px; }
+  .sf-coming ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border-quiet); }
+  .sf-coming li {
+    display: grid; grid-template-columns: 210px 1fr; gap: 6px 18px;
+    padding: 12px 0; border-bottom: 1px solid var(--border-quiet); font-size: 14.5px;
+  }
+  .sf-coming time { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--tungsten-amber); }
+  .sf-coming .place { color: var(--graphite-light); }
+  .sf-coming .sf-tag { font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--data-cyan); border: 1px solid var(--border-quiet); border-radius: 999px; padding: 1px 8px; margin-right: 6px; vertical-align: 1px; }
+  .sf-coming .sf-link { color: var(--signal-white); text-decoration: none; border-bottom: 1px solid var(--border-quiet); }
+  .sf-coming .sf-link:hover { color: var(--tungsten-amber); border-bottom-color: var(--tungsten-amber); }
+  .sf-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
+  .sf-tab {
+    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em;
+    padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border-quiet);
+    background: transparent; color: var(--graphite-light); cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .sf-tab:hover { border-color: var(--signal-white); color: var(--signal-white); }
+  .sf-tab.active { background: rgba(255,156,61,0.15); border-color: var(--tungsten-amber); color: var(--tungsten-amber); }
+  .sf-bm { margin-top: 56px; }
+  .sf-bm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .sf-bm h3.sf-bm-title { font-size: clamp(22px, 3vw, 30px); line-height: 1.1; margin: 0; }
+  .sf-bm-note { font-size: 12.5px; color: var(--graphite-light); }
+  .sf-when { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--tungsten-amber); letter-spacing: 0.04em; }
+  .sf-foot { margin-top: 22px; font-size: 12.5px; color: var(--graphite-light); }
+  .sf-empty { color: var(--graphite-light); font-size: 15px; }
+  @media (max-width: 720px) {
+    .sf-issue { padding: 22px 18px 20px; }
+    .sf-coming li { grid-template-columns: 1fr; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -743,8 +900,9 @@
       <a href="#show">The Show</a>
       <a href="#rundown">Inside an Episode</a>
       <a href="#guests">Who's On</a>
-      <a href="#watch">Watch</a>
       <a href="#listen">Listen</a>
+      <a href="#watch">Watch</a>
+      <a href="#signal-flow">Signal Flow Daily</a>
       <a href="#merch">Merch</a>
       <a href="/contact">Contact</a>
     </div>
@@ -783,8 +941,9 @@
   <a href="#show">The Show</a>
   <a href="#rundown">Inside an Episode</a>
   <a href="#guests">Who's On</a>
-  <a href="#watch">Watch</a>
   <a href="#listen">Listen</a>
+  <a href="#watch">Watch</a>
+      <a href="#signal-flow">Signal Flow Daily</a>
   <a href="#merch">Merch</a>
   <a href="/contact">Contact</a>
   <div class="footer-social" style="margin-top: 32px;">
@@ -824,7 +983,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
-    <svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
           <rect width="1200" height="300" fill="white"/>
@@ -833,12 +992,14 @@
           <rect x="0" y="224" width="1200" height="13" fill="black"/>
         </mask>
       </defs>
-      <text x="600" y="220" text-anchor="middle" font-family="Impact, Haettenschweiler, sans-serif"
+      <text x="0" y="220" text-anchor="start" font-family="Impact, Haettenschweiler, sans-serif"
             font-size="200" fill="#F5F5F0" mask="url(#stencilMask)">PROAV</text>
     </svg>
   </div>
-  <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
-  <div class="signal-line-css" aria-hidden="true"></div>
+  <div class="hero-lockup">
+    <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
+    <div class="signal-line-css" aria-hidden="true"></div>
+  </div>
   <p class="hero-hook">
     Real gear, real crews, real conversations — from the rig on stage to the
     cloud infrastructure taking live production remote. Audio &amp; video,
@@ -905,21 +1066,22 @@
       <div class="cue-desc">The best moment of the conversation, no setup needed.</div>
     </div>
     <div class="cue">
-      <div class="cue-time mono">3:00</div>
+      <div class="cue-time mono">~3:00</div>
       <div class="cue-label mainstage">MAINSTAGE</div>
       <div class="cue-desc">A focused demo of the gear driving the show — not the full rig.</div>
     </div>
     <div class="cue">
-      <div class="cue-time mono">31:00</div>
+      <div class="cue-time mono">~31:00</div>
       <div class="cue-label backstage">BACKSTAGE</div>
       <div class="cue-desc">The real conversation — decisions, pressure, and what almost went wrong.</div>
     </div>
     <div class="cue">
-      <div class="cue-time mono">58:00</div>
+      <div class="cue-time mono">~58:00</div>
       <div class="cue-label neutral">CLOSE</div>
       <div class="cue-desc">One takeaway, and a look at what's next.</div>
     </div>
   </div>
+  <p class="rundown-note reveal">A typical rundown. Times change from episode to episode.</p>
 </section>
 
 <section id="guests">
@@ -1025,9 +1187,21 @@
   </div>
 </section>
 
+<section id="listen">
+  <div class="section-eyebrow reveal">LISTEN</div>
+  <h2 class="section-title display reveal">Wherever you already are.</h2>
+  <div class="listen-grid reveal">
+    <a href="#" class="platform-btn"><span>Apple Podcasts</span><span class="arrow">&rarr;</span></a>
+    <a href="#" class="platform-btn"><span>Spotify</span><span class="arrow">&rarr;</span></a>
+    <a href="#" class="platform-btn"><span>YouTube Channel</span><span class="arrow">&rarr;</span></a>
+  </div>
+</section>
+
 <section id="watch">
   <div class="section-eyebrow reveal">WATCH</div>
   <h2 class="section-title display reveal">The gear, on screen.</h2>
+  <!-- Each .video-card.watch-hero is one tile. Copy a whole tile to add a video; the grid fills across, then down. -->
+  <div class="watch-grid">
   <div class="video-card watch-hero reveal">
     <div class="watch-segments" role="tablist" aria-label="Jump to episode segment">
       <button type="button" class="watch-seg-btn" data-seg="mainstage" data-start="180" onclick="setWatchSegment(this)">MAINSTAGE</button>
@@ -1048,6 +1222,7 @@
       <div class="video-eyebrow backstage" id="watchActiveLabel">BACKSTAGE</div>
       <div class="video-title">The Art of Cutting Live</div>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1078,15 +1253,23 @@
   </div>
 </div>
 
-<section id="listen">
-  <div class="section-eyebrow reveal">LISTEN</div>
-  <h2 class="section-title display reveal">Wherever you already are.</h2>
-  <div class="listen-grid reveal">
-    <a href="#" class="platform-btn"><span>Apple Podcasts</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>Spotify</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>YouTube Channel</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>RSS Feed</span><span class="arrow">&rarr;</span></a>
+<section id="signal-flow">
+  <div class="section-eyebrow reveal">SIGNAL FLOW DAILY</div>
+  <h2 class="section-title display reveal">What changed in live production.</h2>
+  <p class="sf-lede reveal">LED processing, switching, replay and venue-to-cloud news, sourced and checked every morning.</p>
+  <!-- Filled from the Signal Flow feed (falls back to /signal-flow/issues.json) by the Signal Flow script near the bottom of this file. -->
+  <div class="sf-issue" id="sfIssue" aria-live="polite">
+    <p class="sf-empty">Loading today's briefing…</p>
   </div>
+  <div class="sf-bm" id="sfVendors" hidden>
+    <div class="sf-bm-head">
+      <h3 class="sf-bm-title display">Latest from the vendors.</h3>
+      <div class="sf-bm-note">Four newest per tab. Dates are as published by the source where known.</div>
+    </div>
+    <div class="sf-tabs" id="sfTabs" role="tablist" aria-label="Choose a vendor"></div>
+    <div class="sf-items" id="sfBmItems"></div>
+  </div>
+  <noscript><p class="sf-empty">Turn on JavaScript to read Signal Flow Daily.</p></noscript>
 </section>
 
 <section id="merch">
@@ -1342,13 +1525,14 @@
     document.body.style.overflow = 'hidden';
   }
   function setWatchSegment(btn) {
-    document.querySelectorAll('.watch-seg-btn').forEach(b => b.classList.remove('active'));
+    const card = btn.closest('.watch-hero') || document;
+    card.querySelectorAll('.watch-seg-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     const seg = btn.getAttribute('data-seg');
     const start = btn.getAttribute('data-start');
-    const embed = document.querySelector('.watch-hero .video-embed');
+    const embed = card.querySelector('.video-embed');
     if (embed) embed.setAttribute('data-start', start);
-    const label = document.getElementById('watchActiveLabel');
+    const label = card.querySelector('.video-eyebrow') || document.getElementById('watchActiveLabel');
     if (label) {
       label.textContent = seg.toUpperCase();
       label.className = 'video-eyebrow ' + seg;
@@ -1470,8 +1654,9 @@
       index.push({ cat: 'Section', title: 'The Show', snippet: 'What ProAV covers, episode to episode.', el: document.getElementById('show') });
       index.push({ cat: 'Section', title: 'Inside an Episode', snippet: 'A real rundown, cue by cue.', el: document.getElementById('rundown') });
       index.push({ cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', el: document.getElementById('guests') });
-      index.push({ cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
       index.push({ cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', el: document.getElementById('listen') });
+      index.push({ cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
+      index.push({ cat: 'Section', title: 'Signal Flow Daily', snippet: 'Daily live production and ProAV news.', el: document.getElementById('signal-flow') });
       index.push({ cat: 'Section', title: 'Merch', snippet: 'Wear the signal.', el: document.getElementById('merch') });
 
       // show segments (Mainstage / Backstage / Cloud cards)
@@ -1515,6 +1700,13 @@
       document.querySelectorAll('.video-title').forEach(t => {
         const card = t.closest('.video-card');
         if (card) index.push({ cat: 'Watch', title: t.textContent.trim(), snippet: 'Watch this episode segment.', el: card });
+      });
+
+      // signal flow items
+      document.querySelectorAll('.sf-item').forEach(item => {
+        const h3 = item.querySelector('h3');
+        const brief = item.querySelector('.sf-brief');
+        if (h3) index.push({ cat: 'Signal Flow', title: h3.textContent.trim(), snippet: brief ? brief.textContent.trim() : '', el: item });
       });
 
       // listen platforms
@@ -1672,6 +1864,165 @@
         closeSiteSearchImpl();
       }
     });
+  })();
+</script>
+<script>
+  /* ---------- Signal Flow Daily ----------
+     Reads the live feed (see FEED_URL below), falling back to /signal-flow/issues.json
+     ({ updated, issues: [...] }, newest first). */
+  (function () {
+    const box = document.getElementById('sfIssue');
+    if (!box) return;
+    const BEATS = {
+      led:       { label: 'LED / PROCESSING', seg: 'mainstage' },
+      switching: { label: 'SWITCHING',        seg: 'mainstage' },
+      replay:    { label: 'REPLAY / RECORD',  seg: 'mainstage' },
+      cloud:     { label: 'IP / CLOUD',       seg: 'cloud' },
+      field:     { label: 'FIELD',            seg: 'backstage' },
+      graphics:  { label: 'MOTION GRAPHICS',  seg: 'mainstage' }
+    };
+    // Blackmagic Fusion (and Fusion Studio) items are always tagged MOTION GRAPHICS
+    const beatOf = it => (/\bfusion\b/i.test(it.title || '') && /blackmagic/i.test((it.vendor || '') + ' ' + (it.title || ''))) ? 'graphics' : it.beat;
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
+    const fmt = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
+    let issues = [], idx = 0, jumpNote = '';
+    const fmtShort = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
+    // jump to a specific date; if there is no issue that day, show the newest one before it
+    function jumpTo(v) {
+      if (!v) return;
+      let i = issues.findIndex(it => it.date === v);
+      jumpNote = '';
+      if (i < 0) {
+        i = issues.findIndex(it => it.date < v);
+        if (i < 0) i = issues.length - 1;
+        jumpNote = 'No issue on ' + fmtShort(v) + ' — showing ' + fmtShort(issues[i].date);
+      }
+      idx = i; render();
+    }
+
+    function itemHtml(it, when) {
+      const b = BEATS[beatOf(it)] || BEATS.field;
+      let h = '<article class="sf-item"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
+        (when ? '<span class="sf-when">' + esc(when) + '</span>' : '') +
+        (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
+        (it.price ? '<span class="sf-status">' + esc(it.price) + '</span>' : '') + '</div>' +
+        '<h3>' + esc(it.title) + '</h3><div class="sf-vendor">' + esc(it.vendor) + '</div>' +
+        '<p class="sf-brief">' + esc(it.brief) + '</p>' +
+        (it.spec ? '<p class="sf-spec">' + esc(it.spec) + '</p>' : '');
+      if (it.what || it.why || it.watch) {
+        h += '<details><summary>WHAT \u00b7 WHY \u00b7 WATCH</summary><dl class="sf-detail">' +
+          (it.what ? '<dt>WHAT</dt><dd>' + esc(it.what) + '</dd>' : '') +
+          (it.why ? '<dt>WHY</dt><dd>' + esc(it.why) + '</dd>' : '') +
+          (it.watch ? '<dt>WATCH</dt><dd>' + esc(it.watch) + '</dd>' : '') + '</dl></details>';
+      }
+      if (it.sources && it.sources.length) {
+        h += '<div class="sf-sources">' + it.sources.map(s => '<a href="' + esc(safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.label || 'Source') + ' \u2197</a>').join('') + '</div>';
+      }
+      return h + '</article>';
+    }
+
+    /* Latest by vendor: tabs for Blackmagic, Barco, Analog Way, PixelHue (four cards each).
+       Items come from /signal-flow/vendors.json (curated, dated by the source) merged with any briefing item
+       whose lead vendor matches. Duplicates by title are dropped, curated items win. */
+    const VENDORS = [
+      { key: 'blackmagic', label: 'BLACKMAGIC', test: it => /^\s*blackmagic/i.test(it.vendor || '') || /blackmagic/i.test(it.title || '') },
+      { key: 'barco',      label: 'BARCO',      test: it => /^\s*barco/i.test(it.vendor || '') || /\bbarco\b/i.test(it.title || '') },
+      { key: 'analogway',  label: 'ANALOG WAY', test: it => /^\s*analog ?way/i.test(it.vendor || '') || /aquilon|analog ?way/i.test(it.title || '') },
+      { key: 'pixelhue',   label: 'PIXELHUE',   test: it => /^\s*pixel ?hue/i.test(it.vendor || '') || /pixelhue|\b(q8|p80|p20)\b/i.test(it.title || '') }
+    ];
+    const LIMIT = 4;
+    let vendorData = {}, activeVendor = null;
+    const keyOf = t => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+    function vendorItems(v) {
+      // order: pinned (owner-curated, always first) > dated items newest first > curated fillers (only until the tab holds LIMIT cards)
+      const seen = new Set(), pin = [], out = [], fill = [];
+      const add = (arr, it, date, when) => {
+        const k = keyOf(it.title); if (seen.has(k)) return;
+        seen.add(k); arr.push({ it: it, date: date || '', when: when || (date ? fmt(date) : '') });
+      };
+      const vd = vendorData[v.key] || {}, cur = vd.curated || [];
+      cur.filter(c => c.pinned).forEach(c => add(pin, c, c.date, c.when));
+      (vd.items || []).forEach(it => add(out, it, it.date, it.when));
+      // a vendor flagged "direct" in vendors.json shows only its own curated list, never briefing items from trade coverage
+      if (!vd.direct) issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(out, it, iss.date); }));
+      out.sort((a, b) => a.date < b.date ? 1 : -1);
+      cur.filter(c => !c.pinned).forEach(c => add(fill, c, c.date, c.when));
+      return pin.concat(out, fill).slice(0, LIMIT);
+    }
+
+    function renderVendors() {
+      const wrap = document.getElementById('sfVendors'), grid = document.getElementById('sfBmItems'), tabs = document.getElementById('sfTabs');
+      if (!wrap || !grid || !tabs) return;
+      const have = VENDORS.map(v => ({ v: v, items: vendorItems(v) })).filter(x => x.items.length);
+      if (!have.length) { wrap.hidden = true; return; }
+      if (!activeVendor || !have.some(x => x.v.key === activeVendor)) activeVendor = have[0].v.key;
+      tabs.innerHTML = have.map(x => '<button type="button" role="tab" class="sf-tab' + (x.v.key === activeVendor ? ' active' : '') +
+        '" data-v="' + x.v.key + '" aria-selected="' + (x.v.key === activeVendor) + '">' + esc(x.v.label) + '</button>').join('');
+      const cur = have.find(x => x.v.key === activeVendor);
+      grid.innerHTML = cur.items.map(o => itemHtml(o.it, o.when)).join('');
+      tabs.querySelectorAll('.sf-tab').forEach(btn => btn.onclick = () => { activeVendor = btn.dataset.v; renderVendors(); });
+      wrap.hidden = false;
+    }
+
+    function render() {
+      const x = issues[idx];
+      if (!x) { box.innerHTML = '<p class="sf-empty">No briefing yet.</p>'; return; }
+      const when = x.kind === 'weekly' && x.week_start ? fmt(x.week_start) + ' – ' + fmt(x.week_end) : fmt(x.date);
+      let h = '<div class="sf-bar"><span class="sf-kind">' + (x.kind === 'weekly' ? 'WEEKLY ROUNDUP' : 'DAILY BRIEFING') + '</span>' +
+        '<div class="sf-nav">' +
+          '<button type="button" class="sf-step" id="sfOlder" ' + (idx >= issues.length - 1 ? 'disabled' : '') + ' aria-label="Previous issue">‹ PREV</button>' +
+          '<span class="sf-date">' + esc(when) + '</span>' +
+          '<button type="button" class="sf-step" id="sfNewer" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Next issue">NEXT ›</button>' +
+        '</div></div>' +
+        '<div class="sf-jump"><label class="sf-jump-label" for="sfDate">JUMP TO DATE</label>' +
+          '<input type="date" id="sfDate" class="sf-date-input" min="' + esc(issues[issues.length - 1].date) + '" max="' + esc(issues[0].date) + '" value="' + esc(x.date) + '">' +
+          '<button type="button" class="sf-step" id="sfLatest" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Jump to the latest issue">LATEST</button>' +
+          (jumpNote ? '<span class="sf-note" role="status">' + esc(jumpNote) + '</span>' : '') + '</div>' +
+        '<h3 class="sf-headline display">' + esc(x.headline) + '</h3>' +
+        '<p class="sf-topline">' + esc(x.topline) + '</p><div class="sf-items">';
+      (x.items || []).forEach(it => { h += itemHtml(it); });
+      h += '</div>';
+      if (x.watch && x.watch.length) {
+        h += '<div class="sf-coming"><div class="sf-coming-label">COMING UP</div><ul>' + x.watch.map(w =>
+          '<li><time>' + esc(w.date) + (w.end && w.end !== w.date ? ' → ' + esc(w.end) : '') + '</time>' +
+          '<div>' + (w.kind === 'class' ? '<span class="sf-tag">CLASS</span> ' : '') + '<strong>' + (w.kind === 'class' && safeUrl(w.url) !== '#' ? '<a class="sf-link" href="' + esc(safeUrl(w.url)) + '" target="_blank" rel="noopener">' + esc(String(w.name || '').replace(/^Class:\s*/, '')) + '</a>' : esc(w.name)) + '</strong>' + (w.place ? ' <span class="place">· ' + esc(w.place) + '</span>' : '') + '</div></li>').join('') + '</ul></div>';
+      }
+      h += '<div class="sf-foot">Researched and compiled daily with Claude. Check specs with the vendor before you buy.</div>';
+      box.innerHTML = h;
+      const o = document.getElementById('sfOlder'), n = document.getElementById('sfNewer');
+      if (o) o.onclick = () => { if (idx < issues.length - 1) { idx++; jumpNote = ''; render(); } };
+      if (n) n.onclick = () => { if (idx > 0) { idx--; jumpNote = ''; render(); } };
+      const l = document.getElementById('sfLatest'), dt = document.getElementById('sfDate');
+      if (l) l.onclick = () => { idx = 0; jumpNote = ''; render(); };
+      if (dt) dt.onchange = () => jumpTo(dt.value);
+    }
+
+    // Live feed (updated daily by the Signal Flow task); falls back to the
+    // copy bundled with the site if the feed can't be reached.
+    const FEED_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/issues.json';
+    const loadJson = u => fetch(u, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    // Curated vendor items (Barco, Analog Way, PixelHue): live copy from the feed, bundled copy as backup.
+    const VENDORS_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/vendors.json';
+    const loadVendors = loadJson(VENDORS_URL)
+      .catch(() => loadJson('/signal-flow/vendors.json'))
+      .then(d => {
+        (d.vendors || []).forEach(v => {
+          vendorData[v.key] = v;
+          // A vendor that isn't built in gets its own tab: give it "label" (and optionally "match", a regex tested against item vendor/title) in vendors.json.
+          if (!VENDORS.some(x => x.key === v.key) && (v.items || []).length) {
+            let re = null; try { re = v.match ? new RegExp(v.match, 'i') : null; } catch (e) {}
+            VENDORS.push({ key: v.key, label: String(v.label || v.key).toUpperCase(), test: it => !!re && (re.test(it.vendor || '') || re.test(it.title || '')) });
+          }
+        });
+      })
+      .catch(() => {});
+    loadJson(FEED_URL)
+      .catch(() => loadJson('/signal-flow/issues.json'))
+      .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); return loadVendors; })
+      .then(() => renderVendors())
+      .catch(() => { box.innerHTML = '<p class="sf-empty">Signal Flow Daily is unavailable right now.</p>'; });
   })();
 </script>
 </body>
