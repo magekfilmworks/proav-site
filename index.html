@@ -234,7 +234,7 @@
 
 <section id="guests" class="band-plain">  <div class="section-eyebrow reveal">WHO'S ON THE SHOW</div>
   <h2 class="section-title display reveal">Built by the people who run it.</h2>
-  <div class="guest-grid reveal">
+  <div class="guest-grid reveal" id="guestGrid">
     <div class="guest-tag tile" tabindex="0">
       <div class="guest-badge">AV</div><span>AV Companies</span>
       <div class="guest-tooltip">Supply and integrate the audiovisual gear the whole production runs on.</div>
@@ -332,6 +332,7 @@
       <div class="guest-tooltip">The hosts and performers the whole production is built to support.</div>
     </div>
   </div>
+  <button class="guest-toggle" type="button" id="guestToggle" aria-expanded="false" aria-controls="guestGrid">Show all roles</button>
 </section>
 
 <section id="listen" class="band-plain">  <div class="section-eyebrow reveal">LISTEN</div>
@@ -344,7 +345,7 @@
 </section>
 
 <section id="watch" class="band-plain">  <div class="section-eyebrow reveal">WATCH</div>
-  <h2 class="section-title display reveal">The gear, on screen.</h2>
+  <h2 class="section-title display reveal">ProAV Talk: The People, The Gear</h2>
   <!-- Each .video-card.watch-hero is one tile. Copy a whole tile to add a video; the grid fills across, then down. -->
   <div class="watch-grid">
   <div class="video-card watch-hero reveal">
@@ -1248,6 +1249,63 @@
     const HOLD_MS = 5000;
     setTimeout(() => { const p = v.play(); if (p && p.catch) p.catch(() => {}); check(); }, HOLD_MS);
   })();
+</script>
+
+<script>
+/* Who's On: on phones the role grid starts collapsed; the button opens it. */
+(function () {
+  const grid = document.getElementById('guestGrid');
+  const btn = document.getElementById('guestToggle');
+  if (!grid || !btn) return;
+  const count = grid.querySelectorAll('.guest-tag').length;
+  const mq = window.matchMedia('(max-width: 720px)');
+  const setH = () => grid.style.setProperty('--open-h', grid.scrollHeight + 'px');
+  const label = open => { btn.textContent = open ? 'Show fewer roles' : 'Show all ' + count + ' roles'; btn.setAttribute('aria-expanded', open); };
+  label(false);
+  let userClosed = false;
+
+  // open/close with the grid's own height transition; silent = no animation, no flash
+  const setOpen = (open, silent) => {
+    setH();
+    if (silent) grid.style.transition = 'none';
+    grid.classList.toggle('is-open', open);
+    label(open);
+    if (silent) { grid.offsetHeight; grid.style.transition = ''; }
+  };
+
+  btn.addEventListener('click', () => {
+    const open = !grid.classList.contains('is-open');
+    userClosed = !open;
+    setOpen(open);
+    if (!open) grid.closest('section').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
+
+  // phones: open when the grid scrolls into view, close once it has been scrolled past
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      const e = entries[entries.length - 1];
+      if (!mq.matches) return;
+      const isOpen = grid.classList.contains('is-open');
+      if (e.isIntersecting) {
+        if (!isOpen && !userClosed) setOpen(true);
+      } else {
+        userClosed = false;
+        if (!isOpen) return;
+        if (e.boundingClientRect.bottom <= 0) {
+          // scrolled past (it is above the screen): collapse instantly and keep the page where it is
+          const before = grid.getBoundingClientRect().height;
+          setOpen(false, true);
+          window.scrollBy(0, grid.getBoundingClientRect().height - before);
+        } else {
+          setOpen(false, true);   // scrolled back up above it
+        }
+      }
+    }, { rootMargin: '0px 0px -25% 0px' }).observe(grid);
+  }
+  window.addEventListener('resize', setH);
+  mq.addEventListener && mq.addEventListener('change', setH);
+  setH();
+})();
 </script>
 </body>
 </html>
