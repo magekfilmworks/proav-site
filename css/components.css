@@ -153,76 +153,82 @@
 /* guest */
 .guest-tag {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 12px;
-  padding: 10px 0;
+  display: grid;
+  grid-template-rows: auto auto 0fr;
+  align-content: start;
+  justify-items: start;
+  min-height: 124px;
+  padding: 24px 26px;
   cursor: default;
+  transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.4s ease,
+              transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.guest-tag:hover,
+.guest-tag:focus-within {
+  grid-template-rows: auto auto 1fr;
+  background: var(--tile-bg-hover);
+  transform: translateY(-3px);
 }
 
 .guest-badge {
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  margin-bottom: 8px;
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13.5px;
-  border: 1px solid rgba(245,245,240,0.2);
-  border-radius: 2px;
-  transition: border-color 0.2s ease;
+  font-weight: 800;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--tungsten-amber);
+}
+
+.guest-tag:nth-child(even) .guest-badge {
+  color: var(--data-cyan);
+}
+
+.guest-tag span {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  color: var(--signal-white);
 }
 
 .guest-tooltip {
-  flex: 0 0 100%;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--text-soft);
-  max-height: 0;
+  min-height: 0;
   overflow: hidden;
+  padding-top: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-soft);
   opacity: 0;
-  transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
+  transition: opacity 0.35s ease, padding-top 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .guest-tag:hover .guest-tooltip,
 .guest-tag:focus-within .guest-tooltip {
-  max-height: 140px;
+  padding-top: 12px;
   opacity: 1;
-  margin-top: 12px;
+  transition-delay: 0.08s, 0s;
 }
 
-.guest-tag:hover .guest-badge,
-.guest-tag:focus-within .guest-badge {
-  border-color: var(--tungsten-amber);
-}
-
-.guest-tag:hover .guest-tooltip {
-  transition-delay: 0.25s;
-}
-
-.guest-tag:focus-within .guest-tooltip {
-  transition-delay: 0s;
+html.is-scrolling .guest-tag:hover:not(:focus-within) {
+  grid-template-rows: auto auto 0fr;
+  background: var(--tile-bg);
+  transform: none;
 }
 
 html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
-  max-height: 0;
+  padding-top: 0;
   opacity: 0;
-  margin-top: 0;
-  transition-delay: 0s;
 }
 
-html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-badge {
-  border-color: rgba(245,245,240,0.2);
-}
-
-/* span */
-.guest-tag span {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-soft);
+@media (prefers-reduced-motion: reduce) {
+  .guest-tag,
+  .guest-tooltip {
+    transition: none;
+  }
 }
 
 /* video */
