@@ -59,7 +59,7 @@
   font-size: 17px;
   line-height: 1.6;
   color: #cfcfd4;
-  margin: 0 0 28px var(--hero-left);
+  margin: 0 0 0 var(--hero-left);
 }
 
 .hero-ctas {
