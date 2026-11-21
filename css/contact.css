@@ -1,0 +1,118 @@
+/* Contact page — the form block. Everything else on this page (nav, search, footer, section title) comes from the shared files. */
+
+.contact-page {
+  padding-top: 148px;   /* clears the fixed nav */
+}
+
+.contact-block {
+  background: var(--stage-black-raised);
+  border: 1px solid var(--border-quiet);
+  border-radius: 12px;
+  padding: 40px 36px;
+  max-width: 560px;
+}
+
+.contact-copy {
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--graphite-light);
+  margin: 0 0 24px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-honey {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.contact-submit {
+  align-self: flex-start;
+  padding: 12px 28px;
+  border-radius: 6px;
+  border: none;
+  background: var(--tungsten-amber);
+  color: var(--stage-black);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.contact-submit:hover {
+  opacity: 0.85;
+}
+
+.contact-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.contact-status {
+  font-size: 13.5px;
+  min-height: 18px;
+}
+
+.contact-status.success {
+  color: var(--data-cyan);
+}
+
+.contact-status.error {
+  color: var(--tungsten-amber);
+}
+
+.contact-fallback {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--graphite-light);
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form textarea {
+  width: 100%;
+  background: var(--stage-black);
+  border: 1px solid var(--border-quiet);
+  border-radius: 8px;
+  padding: 13px 16px;
+  color: var(--signal-white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--graphite-light);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: var(--tungsten-amber);
+}
+
+.contact-fallback a {
+  color: var(--signal-white);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-quiet);
+}
+
+.contact-fallback a:hover {
+  border-color: var(--tungsten-amber);
+}
+
+@media (max-width: 720px) {
+  .contact-block {
+    padding: 28px 22px;
+  }
+}
