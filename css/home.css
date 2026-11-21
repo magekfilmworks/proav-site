@@ -3,8 +3,6 @@
 /* hero */
 .hero {
   background: var(--stage-black);
-}
-.hero {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -32,6 +30,7 @@
   z-index: 1;
   align-self: flex-start;
   margin-left: var(--hero-left);
+  width: min(1392px, calc(100% - var(--hero-left) - 24px));
 }
 
 .hero-lockup {
@@ -69,11 +68,6 @@
   align-self: flex-start;
   margin-left: var(--hero-left);
   width: calc(100% - var(--hero-left) - 24px);
-}
-
-.hero-word {
-  width: min(1392px, calc(100% - var(--hero-left) - 24px));
-  position: relative;
 }
 
 .hero-word-video {
@@ -269,11 +263,6 @@
   grid-column: span 3;
 }
 
-/* place */
-.sf-coming .place {
-  color: var(--graphite-light);
-}
-
 /* video */
 .hero-word-video video.hero-intro {
   z-index: 2;
@@ -356,6 +345,11 @@
   .guest-grid > *,
   .merch-grid > * {
     grid-column: span 6;
+  }
+
+  /* watch: the episode card fills the width on phones */
+  .watch-grid > * {
+    grid-column: span 12;
   }
 }
 
