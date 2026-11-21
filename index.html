@@ -333,7 +333,6 @@
       <div class="guest-tooltip">The hosts and performers the whole production is built to support.</div>
     </div>
   </div>
-  <button class="guest-toggle" type="button" id="guestToggle" aria-expanded="false" aria-controls="guestGrid">Show all roles</button>
 </section>
 
 <section id="listen" class="band-plain">  <div class="section-eyebrow reveal">LISTEN</div>
@@ -1079,42 +1078,85 @@
 </script>
 
 <script>
-/* Who's On: on phones the grid starts with four roles showing; the visitor taps to see the rest. */
+/* Who's On flip board: as the visitor scrolls down, the grid opens one row at a time, each tile flipping down from its top edge;
+   scrolling back up folds the rows closed again. The first row is always showing. Works on every screen size. */
 (function () {
   const grid = document.getElementById('guestGrid');
-  const btn = document.getElementById('guestToggle');
-  if (!grid || !btn) return;
-  const count = grid.querySelectorAll('.guest-tag').length;
-  const mq = window.matchMedia('(max-width: 720px)');
-  const SHOWN = 4;   // roles visible while collapsed
-  const setH = () => {
-    grid.style.setProperty('--open-h', grid.scrollHeight + 'px');
-    const tiles = grid.querySelectorAll('.guest-tag');
-    const last = tiles[Math.min(SHOWN, tiles.length) - 1];
-    if (last) grid.style.setProperty('--closed-h',
-      Math.ceil(last.getBoundingClientRect().bottom - grid.getBoundingClientRect().top + 4 - (parseFloat(getComputedStyle(grid).paddingTop) || 0) * 0) + 'px');
-  };
-  const label = open => { btn.textContent = open ? 'Show fewer roles' : 'Show all ' + count + ' roles'; btn.setAttribute('aria-expanded', open); };
-  label(false);
+  if (!grid) return;
+  const tiles = Array.from(grid.querySelectorAll('.guest-tag'));
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const phone = window.matchMedia('(max-width: 720px)');
+  let STEP = 170;      // pixels of scrolling it takes to open one row (smaller on phones, where rows are shorter)
+  let GAP = 24;        // space between rows, read from the grid's own row gap
+  let cols = 1, rows = 1, rowH = [], P = 1, raf = 0, released = true;
 
-  // open/close with the grid's own height transition; silent = no animation, no flash
-  const setOpen = (open, silent) => {
-    setH();
-    if (silent) grid.style.transition = 'none';
-    grid.classList.toggle('is-open', open);
-    label(open);
-    if (silent) { grid.offsetHeight; grid.style.transition = ''; }
-  };
+  const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+  const ease = x => x * x * (3 - 2 * x);
 
-  btn.addEventListener('click', () => {
-    const open = !grid.classList.contains('is-open');
-    setOpen(open);
-    if (!open) grid.closest('section').scrollIntoView({ block: 'start', behavior: 'smooth' });
-  });
-
-  window.addEventListener('resize', setH);
-  mq.addEventListener && mq.addEventListener('change', setH);
-  setH();
+  function clearInline() {
+    grid.style.gridTemplateRows = '';
+    tiles.forEach(t => { t.style.rotate = ''; t.style.opacity = ''; t.style.visibility = ''; t.style.pointerEvents = ''; });
+  }
+  function release() {
+    if (released) return;
+    released = true; grid.classList.remove('flip-on'); clearInline();
+  }
+  // read the natural row heights (grid must be in its plain state)
+  function measure() {
+    const wasReleased = released;
+    grid.classList.remove('flip-on'); clearInline();
+    STEP = phone.matches ? 110 : 170;
+    GAP = parseFloat(getComputedStyle(grid).rowGap) || 24;
+    grid.style.setProperty('--flip-gap', GAP + 'px');
+    const top0 = tiles[0].offsetTop;
+    cols = Math.max(1, tiles.filter(t => t.offsetTop === top0).length);
+    rows = Math.ceil(tiles.length / cols);
+    rowH = [];
+    for (let r = 0; r < rows; r++) {
+      rowH.push(Math.max.apply(null, tiles.slice(r * cols, r * cols + cols).map(t => t.offsetHeight)));
+    }
+    if (!wasReleased) { grid.classList.add('flip-on'); }
+  }
+  function target() {
+    const s = window.innerHeight * 0.72 - grid.getBoundingClientRect().top;   // how far the grid top has climbed past 72% of the screen
+    return clamp(1 + s / STEP, 1, rows);
+  }
+  function render() {
+    if (P >= rows - 0.001) { release(); return; }
+    if (released) { measure(); released = false; grid.classList.add('flip-on'); }
+    grid.style.gridTemplateRows = rowH.map((h, i) => ((h + GAP) * clamp(P - i, 0, 1)) + 'px').join(' ');
+    tiles.forEach((t, k) => {
+      const r = Math.floor(k / cols), c = k % cols;
+      const e = ease(clamp((clamp(P - r, 0, 1) - c * 0.07) / (1 - 0.07 * (cols - 1)), 0, 1));
+      t.style.rotate = e >= 1 ? '' : '1 0 0 ' + (-(1 - e) * 88).toFixed(1) + 'deg';
+      t.style.opacity = e >= 1 ? '' : e.toFixed(3);
+      t.style.visibility = e <= 0 ? 'hidden' : '';
+      t.style.pointerEvents = e < 0.6 ? 'none' : '';
+    });
+  }
+  function tick() {
+    raf = 0;
+    const T = target();
+    P += (T - P) * 0.16;
+    if (Math.abs(T - P) < 0.003) P = T;
+    render();
+    if (P !== T) raf = requestAnimationFrame(tick);
+  }
+  function kick() { if (!raf && active()) raf = requestAnimationFrame(tick); }
+  function active() { return !calm.matches; }
+  function setup() {
+    if (!active()) { release(); return; }
+    measure();
+    P = target();
+    released = true;       // let render() re-enter flip mode if needed
+    render();
+  }
+  window.addEventListener('scroll', kick, { passive: true });
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(setup, 150); });
+  phone.addEventListener && phone.addEventListener('change', setup);
+  calm.addEventListener && calm.addEventListener('change', setup);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(setup);
+  setup();
 })();
 </script>
 </body>

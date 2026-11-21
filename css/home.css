@@ -345,53 +345,23 @@
   }
 }
 
-/* who's on: the toggle only exists on phones */
-.guest-toggle {
-  display: none;
+/* who's on: scroll flip-board, on every screen size. The grid opens row by row as you scroll down (each role tile flips down from
+   its top edge) and folds back up as you scroll up. Script adds .flip-on only while some rows are still closed; once all are open
+   the grid is plain again. --flip-gap is the grid's own row gap, read by the script. */
+.guest-grid.flip-on {
+  row-gap: 0;
+  margin-bottom: calc(var(--flip-gap, 24px) * -1);
+  perspective: 1400px;
+  perspective-origin: 50% 0;
+}
+
+.guest-grid.flip-on > .guest-tag {
+  margin-bottom: var(--flip-gap, 24px);
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
 }
 
 @media (max-width: 720px) {
-  /* who's on: collapsed until the button is tapped */
-  .guest-grid {
-    margin-top: -6px;
-    padding-top: 6px;
-    max-height: var(--closed-h, 300px);
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(#000 94%, transparent);
-    mask-image: linear-gradient(#000 94%, transparent);
-    transition: max-height 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .guest-grid.is-open {
-    max-height: var(--open-h, 4000px);
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
-
-  .guest-toggle {
-    display: block;
-    width: 100%;
-    margin-top: 20px;
-    padding: 16px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 20px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--signal-white);
-    background: var(--tile-bg);
-    border: 0;
-    border-radius: 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .guest-toggle:hover,
-  .guest-toggle:focus-visible {
-    background: var(--tile-bg-hover);
-    color: var(--tungsten-amber);
-  }
-
   /* hero */
   .hero {
     --hero-left: 20px;
