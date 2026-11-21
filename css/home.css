@@ -31,6 +31,8 @@
   align-self: flex-start;
   margin-left: var(--hero-left);
   width: min(1392px, calc(100% - var(--hero-left) - 24px));
+  color: var(--signal-white);   /* the cycle tints the wordmark: white -> amber -> cyan */
+  transition: color 1.4s ease-in-out;
 }
 
 .hero-lockup {
@@ -81,7 +83,7 @@
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transition: opacity 1.4s ease-in-out;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   backface-visibility: hidden;
@@ -93,12 +95,6 @@
 }
 
 /* svg */
-/* the wordmark takes its colour from .hero-word, so the cycle can tint it white -> amber -> cyan */
-.hero-word {
-  color: var(--signal-white);
-  transition: color 0.6s ease;
-}
-
 .hero-word.tint-amber {
   color: var(--tungsten-amber);
 }
@@ -112,6 +108,7 @@
   height: auto;
   display: block;
   margin: 0;
+  transition: opacity 1.4s ease-in-out;
 }
 
 .watch-hero .play-btn svg {
@@ -238,42 +235,44 @@
   grid-column: span 12;   /* each video fills its half of the pair */
 }
 
+/* the audio slot is built like the video card beside it: tags, a solid media block, then the caption */
 .audio-slot {
-  padding: 20px;
+  min-width: 0;   /* a long title must wrap rather than stretch the grid column */
+}
+
+/* the holding graphic inside an empty audio or video block */
+.slot-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.audio-embed {
+  position: relative;
+  width: 100%;
+  min-height: 175px;        /* the height an Apple Podcasts player takes */
+  background: #000;
+  display: block;
 }
 
 .audio-embed iframe {
   display: block;
   width: 100%;
+  height: 175px;
   border: 0;
 }
 
-/* placeholder blocks, shown until the real player or video is dropped in */
-.audio-placeholder,
+/* an empty slot is just the solid block — no dashed outline, the caption says what goes there */
 .video-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  min-height: 140px;
-  border: 1px dashed var(--border-quiet);
-  color: var(--graphite-light);
-  font-size: 15px;
+  cursor: default;
 }
 
-.video-placeholder {
-  min-height: 0;
-  padding-top: 56.25%;   /* holds the 16:9 shape the real video will take */
-  position: relative;
-}
-
-.video-placeholder::after {
-  content: attr(data-label);
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* the tags above an audio player are labels, not buttons */
+.watch-seg-tag {
+  cursor: default;
 }
 
 @media (max-width: 720px) {
@@ -301,7 +300,8 @@
   padding: 14px 14px 12px;
 }
 
-.watch-seg-btn {
+.watch-seg-btn,
+.watch-seg-tag {
   font-family: var(--font-body);
   font-size: 10.5px;
   font-weight: 700;
@@ -320,19 +320,22 @@
   color: var(--signal-white);
 }
 
-.watch-seg-btn.active[data-seg="mainstage"] {
+.watch-seg-btn.active[data-seg="mainstage"],
+.watch-seg-tag.active[data-seg="mainstage"] {
   background: rgba(255,156,61,0.15);
   border-color: var(--tungsten-amber);
   color: var(--tungsten-amber);
 }
 
-.watch-seg-btn.active[data-seg="backstage"] {
+.watch-seg-btn.active[data-seg="backstage"],
+.watch-seg-tag.active[data-seg="backstage"] {
   background: rgba(138,138,146,0.18);
   border-color: var(--graphite-light);
   color: var(--signal-white);
 }
 
-.watch-seg-btn.active[data-seg="cloud"] {
+.watch-seg-btn.active[data-seg="cloud"],
+.watch-seg-tag.active[data-seg="cloud"] {
   background: rgba(42,217,236,0.15);
   border-color: var(--data-cyan);
   color: var(--data-cyan);

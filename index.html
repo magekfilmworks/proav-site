@@ -341,7 +341,7 @@
 <section id="watch" class="band-plain">  <div class="section-eyebrow reveal">EPISODES</div>
   <div class="watch-kicker reveal">LONG FORM</div>
   <h2 class="section-title display reveal">ProAV Talk: The People, Conversations, The Gear, Demos</h2>
-  <p class="watch-note reveal">1 hour</p>
+  <p class="watch-note reveal">1-hour conversations with ProAV professionals, demos with hardware and software manufacturers.</p>
   <!-- Video on the left, audio on the right. Each .video-card.watch-hero is one tile;
        copy a whole tile to add a video and they stack down the left column. -->
   <div class="watch-pair">
@@ -369,20 +369,26 @@
   </div>
   </div>
 
-    <div class="audio-slot tile reveal">
-      <div class="watch-kicker">LISTEN</div>
-      <div class="audio-embed">
-        <p class="audio-placeholder">Audio player goes here.</p>
+    <div class="audio-slot reveal">
+      <div class="watch-segments" aria-hidden="true">
+        <span class="watch-seg-tag" data-seg="mainstage">MAINSTAGE</span>
+        <span class="watch-seg-tag active" data-seg="backstage">BACKSTAGE</span>
+        <span class="watch-seg-tag" data-seg="cloud">CLOUD</span>
+      </div>
+      <div class="audio-embed"><svg class="slot-art" viewBox="0 0 600 175" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="6.0" y="65.7" width="10.2" height="43.7" fill="#FF9C3D" opacity="0.55"/><rect x="28.2" y="47.0" width="10.2" height="81.0" fill="#2AD9EC" opacity="0.9"/><rect x="50.4" y="34.2" width="10.2" height="106.7" fill="#FF9C3D" opacity="0.9"/><rect x="72.7" y="30.8" width="10.2" height="113.4" fill="#2AD9EC" opacity="0.55"/><rect x="94.9" y="37.9" width="10.2" height="99.2" fill="#FF9C3D" opacity="0.9"/><rect x="117.1" y="53.6" width="10.2" height="67.8" fill="#2AD9EC" opacity="0.9"/><rect x="139.3" y="63.1" width="10.2" height="48.9" fill="#FF9C3D" opacity="0.55"/><rect x="161.6" y="48.8" width="10.2" height="77.3" fill="#2AD9EC" opacity="0.9"/><rect x="183.8" y="41.4" width="10.2" height="92.1" fill="#FF9C3D" opacity="0.9"/><rect x="206.0" y="43.7" width="10.2" height="87.7" fill="#2AD9EC" opacity="0.55"/><rect x="228.2" y="54.0" width="10.2" height="67.1" fill="#FF9C3D" opacity="0.9"/><rect x="250.4" y="66.9" width="10.2" height="41.2" fill="#2AD9EC" opacity="0.9"/><rect x="272.7" y="61.4" width="10.2" height="52.2" fill="#FF9C3D" opacity="0.55"/><rect x="294.9" y="43.7" width="10.2" height="87.5" fill="#2AD9EC" opacity="0.9"/><rect x="317.1" y="34.0" width="10.2" height="106.9" fill="#FF9C3D" opacity="0.9"/><rect x="339.3" y="34.6" width="10.2" height="105.8" fill="#2AD9EC" opacity="0.55"/><rect x="361.6" y="44.9" width="10.2" height="85.2" fill="#FF9C3D" opacity="0.9"/><rect x="383.8" y="61.6" width="10.2" height="51.8" fill="#2AD9EC" opacity="0.9"/><rect x="406.0" y="48.9" width="10.2" height="77.1" fill="#FF9C3D" opacity="0.55"/><rect x="428.2" y="36.4" width="10.2" height="102.2" fill="#2AD9EC" opacity="0.9"/><rect x="450.4" y="32.9" width="10.2" height="109.2" fill="#FF9C3D" opacity="0.9"/><rect x="472.7" y="39.9" width="10.2" height="95.2" fill="#2AD9EC" opacity="0.55"/><rect x="494.9" y="55.7" width="10.2" height="63.6" fill="#FF9C3D" opacity="0.9"/><rect x="517.1" y="70.7" width="10.2" height="33.6" fill="#2AD9EC" opacity="0.9"/><rect x="539.3" y="56.6" width="10.2" height="61.9" fill="#FF9C3D" opacity="0.55"/><rect x="561.6" y="46.4" width="10.2" height="82.1" fill="#2AD9EC" opacity="0.9"/><rect x="583.8" y="41.4" width="10.2" height="92.2" fill="#FF9C3D" opacity="0.9"/></svg>
         <!--
-          Apple Podcasts player. Delete the placeholder line above and this comment's
-          markers, then put the show and episode IDs into the src below.
-          Get them from the episode page on Apple Podcasts: the URL ends
-          .../podcast/<SHOW-SLUG>/id<SHOW_ID>?i=<EPISODE_ID>
+          Apple Podcasts player. Put the show and episode IDs into the src below and
+          uncomment it; the block it sits in is already the right height.
+          The episode page URL ends .../podcast/<SHOW-SLUG>/id<SHOW_ID>?i=<EPISODE_ID>
         <iframe src="https://embed.podcasts.apple.com/us/podcast/SHOW-SLUG/idSHOW_ID?i=EPISODE_ID"
           height="175" frameborder="0" loading="lazy" title="Listen to this episode"
           sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
           allow="autoplay *; encrypted-media *;"></iframe>
         -->
+      </div>
+      <div class="video-meta">
+        <div class="video-eyebrow backstage">LISTEN</div>
+        <div class="video-title">Apple Podcasts player goes here</div>
       </div>
     </div>
   </div>
@@ -395,7 +401,7 @@
     <div class="watch-pair">
       <div class="watch-grid">
         <div class="video-card watch-hero reveal">
-          <div class="video-placeholder" data-label="Video goes here."></div>
+          <div class="video-embed video-placeholder"><svg class="slot-art" viewBox="0 0 640 360" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="0" y="150" width="640" height="7" fill="#FF9C3D" opacity="0.14"/><rect x="0" y="178" width="640" height="6" fill="#2AD9EC" opacity="0.14"/><rect x="0" y="205" width="640" height="7" fill="#FF9C3D" opacity="0.10"/><circle cx="320" cy="180" r="42" fill="none" stroke="#F5F5F0" stroke-opacity="0.5" stroke-width="2"/><path d="M308 158 L308 202 L344 180 Z" fill="#F5F5F0" fill-opacity="0.75"/></svg></div>
           <!--
             First episode. Delete the placeholder line above and this comment's markers,
             then swap VIDEO_ID (in data-video-id and in the thumbnail src) for the YouTube ID
@@ -412,22 +418,23 @@
         </div>
       </div>
 
-      <div class="audio-slot tile reveal">
-        <div class="watch-kicker">LISTEN</div>
-        <div class="audio-embed">
-          <p class="audio-placeholder">Audio player goes here.</p>
+      <div class="audio-slot reveal">
+        <div class="watch-segments" aria-hidden="true">
+          <span class="watch-seg-tag active" data-seg="cloud">CUE TO CUE</span>
+        </div>
+        <div class="audio-embed"><svg class="slot-art" viewBox="0 0 600 175" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="6.0" y="65.7" width="10.2" height="43.7" fill="#FF9C3D" opacity="0.55"/><rect x="28.2" y="47.0" width="10.2" height="81.0" fill="#2AD9EC" opacity="0.9"/><rect x="50.4" y="34.2" width="10.2" height="106.7" fill="#FF9C3D" opacity="0.9"/><rect x="72.7" y="30.8" width="10.2" height="113.4" fill="#2AD9EC" opacity="0.55"/><rect x="94.9" y="37.9" width="10.2" height="99.2" fill="#FF9C3D" opacity="0.9"/><rect x="117.1" y="53.6" width="10.2" height="67.8" fill="#2AD9EC" opacity="0.9"/><rect x="139.3" y="63.1" width="10.2" height="48.9" fill="#FF9C3D" opacity="0.55"/><rect x="161.6" y="48.8" width="10.2" height="77.3" fill="#2AD9EC" opacity="0.9"/><rect x="183.8" y="41.4" width="10.2" height="92.1" fill="#FF9C3D" opacity="0.9"/><rect x="206.0" y="43.7" width="10.2" height="87.7" fill="#2AD9EC" opacity="0.55"/><rect x="228.2" y="54.0" width="10.2" height="67.1" fill="#FF9C3D" opacity="0.9"/><rect x="250.4" y="66.9" width="10.2" height="41.2" fill="#2AD9EC" opacity="0.9"/><rect x="272.7" y="61.4" width="10.2" height="52.2" fill="#FF9C3D" opacity="0.55"/><rect x="294.9" y="43.7" width="10.2" height="87.5" fill="#2AD9EC" opacity="0.9"/><rect x="317.1" y="34.0" width="10.2" height="106.9" fill="#FF9C3D" opacity="0.9"/><rect x="339.3" y="34.6" width="10.2" height="105.8" fill="#2AD9EC" opacity="0.55"/><rect x="361.6" y="44.9" width="10.2" height="85.2" fill="#FF9C3D" opacity="0.9"/><rect x="383.8" y="61.6" width="10.2" height="51.8" fill="#2AD9EC" opacity="0.9"/><rect x="406.0" y="48.9" width="10.2" height="77.1" fill="#FF9C3D" opacity="0.55"/><rect x="428.2" y="36.4" width="10.2" height="102.2" fill="#2AD9EC" opacity="0.9"/><rect x="450.4" y="32.9" width="10.2" height="109.2" fill="#FF9C3D" opacity="0.9"/><rect x="472.7" y="39.9" width="10.2" height="95.2" fill="#2AD9EC" opacity="0.55"/><rect x="494.9" y="55.7" width="10.2" height="63.6" fill="#FF9C3D" opacity="0.9"/><rect x="517.1" y="70.7" width="10.2" height="33.6" fill="#2AD9EC" opacity="0.9"/><rect x="539.3" y="56.6" width="10.2" height="61.9" fill="#FF9C3D" opacity="0.55"/><rect x="561.6" y="46.4" width="10.2" height="82.1" fill="#2AD9EC" opacity="0.9"/><rect x="583.8" y="41.4" width="10.2" height="92.2" fill="#FF9C3D" opacity="0.9"/></svg>
           <!--
-            Apple Podcasts player. Delete the placeholder line above and this comment's
-            markers, then put the show and episode IDs into the src below.
-            Get them from the episode page on Apple Podcasts: the URL ends
-            .../podcast/<SHOW-SLUG>/id<SHOW_ID>?i=<EPISODE_ID>
+            Apple Podcasts player for Cue to Cue. Same as above: drop the IDs in and uncomment.
           <iframe src="https://embed.podcasts.apple.com/us/podcast/SHOW-SLUG/idSHOW_ID?i=EPISODE_ID"
             height="175" frameborder="0" loading="lazy" title="Listen to this episode"
             sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
             allow="autoplay *; encrypted-media *;"></iframe>
           -->
         </div>
-      </div>
+        <div class="video-meta">
+          <div class="video-eyebrow">LISTEN</div>
+          <div class="video-title">Apple Podcasts player goes here</div>
+        </div>
     </div>
   </div>
 </section>
@@ -1120,7 +1127,8 @@
 
     // One cycle: the white wordmark, then amber, then cyan, five seconds each, then the clip plays
     // through the letters. When the clip finishes the cycle starts over.
-    const PHASE_MS = 5000;
+    const PHASE_MS = 9000;   // how long each colour holds before the fade to the next
+    const SHOW_CLIP = false; // true brings the clip back after cyan; false cycles the colours on their own
     let timers = [];
     const later = (fn, ms) => timers.push(setTimeout(fn, ms));
 
@@ -1133,8 +1141,9 @@
       later(() => { word.classList.remove('tint-amber'); word.classList.add('tint-cyan'); }, PHASE_MS * 2);
       later(() => {
         word.classList.remove('tint-cyan');
+        if (!SHOW_CLIP) { startCycle(); return; }   // straight back to white
         const p = v.play();
-        if (p && p.catch) p.catch(startCycle);   // autoplay refused: keep cycling the colours
+        if (p && p.catch) p.catch(startCycle);     // autoplay refused: keep cycling the colours
       }, PHASE_MS * 3);
     }
 
