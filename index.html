@@ -76,7 +76,7 @@
       <a href="#show">The Show</a>
       <a href="#guests">Who's On</a>
       <a href="#listen">Listen</a>
-      <a href="#watch">Watch</a>
+      <a href="#watch">Episodes</a>
       <a href="#merch">Merch</a>
       <a href="/signal-flow-daily.html">Signal Flow Daily</a>
       <a href="/contact">Contact</a>
@@ -116,7 +116,7 @@
   <a href="#show">The Show</a>
   <a href="#guests">Who's On</a>
   <a href="#listen">Listen</a>
-  <a href="#watch">Watch</a>
+  <a href="#watch">Episodes</a>
   <a href="#merch">Merch</a>
   <a href="/signal-flow-daily.html">Signal Flow Daily</a>
   <a href="/contact">Contact</a>
@@ -157,7 +157,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
-    <div class="hero-word-video" aria-hidden="true"><video class="hero-intro" src="images/hero-logo-intro-v2.mp4" muted playsinline preload="auto"></video><video src="images/hero-logo-v132.mp4" muted loop playsinline preload="auto"></video></div>
+    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-logo-v132.mp4" muted playsinline preload="auto"></video></div>
     <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
@@ -168,7 +168,7 @@
         </mask>
       </defs>
       <text x="0" y="220" text-anchor="start" font-family="Impact, Haettenschweiler, sans-serif"
-            font-size="200" fill="#F5F5F0" mask="url(#stencilMask)">PROAV</text>
+            font-size="200" fill="currentColor" mask="url(#stencilMask)">PROAV</text>
     </svg>
   </div>
   <div class="hero-lockup">
@@ -338,9 +338,13 @@
   </div>
 </section>
 
-<section id="watch" class="band-plain">  <div class="section-eyebrow reveal">WATCH</div>
-  <h2 class="section-title display reveal">ProAV Talk: The People, The Gear, Conversations</h2>
-  <!-- Each .video-card.watch-hero is one tile. Copy a whole tile to add a video; the grid fills across, then down. -->
+<section id="watch" class="band-plain">  <div class="section-eyebrow reveal">EPISODES</div>
+  <div class="watch-kicker reveal">LONG FORM</div>
+  <h2 class="section-title display reveal">ProAV Talk: The People, Conversations, The Gear, Demos</h2>
+  <p class="watch-note reveal">1 hour</p>
+  <!-- Video on the left, audio on the right. Each .video-card.watch-hero is one tile;
+       copy a whole tile to add a video and they stack down the left column. -->
+  <div class="watch-pair">
   <div class="watch-grid">
   <div class="video-card watch-hero reveal">
     <div class="watch-segments" role="tablist" aria-label="Jump to episode segment">
@@ -363,6 +367,68 @@
       <div class="video-title">The Art of Cutting Live</div>
     </div>
   </div>
+  </div>
+
+    <div class="audio-slot tile reveal">
+      <div class="watch-kicker">LISTEN</div>
+      <div class="audio-embed">
+        <p class="audio-placeholder">Audio player goes here.</p>
+        <!--
+          Apple Podcasts player. Delete the placeholder line above and this comment's
+          markers, then put the show and episode IDs into the src below.
+          Get them from the episode page on Apple Podcasts: the URL ends
+          .../podcast/<SHOW-SLUG>/id<SHOW_ID>?i=<EPISODE_ID>
+        <iframe src="https://embed.podcasts.apple.com/us/podcast/SHOW-SLUG/idSHOW_ID?i=EPISODE_ID"
+          height="175" frameborder="0" loading="lazy" title="Listen to this episode"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+          allow="autoplay *; encrypted-media *;"></iframe>
+        -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Second format in this section: the short field cut. -->
+  <div class="watch-next">
+    <div class="watch-kicker reveal">SHORT FORM</div>
+    <h2 class="section-title display reveal">CUE to CUE in 20: Insights from the Field</h2>
+    <p class="watch-note reveal">Twenty minutes, one topic, straight from the field.</p>
+    <div class="watch-pair">
+      <div class="watch-grid">
+        <div class="video-card watch-hero reveal">
+          <div class="video-placeholder" data-label="Video goes here."></div>
+          <!--
+            First episode. Delete the placeholder line above and this comment's markers,
+            then swap VIDEO_ID (in data-video-id and in the thumbnail src) for the YouTube ID
+            and set the title. Copy the whole .video-card to add another episode.
+          <div class="video-embed" data-video-id="VIDEO_ID" data-start="0" onclick="openVideoModal(this)">
+            <img src="https://img.youtube.com/vi/VIDEO_ID/hqdefault.jpg" alt="Episode thumbnail" loading="lazy" decoding="async" onerror="this.style.display='none'">
+            <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+          </div>
+          <div class="video-meta">
+            <div class="video-eyebrow">CUE TO CUE</div>
+            <div class="video-title">Episode title</div>
+          </div>
+          -->
+        </div>
+      </div>
+
+      <div class="audio-slot tile reveal">
+        <div class="watch-kicker">LISTEN</div>
+        <div class="audio-embed">
+          <p class="audio-placeholder">Audio player goes here.</p>
+          <!--
+            Apple Podcasts player. Delete the placeholder line above and this comment's
+            markers, then put the show and episode IDs into the src below.
+            Get them from the episode page on Apple Podcasts: the URL ends
+            .../podcast/<SHOW-SLUG>/id<SHOW_ID>?i=<EPISODE_ID>
+          <iframe src="https://embed.podcasts.apple.com/us/podcast/SHOW-SLUG/idSHOW_ID?i=EPISODE_ID"
+            height="175" frameborder="0" loading="lazy" title="Listen to this episode"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            allow="autoplay *; encrypted-media *;"></iframe>
+          -->
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -769,7 +835,7 @@
       index.push({ cat: 'Section', title: 'The Show', snippet: 'What ProAV covers, episode to episode.', el: document.getElementById('show') });
       index.push({ cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', el: document.getElementById('guests') });
       index.push({ cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', el: document.getElementById('listen') });
-      index.push({ cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
+      index.push({ cat: 'Section', title: 'Episodes', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
       index.push({ cat: 'Section', title: 'Merch', snippet: 'Wear the signal.', el: document.getElementById('merch') });
 
       // show segments (Mainstage / Backstage / Cloud cards)
@@ -812,7 +878,7 @@
       // watch videos
       document.querySelectorAll('.video-title').forEach(t => {
         const card = t.closest('.video-card');
-        if (card) index.push({ cat: 'Watch', title: t.textContent.trim(), snippet: 'Watch this episode segment.', el: card });
+        if (card) index.push({ cat: 'Episodes', title: t.textContent.trim(), snippet: 'Watch this episode segment.', el: card });
       });
 
       // listen platforms
@@ -1023,10 +1089,8 @@
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const word = document.querySelector('.hero-word');
-    const intro = word && word.querySelector('video.hero-intro');   // plays once, first
-    const v = word && word.querySelector('video:not(.hero-intro)'); // then this one loops
-    if (!v || !intro) return;
-    const both = [intro, v];
+    const v = word && word.querySelector('video');
+    if (!v) return;
     // fit the video to the actual ink of the letters (measured with the same font stack as the wordmark),
     // so the whole picture shows through PROAV instead of only the part that happens to sit under the glyphs
     const holder = word.querySelector('.hero-word-video');
@@ -1039,13 +1103,11 @@
         const y0 = 220 - m.actualBoundingBoxAscent, y1 = 220 + m.actualBoundingBoxDescent;
         const sc = word.clientWidth / 1200;
         if (!(x1 > x0) || !(y1 > y0) || !sc) return;
-        both.forEach(el => {
-          el.style.position = 'absolute';
-          el.style.left = (x0 * sc) + 'px';
-          el.style.top = ((y0 - 50) * sc) + 'px';
-          el.style.width = ((x1 - x0) * sc) + 'px';
-          el.style.height = ((y1 - y0) * sc) + 'px';
-        });
+        v.style.position = 'absolute';
+        v.style.left = (x0 * sc) + 'px';
+        v.style.top = ((y0 - 50) * sc) + 'px';
+        v.style.width = ((x1 - x0) * sc) + 'px';
+        v.style.height = ((y1 - y0) * sc) + 'px';
       } catch (e) {}
     }
     fitVideo();
@@ -1055,19 +1117,32 @@
     const SPEED = 1;  // playback speed of the clip (1 = normal); lower is slower
     v.defaultPlaybackRate = SPEED; v.playbackRate = SPEED;
     v.addEventListener('loadedmetadata', () => { v.playbackRate = SPEED; });
+
+    // One cycle: the white wordmark, then amber, then cyan, five seconds each, then the clip plays
+    // through the letters. When the clip finishes the cycle starts over.
+    const PHASE_MS = 5000;
+    let timers = [];
+    const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+
+    function startCycle() {
+      timers.forEach(clearTimeout); timers = [];
+      word.classList.remove('video-on', 'tint-amber', 'tint-cyan');
+      v.pause();
+      try { v.currentTime = 0; } catch (e) {}
+      later(() => word.classList.add('tint-amber'), PHASE_MS);
+      later(() => { word.classList.remove('tint-amber'); word.classList.add('tint-cyan'); }, PHASE_MS * 2);
+      later(() => {
+        word.classList.remove('tint-cyan');
+        const p = v.play();
+        if (p && p.catch) p.catch(startCycle);   // autoplay refused: keep cycling the colours
+      }, PHASE_MS * 3);
+    }
+
     v.addEventListener('playing', () => { v.playbackRate = SPEED; word.classList.add('video-on'); });
-    v.addEventListener('error', () => word.classList.remove('video-on'));
-    const check = () => { const a = intro.ended ? v : intro; if (!a.paused && a.readyState >= 3) { a.playbackRate = SPEED; word.classList.add('video-on'); } };
-    both.forEach(el => ['canplay', 'timeupdate'].forEach(ev => el.addEventListener(ev, check)));
-    intro.addEventListener('error', () => { intro.style.display = 'none'; const p = v.play(); if (p && p.catch) p.catch(() => {}); });
-    // intro finishes, then the current clip takes over (and loops); the intro is hidden once the next one is showing
-    intro.addEventListener('ended', () => {
-      const p = v.play(); if (p && p.catch) p.catch(() => {});
-      v.addEventListener('playing', () => { intro.style.visibility = 'hidden'; }, { once: true });
-    });
-    // hold the plain white wordmark first, then let the video play (and loop)
-    const HOLD_MS = 5000;
-    setTimeout(() => { const p = intro.play(); if (p && p.catch) p.catch(() => {}); check(); }, HOLD_MS);
+    v.addEventListener('ended', startCycle);
+    v.addEventListener('error', startCycle);
+
+    startCycle();
   })();
 </script>
 
@@ -1136,6 +1211,27 @@
   }
   function kick() { if (!queued) { queued = true; requestAnimationFrame(render); } }
   function setup() { measure(); render(); }
+
+  // A jump to a section below this grid has to clear the folded rows first: opening them adds height,
+  // and if that happens after the browser has scrolled, the target ends up pushed off the screen.
+  function isBelow(el) {
+    return !!(el && (el.compareDocumentPosition(grid) & Node.DOCUMENT_POSITION_PRECEDING));
+  }
+  document.addEventListener('click', function (ev) {
+    const a = ev.target.closest && ev.target.closest('a[href*="#"]');
+    if (!a) return;
+    const id = (a.getAttribute('href') || '').split('#')[1];
+    if (id && isBelow(document.getElementById(id))) release();
+  }, true);
+  // same when the page is opened straight at an anchor, e.g. /#merch from another page
+  function atHash() {
+    const el = location.hash && document.getElementById(location.hash.slice(1));
+    if (!isBelow(el)) return;
+    release();
+    requestAnimationFrame(() => el.scrollIntoView());
+  }
+  window.addEventListener('hashchange', atHash);
+  window.addEventListener('load', () => setTimeout(atHash, 60));
   window.addEventListener('scroll', kick, { passive: true });
   let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(setup, 150); });
   calm.addEventListener && calm.addEventListener('change', setup);
