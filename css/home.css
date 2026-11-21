@@ -142,6 +142,41 @@
   text-align: left;
 }
 
+/* the two formats, named side by side under the main description */
+.show-formats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  max-width: 1000px;
+  margin: 0 0 40px;
+}
+
+.show-format {
+  min-width: 0;
+}
+
+.show-format h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--signal-white);
+}
+
+.show-format p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text-soft);
+}
+
+@media (max-width: 720px) {
+  .show-formats {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
 .show-copy {
   max-width: 1000px;
   font-size: 17px;
