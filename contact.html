@@ -435,5 +435,50 @@
     });
   })();
 </script>
+<script>
+  // dim section headers as they scroll up toward the top of the screen
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const titles = Array.from(document.querySelectorAll('.section-title.display'));
+    if (!titles.length) return;
+    let ticking = false;
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight;
+      titles.forEach(t => {
+        const r = t.getBoundingClientRect();
+        // full brightness only while the title's bottom is in the lower quarter of the screen;
+        // fades to 15% as its bottom reaches the top edge. This title sits at the very top of the
+        // page, so it starts white and bright exactly where it rests at scroll 0.
+        const start = Math.min(vh * 0.75, r.bottom + window.scrollY);
+        const p = Math.min(1, Math.max(0, r.bottom / start));
+        const v = (Math.round((0.15 + 0.85 * p) * 40) / 40).toFixed(3);
+        if (t._dim !== v) { t._dim = v; t.style.setProperty('--dim', v); }
+        // starts white, then shifts through amber to cyan as the title rises
+        const h = Math.round((1 - p) * 40) / 40;
+        if (t._h !== h) {
+          t._h = h;
+          const W = [245, 245, 240], A = [255, 156, 61], C = [42, 217, 236];
+          const f = h < 0.5 ? h * 2 : (h - 0.5) * 2, a = h < 0.5 ? W : A, b = h < 0.5 ? A : C;
+          t.style.setProperty('--tc', a.map((x, i) => Math.round(x + (b[i] - x) * f)).join(','));
+        }
+      });
+    }
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+
+  // mark the page as scrolling so hover effects don't fire under a stationary cursor
+  (function () {
+    let t;
+    const root = document.documentElement;
+    window.addEventListener('scroll', () => {
+      root.classList.add('is-scrolling');
+      clearTimeout(t);
+      t = setTimeout(() => root.classList.remove('is-scrolling'), 200);
+    }, { passive: true });
+  })();
+</script>
 </body>
 </html>

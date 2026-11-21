@@ -187,6 +187,7 @@ section {
 
 .section-title.display {
   color: rgba(var(--tc, 245,245,240), var(--dim, 1));
+  overflow-wrap: anywhere;   /* a long word never pushes the page sideways, even before the web font loads */
 }
 
 /* reveal */

@@ -4,7 +4,6 @@
 .hero {
   background: var(--stage-black);
 }
-
 .hero {
   position: relative;
   display: flex;
