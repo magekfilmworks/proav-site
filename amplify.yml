@@ -13,6 +13,7 @@ frontend:
       - 'robots.txt'
       - 'sitemap.xml'
       - 'og-image.png'
+      - 'css/**/*'
       - 'images/**/*'
       - 'signal-flow/**/*'
   cache:
