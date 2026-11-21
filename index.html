@@ -1259,10 +1259,18 @@
   if (!grid || !btn) return;
   const count = grid.querySelectorAll('.guest-tag').length;
   const mq = window.matchMedia('(max-width: 720px)');
-  const setH = () => grid.style.setProperty('--open-h', grid.scrollHeight + 'px');
+  const SHOWN = 4;   // roles visible while collapsed
+  const setH = () => {
+    grid.style.setProperty('--open-h', grid.scrollHeight + 'px');
+    const tiles = grid.querySelectorAll('.guest-tag');
+    const last = tiles[Math.min(SHOWN, tiles.length) - 1];
+    if (last) grid.style.setProperty('--closed-h',
+      Math.ceil(last.getBoundingClientRect().bottom - grid.getBoundingClientRect().top + 4 - (parseFloat(getComputedStyle(grid).paddingTop) || 0) * 0) + 'px');
+  };
   const label = open => { btn.textContent = open ? 'Show fewer roles' : 'Show all ' + count + ' roles'; btn.setAttribute('aria-expanded', open); };
   label(false);
   let userClosed = false;
+  let lockUntil = 0;   // ignore scroll-driven changes while a button tap settles
 
   // open/close with the grid's own height transition; silent = no animation, no flash
   const setOpen = (open, silent) => {
@@ -1276,6 +1284,7 @@
   btn.addEventListener('click', () => {
     const open = !grid.classList.contains('is-open');
     userClosed = !open;
+    lockUntil = Date.now() + 1500;
     setOpen(open);
     if (!open) grid.closest('section').scrollIntoView({ block: 'start', behavior: 'smooth' });
   });
@@ -1284,7 +1293,7 @@
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(entries => {
       const e = entries[entries.length - 1];
-      if (!mq.matches) return;
+      if (!mq.matches || Date.now() < lockUntil) return;
       const isOpen = grid.classList.contains('is-open');
       if (e.isIntersecting) {
         if (!isOpen && !userClosed) setOpen(true);
