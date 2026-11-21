@@ -391,6 +391,16 @@
     padding: 0 20px;
   }
 
+  /* segments (Mainstage / Backstage / Cloud): one full-width column on phones, read like a stack of paragraphs */
+  .segments {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+  }
+
+  .segments > * {
+    grid-column: auto;
+  }
+
   /* * */
   .guest-grid > *,
   .merch-grid > * {
