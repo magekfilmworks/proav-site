@@ -157,7 +157,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
-    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-logo-v132.mp4" muted loop playsinline preload="auto"></video></div>
+    <div class="hero-word-video" aria-hidden="true"><video class="hero-intro" src="images/hero-logo-intro-v2.mp4" muted playsinline preload="auto"></video><video src="images/hero-logo-v132.mp4" muted loop playsinline preload="auto"></video></div>
     <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
@@ -1030,8 +1030,10 @@
   (function () {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const word = document.querySelector('.hero-word');
-    const v = word && word.querySelector('video');
-    if (!v) return;
+    const intro = word && word.querySelector('video.hero-intro');   // plays once, first
+    const v = word && word.querySelector('video:not(.hero-intro)'); // then this one loops
+    if (!v || !intro) return;
+    const both = [intro, v];
     // fit the video to the actual ink of the letters (measured with the same font stack as the wordmark),
     // so the whole picture shows through PROAV instead of only the part that happens to sit under the glyphs
     const holder = word.querySelector('.hero-word-video');
@@ -1044,11 +1046,13 @@
         const y0 = 220 - m.actualBoundingBoxAscent, y1 = 220 + m.actualBoundingBoxDescent;
         const sc = word.clientWidth / 1200;
         if (!(x1 > x0) || !(y1 > y0) || !sc) return;
-        v.style.position = 'absolute';
-        v.style.left = (x0 * sc) + 'px';
-        v.style.top = ((y0 - 50) * sc) + 'px';
-        v.style.width = ((x1 - x0) * sc) + 'px';
-        v.style.height = ((y1 - y0) * sc) + 'px';
+        both.forEach(el => {
+          el.style.position = 'absolute';
+          el.style.left = (x0 * sc) + 'px';
+          el.style.top = ((y0 - 50) * sc) + 'px';
+          el.style.width = ((x1 - x0) * sc) + 'px';
+          el.style.height = ((y1 - y0) * sc) + 'px';
+        });
       } catch (e) {}
     }
     fitVideo();
@@ -1060,11 +1064,17 @@
     v.addEventListener('loadedmetadata', () => { v.playbackRate = SPEED; });
     v.addEventListener('playing', () => { v.playbackRate = SPEED; word.classList.add('video-on'); });
     v.addEventListener('error', () => word.classList.remove('video-on'));
-    const check = () => { if (!v.paused && v.readyState >= 3) { v.playbackRate = SPEED; word.classList.add('video-on'); } };
-    ['canplay', 'timeupdate'].forEach(ev => v.addEventListener(ev, check));
+    const check = () => { const a = intro.ended ? v : intro; if (!a.paused && a.readyState >= 3) { a.playbackRate = SPEED; word.classList.add('video-on'); } };
+    both.forEach(el => ['canplay', 'timeupdate'].forEach(ev => el.addEventListener(ev, check)));
+    intro.addEventListener('error', () => { intro.style.display = 'none'; const p = v.play(); if (p && p.catch) p.catch(() => {}); });
+    // intro finishes, then the current clip takes over (and loops); the intro is hidden once the next one is showing
+    intro.addEventListener('ended', () => {
+      const p = v.play(); if (p && p.catch) p.catch(() => {});
+      v.addEventListener('playing', () => { intro.style.visibility = 'hidden'; }, { once: true });
+    });
     // hold the plain white wordmark first, then let the video play (and loop)
     const HOLD_MS = 5000;
-    setTimeout(() => { const p = v.play(); if (p && p.catch) p.catch(() => {}); check(); }, HOLD_MS);
+    setTimeout(() => { const p = intro.play(); if (p && p.catch) p.catch(() => {}); check(); }, HOLD_MS);
   })();
 </script>
 
