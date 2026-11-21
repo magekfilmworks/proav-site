@@ -196,22 +196,22 @@
 
 /* h3 */
 .segment-card h3 {
-  font-family: var(--font-body);
-  margin: 0 0 10px;
-}
-
-.segment-card h3 {
-  font-size: 22px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 2.6vw, 38px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--signal-white);
 }
 
 /* p */
 .segment-card p {
-  font-size: 14.5px;
-  line-height: 1.6;
-  color: var(--graphite-light);
   margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-soft);
 }
 
 /* guest */
