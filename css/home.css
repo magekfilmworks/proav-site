@@ -156,41 +156,8 @@
   gap: 20px;
 }
 
-/* segment */
-.segment-flow {
-  position: relative;
-  height: 22px;
-  margin-bottom: 14px;
-}
-
 .segment-card {
   padding: 22px 4px 8px 0;
-}
-
-/* flow */
-.segment-flow .flow-line {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 2px;
-  transform: translateY(-50%);
-  background: var(--signal-gradient);
-  background-size: 220% 100%;
-  animation: flowSweep 5s ease-in-out infinite;
-  border-radius: 2px;
-}
-
-.segment-flow .flow-node {
-  position: absolute;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  margin-top: -4.5px;
-  margin-left: -4.5px;
-  border-radius: 50%;
-  background: var(--stage-black);
-  border: 1.5px solid var(--border-quiet);
 }
 
 /* h3 */
@@ -325,18 +292,7 @@
   100% { background-position: 100% 0; }
 }
 
-@keyframes flowSweep {
-  0% { background-position: 100% 0; }
-  50% { background-position: 0% 0; }
-  100% { background-position: 100% 0; }
-}
-
 @media (max-width: 1024px) {
-  /* segment */
-  .segment-flow {
-    display: none;
-  }
-
   /* * */
   .segments > *,
   .watch-grid > *,
@@ -380,11 +336,6 @@
     width: calc((100% - var(--hero-left) - 24px) * 1.65);
   }
 
-  /* segment */
-  .segment-flow {
-    display: none;
-  }
-
   /* show */
   .show-in-hero {
     margin-top: 56px;
@@ -411,12 +362,6 @@
 @media (prefers-reduced-motion: reduce) {
   /* signal */
   .signal-line-css {
-    animation: none;
-    background-position: 0 0;
-  }
-
-  /* flow */
-  .flow-line {
     animation: none;
     background-position: 0 0;
   }
