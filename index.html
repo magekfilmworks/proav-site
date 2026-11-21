@@ -58,7 +58,6 @@
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/home.css">
-<link rel="stylesheet" href="css/signal-flow.css">
 </head>
 <body>
 
@@ -78,8 +77,8 @@
       <a href="#guests">Who's On</a>
       <a href="#listen">Listen</a>
       <a href="#watch">Watch</a>
-      <!-- <a href="#signal-flow">Signal Flow Daily</a> -->
       <a href="#merch">Merch</a>
+      <a href="/signal-flow-daily.html">Signal Flow Daily</a>
       <a href="/contact">Contact</a>
     </div>
     <div class="nav-social">
@@ -118,8 +117,8 @@
   <a href="#guests">Who's On</a>
   <a href="#listen">Listen</a>
   <a href="#watch">Watch</a>
-      <!-- <a href="#signal-flow">Signal Flow Daily</a> -->
   <a href="#merch">Merch</a>
+  <a href="/signal-flow-daily.html">Signal Flow Daily</a>
   <a href="/contact">Contact</a>
   <div class="footer-social" style="margin-top: 32px;">
     <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
@@ -158,7 +157,7 @@
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
   <div class="hero-word display">
-    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-logo-v130.mp4" muted loop playsinline preload="auto"></video></div>
+    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-logo-v132.mp4" muted loop playsinline preload="auto"></video></div>
     <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
@@ -400,26 +399,6 @@
     </div>
   </div>
 </div>
-
-<!-- Signal Flow Daily is hidden for now. To bring it back: delete the word `hidden` on the <section> line below and uncomment the two nav links (desktop and mobile menu). The search and feed scripts switch back on by themselves. -->
-<section id="signal-flow" class="band-plain" hidden>
-  <div class="section-eyebrow reveal">SIGNAL FLOW DAILY</div>
-  <h2 class="section-title display reveal">What changed in live production.</h2>
-  <p class="sf-lede reveal">LED processing, switching, replay and venue-to-cloud news, sourced and checked every morning.</p>
-  <!-- Filled from the Signal Flow feed (falls back to /signal-flow/issues.json) by the Signal Flow script near the bottom of this file. -->
-  <div class="sf-issue" id="sfIssue" aria-live="polite">
-    <p class="sf-empty">Loading today's briefing…</p>
-  </div>
-  <div class="sf-bm" id="sfVendors" hidden>
-    <div class="sf-bm-head">
-      <h3 class="sf-bm-title display">Latest from the vendors.</h3>
-      <div class="sf-bm-note">Four newest per tab. Dates are as published by the source where known.</div>
-    </div>
-    <div class="sf-tabs" id="sfTabs" role="tablist" aria-label="Choose a vendor"></div>
-    <div class="sf-items" id="sfBmItems"></div>
-  </div>
-  <noscript><p class="sf-empty">Turn on JavaScript to read Signal Flow Daily.</p></noscript>
-</section>
 
 <section id="merch" class="band-plain">  <div class="section-eyebrow reveal">MERCH</div>
   <h2 class="section-title display reveal">Wear the signal.</h2>
@@ -798,7 +777,6 @@
       index.push({ cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', el: document.getElementById('guests') });
       index.push({ cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', el: document.getElementById('listen') });
       index.push({ cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
-      if (document.getElementById('signal-flow') && !document.getElementById('signal-flow').hidden) index.push({ cat: 'Section', title: 'Signal Flow Daily', snippet: 'Daily live production and ProAV news.', el: document.getElementById('signal-flow') });
       index.push({ cat: 'Section', title: 'Merch', snippet: 'Wear the signal.', el: document.getElementById('merch') });
 
       // show segments (Mainstage / Backstage / Cloud cards)
@@ -844,13 +822,6 @@
         if (card) index.push({ cat: 'Watch', title: t.textContent.trim(), snippet: 'Watch this episode segment.', el: card });
       });
 
-      // signal flow items
-      document.querySelectorAll('.sf-item').forEach(item => {
-        const h3 = item.querySelector('h3');
-        const brief = item.querySelector('.sf-brief');
-        if (h3) index.push({ cat: 'Signal Flow', title: h3.textContent.trim(), snippet: brief ? brief.textContent.trim() : '', el: item });
-      });
-
       // listen platforms
       document.querySelectorAll('.platform-btn span').forEach(s => {
         const btn = s.closest('.platform-btn');
@@ -872,6 +843,7 @@
       });
 
       // static entry for the Contact page, since it's a separate document
+      index.push({ cat: 'Page', title: 'Signal Flow Daily', snippet: 'Daily live production and ProAV news.', href: '/signal-flow-daily.html' });
       index.push({ cat: 'Page', title: 'Contact', snippet: 'Guest pitches, sponsor inquiries, and general contact.', href: '/contact' });
 
       return index;
@@ -1009,164 +981,7 @@
   })();
 </script>
 <script>
-  /* ---------- Signal Flow Daily ----------
-     Reads the live feed (see FEED_URL below), falling back to /signal-flow/issues.json
-     ({ updated, issues: [...] }, newest first). */
-  (function () {
-    const box = document.getElementById('sfIssue');
-    if (!box || document.getElementById('signal-flow').hidden) return;   // section is hidden for now: no feed requests
-    const BEATS = {
-      led:       { label: 'LED / PROCESSING', seg: 'mainstage' },
-      switching: { label: 'SWITCHING',        seg: 'mainstage' },
-      replay:    { label: 'REPLAY / RECORD',  seg: 'mainstage' },
-      cloud:     { label: 'IP / CLOUD',       seg: 'cloud' },
-      field:     { label: 'FIELD',            seg: 'backstage' },
-      graphics:  { label: 'MOTION GRAPHICS',  seg: 'mainstage' }
-    };
-    // Blackmagic Fusion (and Fusion Studio) items are always tagged MOTION GRAPHICS
-    const beatOf = it => (/\bfusion\b/i.test(it.title || '') && /blackmagic/i.test((it.vendor || '') + ' ' + (it.title || ''))) ? 'graphics' : it.beat;
-    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
-    const fmt = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
-    let issues = [], idx = 0, jumpNote = '';
-    const fmtShort = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
-    // jump to a specific date; if there is no issue that day, show the newest one before it
-    function jumpTo(v) {
-      if (!v) return;
-      let i = issues.findIndex(it => it.date === v);
-      jumpNote = '';
-      if (i < 0) {
-        i = issues.findIndex(it => it.date < v);
-        if (i < 0) i = issues.length - 1;
-        jumpNote = 'No issue on ' + fmtShort(v) + ' — showing ' + fmtShort(issues[i].date);
-      }
-      idx = i; render();
-    }
 
-    function itemHtml(it, when) {
-      const b = BEATS[beatOf(it)] || BEATS.field;
-      let h = '<article class="sf-item tile"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
-        (when ? '<span class="sf-when">' + esc(when) + '</span>' : '') +
-        (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
-        (it.price ? '<span class="sf-status">' + esc(it.price) + '</span>' : '') + '</div>' +
-        '<h3>' + esc(it.title) + '</h3><div class="sf-vendor">' + esc(it.vendor) + '</div>' +
-        '<p class="sf-brief">' + esc(it.brief) + '</p>' +
-        (it.spec ? '<p class="sf-spec">' + esc(it.spec) + '</p>' : '');
-      if (it.what || it.why || it.watch) {
-        h += '<details><summary>WHAT \u00b7 WHY \u00b7 WATCH</summary><dl class="sf-detail">' +
-          (it.what ? '<dt>WHAT</dt><dd>' + esc(it.what) + '</dd>' : '') +
-          (it.why ? '<dt>WHY</dt><dd>' + esc(it.why) + '</dd>' : '') +
-          (it.watch ? '<dt>WATCH</dt><dd>' + esc(it.watch) + '</dd>' : '') + '</dl></details>';
-      }
-      if (it.sources && it.sources.length) {
-        h += '<div class="sf-sources">' + it.sources.map(s => '<a href="' + esc(safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.label || 'Source') + ' \u2197</a>').join('') + '</div>';
-      }
-      return h + '</article>';
-    }
-
-    /* Latest by vendor: tabs for Blackmagic, Barco, Analog Way, PixelHue (four cards each).
-       Items come from /signal-flow/vendors.json (curated, dated by the source) merged with any briefing item
-       whose lead vendor matches. Duplicates by title are dropped, curated items win. */
-    const VENDORS = [
-      { key: 'blackmagic', label: 'BLACKMAGIC', test: it => /^\s*blackmagic/i.test(it.vendor || '') || /blackmagic/i.test(it.title || '') },
-      { key: 'barco',      label: 'BARCO',      test: it => /^\s*barco/i.test(it.vendor || '') || /\bbarco\b/i.test(it.title || '') },
-      { key: 'analogway',  label: 'ANALOG WAY', test: it => /^\s*analog ?way/i.test(it.vendor || '') || /aquilon|analog ?way/i.test(it.title || '') },
-      { key: 'pixelhue',   label: 'PIXELHUE',   test: it => /^\s*pixel ?hue/i.test(it.vendor || '') || /pixelhue|\b(q8|p80|p20)\b/i.test(it.title || '') }
-    ];
-    const LIMIT = 4;
-    let vendorData = {}, activeVendor = null;
-    const keyOf = t => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-
-    function vendorItems(v) {
-      // order: pinned (owner-curated, always first) > dated items newest first > curated fillers (only until the tab holds LIMIT cards)
-      const seen = new Set(), pin = [], out = [], fill = [];
-      const add = (arr, it, date, when) => {
-        const k = keyOf(it.title); if (seen.has(k)) return;
-        seen.add(k); arr.push({ it: it, date: date || '', when: when || (date ? fmt(date) : '') });
-      };
-      const vd = vendorData[v.key] || {}, cur = vd.curated || [];
-      cur.filter(c => c.pinned).forEach(c => add(pin, c, c.date, c.when));
-      (vd.items || []).forEach(it => add(out, it, it.date, it.when));
-      // a vendor flagged "direct" in vendors.json shows only its own curated list, never briefing items from trade coverage
-      if (!vd.direct) issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(out, it, iss.date); }));
-      out.sort((a, b) => a.date < b.date ? 1 : -1);
-      cur.filter(c => !c.pinned).forEach(c => add(fill, c, c.date, c.when));
-      return pin.concat(out, fill).slice(0, LIMIT);
-    }
-
-    function renderVendors() {
-      const wrap = document.getElementById('sfVendors'), grid = document.getElementById('sfBmItems'), tabs = document.getElementById('sfTabs');
-      if (!wrap || !grid || !tabs) return;
-      const have = VENDORS.map(v => ({ v: v, items: vendorItems(v) })).filter(x => x.items.length);
-      if (!have.length) { wrap.hidden = true; return; }
-      if (!activeVendor || !have.some(x => x.v.key === activeVendor)) activeVendor = have[0].v.key;
-      tabs.innerHTML = have.map(x => '<button type="button" role="tab" class="sf-tab' + (x.v.key === activeVendor ? ' active' : '') +
-        '" data-v="' + x.v.key + '" aria-selected="' + (x.v.key === activeVendor) + '">' + esc(x.v.label) + '</button>').join('');
-      const cur = have.find(x => x.v.key === activeVendor);
-      grid.innerHTML = cur.items.map(o => itemHtml(o.it, o.when)).join('');
-      tabs.querySelectorAll('.sf-tab').forEach(btn => btn.onclick = () => { activeVendor = btn.dataset.v; renderVendors(); });
-      wrap.hidden = false;
-    }
-
-    function render() {
-      const x = issues[idx];
-      if (!x) { box.innerHTML = '<p class="sf-empty">No briefing yet.</p>'; return; }
-      const when = x.kind === 'weekly' && x.week_start ? fmt(x.week_start) + ' – ' + fmt(x.week_end) : fmt(x.date);
-      let h = '<div class="sf-bar"><span class="sf-kind">' + (x.kind === 'weekly' ? 'WEEKLY ROUNDUP' : 'DAILY BRIEFING') + '</span>' +
-        '</div>' +
-        '<div class="sf-jump"><label class="sf-jump-label" for="sfDate">JUMP TO DATE</label>' +
-          '<input type="date" id="sfDate" class="sf-date-input" min="' + esc(issues[issues.length - 1].date) + '" max="' + esc(issues[0].date) + '" value="' + esc(x.date) + '">' +
-          '<button type="button" class="sf-step" id="sfLatest" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Jump to the latest issue">LATEST</button>' +
-        '<div class="sf-nav">' +
-          '<button type="button" class="sf-step" id="sfOlder" ' + (idx >= issues.length - 1 ? 'disabled' : '') + ' aria-label="Previous issue">‹ PREV</button>' +
-          '<span class="sf-date">' + esc(when) + '</span>' +
-          '<button type="button" class="sf-step" id="sfNewer" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Next issue">NEXT ›</button>' +
-        '</div>' +
-          (jumpNote ? '<span class="sf-note" role="status">' + esc(jumpNote) + '</span>' : '') + '</div>' +
-        '<h3 class="sf-headline display">' + esc(x.headline) + '</h3>' +
-        '<p class="sf-topline">' + esc(x.topline) + '</p><div class="sf-items">';
-      (x.items || []).forEach(it => { h += itemHtml(it); });
-      h += '</div>';
-      if (x.watch && x.watch.length) {
-        h += '<div class="sf-coming"><div class="sf-coming-label">COMING UP</div><ul>' + x.watch.map(w =>
-          '<li><time>' + esc(w.date) + (w.end && w.end !== w.date ? ' → ' + esc(w.end) : '') + '</time>' +
-          '<span class="sf-tag-slot">' + '<span class="sf-tag' + (w.kind === 'class' ? '' : ' event') + '">' + (w.kind === 'class' ? 'CLASS' : 'EVENT') + '</span>' + '</span><div><strong>' + (w.kind === 'class' && safeUrl(w.url) !== '#' ? '<a class="sf-link" href="' + esc(safeUrl(w.url)) + '" target="_blank" rel="noopener">' + esc(String(w.name || '').replace(/^Class:\s*/, '')) + '</a>' : esc(w.name)) + '</strong>' + (w.place ? ' <span class="place">· ' + esc(w.place) + '</span>' : '') + '</div></li>').join('') + '</ul></div>';
-      }
-      h += '<div class="sf-foot">Researched and compiled daily with Claude. Check specs with the vendor before you buy.</div>';
-      box.innerHTML = h;
-      const o = document.getElementById('sfOlder'), n = document.getElementById('sfNewer');
-      if (o) o.onclick = () => { if (idx < issues.length - 1) { idx++; jumpNote = ''; render(); } };
-      if (n) n.onclick = () => { if (idx > 0) { idx--; jumpNote = ''; render(); } };
-      const l = document.getElementById('sfLatest'), dt = document.getElementById('sfDate');
-      if (l) l.onclick = () => { idx = 0; jumpNote = ''; render(); };
-      if (dt) dt.onchange = () => jumpTo(dt.value);
-    }
-
-    // Live feed (updated daily by the Signal Flow task); falls back to the
-    // copy bundled with the site if the feed can't be reached.
-    const FEED_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/issues.json';
-    const loadJson = u => fetch(u, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
-    // Curated vendor items (Barco, Analog Way, PixelHue): live copy from the feed, bundled copy as backup.
-    const VENDORS_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/vendors.json';
-    const loadVendors = loadJson(VENDORS_URL)
-      .catch(() => loadJson('/signal-flow/vendors.json'))
-      .then(d => {
-        (d.vendors || []).forEach(v => {
-          vendorData[v.key] = v;
-          // A vendor that isn't built in gets its own tab: give it "label" (and optionally "match", a regex tested against item vendor/title) in vendors.json.
-          if (!VENDORS.some(x => x.key === v.key) && (v.items || []).length) {
-            let re = null; try { re = v.match ? new RegExp(v.match, 'i') : null; } catch (e) {}
-            VENDORS.push({ key: v.key, label: String(v.label || v.key).toUpperCase(), test: it => !!re && (re.test(it.vendor || '') || re.test(it.title || '')) });
-          }
-        });
-      })
-      .catch(() => {});
-    loadJson(FEED_URL)
-      .catch(() => loadJson('/signal-flow/issues.json'))
-      .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); return loadVendors; })
-      .then(() => renderVendors())
-      .catch(() => { box.innerHTML = '<p class="sf-empty">Signal Flow Daily is unavailable right now.</p>'; });
-  })();
 
   // dim section headers as they scroll up toward the top of the screen
   (function () {

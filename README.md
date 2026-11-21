@@ -8,6 +8,7 @@ Plain hand-written HTML/CSS/JS. No framework, no build step, no
 ```
 index.html      — homepage
 contact.html    — contact page
+signal-flow-daily.html — Signal Flow Daily (its own page; linked as /signal-flow-daily.html, so no Amplify rewrite is needed)
 images/         — merch product photos (WebP)
 og-image.png    — social share image
 robots.txt      — crawl rules

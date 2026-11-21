@@ -10,6 +10,7 @@ frontend:
     files:
       - 'index.html'
       - 'contact.html'
+      - 'signal-flow-daily.html'
       - 'robots.txt'
       - 'sitemap.xml'
       - 'og-image.png'
