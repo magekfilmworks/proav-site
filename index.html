@@ -498,55 +498,48 @@
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
 
-  // Who's On: the role tiles arrive row by row as they rise past a line partway up the window, and drop
-  // back out of sight when that row falls below the line again on the way up. The watched band runs from
-  // far above the window down to that line, so rows already scrolled past stay put rather than flickering.
+  // Who's On: the role tiles hinge down in one wave the first time the grid comes into view, then stay.
+  // The whole grid fits on a single screen, so a scroll-linked reveal has no room to read — this plays
+  // the motion once, on screen, as the section's introduction.
   const guestEls = document.querySelectorAll('.guest-reveal');
   if (guestEls.length) {
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (calm.matches) {
       guestEls.forEach(el => el.classList.add('visible'));
     } else {
-      // the top row stays down once it has arrived, so the section is never an empty gap
-      let firstRow = new Set();
-      const markFirstRow = () => {
-        const top0 = guestEls[0].offsetTop;
-        firstRow = new Set(Array.prototype.filter.call(guestEls, el => el.offsetTop === top0));
-        firstRow.forEach(el => el.classList.add('visible'));
-      };
-      const gio = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (firstRow.has(e.target)) { e.target.classList.add('visible'); return; }
-          e.target.classList.toggle('visible', e.isIntersecting);
-        });
-      }, { rootMargin: '300% 0px 10% 0px', threshold: 0 });
-      guestEls.forEach(el => gio.observe(el));
-      // the grid now fits on one screen, so the cascade runs on time rather than on scroll
-      // position: each tile waits its turn by index before hinging down
+      // The grid fits on one screen, so there is nothing to reveal row by row as you scroll. The
+      // cascade instead plays once, when the grid itself comes into view, and the tiles then stay.
+      // Watching the grid rather than the 24 tiles is deliberate: the container carries no 3D
+      // transform, so it can never be the flattened element a browser stops reporting.
       Array.prototype.forEach.call(guestEls, (el, i) => el.style.setProperty('--i', i));
-      markFirstRow();
+      let played = false;
+      const play = () => {
+        if (played) return;
+        played = true;
+        guestEls.forEach(el => el.classList.add('visible'));
+      };
+      const grid = guestEls[0].parentElement;
+      const gio = new IntersectionObserver((entries) => {
+        // half the grid on screen: far enough in that the wave is watched, not missed. On a phone the
+        // grid is taller than the window and never reaches half, so the scroll check below fires first.
+        if (entries.some(e => e.isIntersecting)) { play(); gio.disconnect(); }
+      }, { threshold: 0.5 });
+      gio.observe(grid);
 
-      // Safety net. Safari has been known to stop reporting an element that CSS has flattened or
-      // moved in 3D, which would leave a tile hidden for good. This costs one rect read per tile on
-      // a scroll frame and guarantees nothing stays blank while it is on screen.
-      let pending = false;
-      const sweep = () => {
-        pending = false;
-        const h = window.innerHeight;
-        for (let i = 0; i < guestEls.length; i++) {
-          const el = guestEls[i];
-          const r = el.getBoundingClientRect();
-          const near = r.top < h * 1.1 && r.bottom > -h * 3;
-          if (near) el.classList.add('visible');
-          else if (!firstRow.has(el)) el.classList.remove('visible');
+      // Safety net, in case the observer never reports: if the grid's top third is on screen, play.
+      // One rect read per scroll frame, and it stops listening the moment the wave has run.
+      const check = () => {
+        const r = grid.getBoundingClientRect();
+        if (r.top < window.innerHeight * 0.62 && r.bottom > 0) {
+          play();
+          gio.disconnect();
+          window.removeEventListener('scroll', queue);
         }
       };
-      const queue = () => { if (!pending) { pending = true; requestAnimationFrame(sweep); } };
+      let pending = false;
+      const queue = () => { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; check(); }); } };
       window.addEventListener('scroll', queue, { passive: true });
-      let rt;                                  // the row splits 4-up or 2-up, so recheck after a resize
-      window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { markFirstRow(); sweep(); }, 150); });
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { markFirstRow(); sweep(); });
-      sweep();
+      check();
     }
   }
 

@@ -148,31 +148,32 @@
 }
 
 /* guest */
-/* Role tiles hinge down from their top edge as each row arrives. The hidden state deliberately
-   carries no transform — a tile flattened in 3D can stop being reported by the browser's
-   visibility watcher (Safari does this), which strands it hidden for good. So hiding is opacity
-   only, and the hinge plays as an animation on the way in. No fill mode, so the hover lift still
-   works once the animation has finished. */
+/* The roster introduces itself once. The grid fits on a single screen, so there is nothing to
+   reveal gradually on scroll — instead the tiles hinge down from their top edge in one wave when
+   the section arrives, then stay put. One orchestrated moment, played on screen, never re-run. */
 .guest-reveal {
   opacity: 0;
+  transform: rotateX(-82deg);
   transform-origin: 50% 0;
   backface-visibility: hidden;
-  transition: opacity 0.35s ease;
 }
 
+/* backwards, not forwards: the tile holds the rotated state through its delay, then settles on the
+   values below once the animation ends. No fill left behind, so the hover lift still works. */
 .guest-reveal.visible {
   opacity: 1;
-  animation: guestHinge 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
-  animation-delay: calc(var(--i, 0) * 38ms);   /* each tile waits its turn, so the row reads as a wave */
+  transform: none;
+  animation: guestHinge 0.62s cubic-bezier(0.18, 0.9, 0.3, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 45ms);   /* each tile waits its turn, so the grid reads as a wave */
 }
 
 @keyframes guestHinge {
-  from { opacity: 0; transform: rotateX(-85deg); }
+  from { opacity: 0; transform: rotateX(-82deg); }
   to   { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .guest-reveal { opacity: 1; transition: none; }
+  .guest-reveal { opacity: 1; transform: none; }
   .guest-reveal.visible { animation: none; }
 }
 
