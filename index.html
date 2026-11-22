@@ -521,6 +521,9 @@
         });
       }, { rootMargin: '300% 0px 10% 0px', threshold: 0 });
       guestEls.forEach(el => gio.observe(el));
+      // the grid now fits on one screen, so the cascade runs on time rather than on scroll
+      // position: each tile waits its turn by index before hinging down
+      Array.prototype.forEach.call(guestEls, (el, i) => el.style.setProperty('--i', i));
       markFirstRow();
 
       // Safety net. Safari has been known to stop reporting an element that CSS has flattened or

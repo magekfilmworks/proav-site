@@ -195,11 +195,6 @@
   perspective-origin: 50% 0;
 }
 
-/* tiles in a row arrive together, so a small step across the columns reads as a wave */
-.guest-reveal:nth-child(4n + 2) { transition-delay: 0.06s; }
-.guest-reveal:nth-child(4n + 3) { transition-delay: 0.12s; }
-.guest-reveal:nth-child(4n + 4) { transition-delay: 0.18s; }
-
 /* the line that sits under a show heading */
 .watch-note {
   max-width: 62ch;
