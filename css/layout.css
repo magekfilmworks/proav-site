@@ -557,3 +557,14 @@ footer {
     transition: none;
   }
 }
+
+@media (max-width: 720px) {
+  /* phones: a comfortable tap target for the social icons */
+  .nav-social a {
+    min-width: 40px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

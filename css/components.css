@@ -154,8 +154,8 @@
   grid-template-rows: auto auto 0fr;
   align-content: start;
   justify-items: start;
-  min-height: 124px;
-  padding: 24px 26px;
+  min-height: 104px;
+  padding: 18px 20px;
   cursor: default;
   transition: grid-template-rows 0.5s cubic-bezier(0.22, 1, 0.36, 1),
               background-color 0.4s ease,
@@ -170,10 +170,10 @@
 }
 
 .guest-badge {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 34px;
+  font-size: 28px;
   line-height: 1;
   letter-spacing: 0.04em;
   color: var(--tungsten-amber);
@@ -186,8 +186,8 @@
 .guest-tag span {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 24px;
-  line-height: 1.15;
+  font-size: 20px;
+  line-height: 1.2;
   letter-spacing: 0.01em;
   color: var(--signal-white);
 }
@@ -196,8 +196,8 @@
   min-height: 0;
   overflow: hidden;
   padding-top: 0;
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--text-soft);
   opacity: 0;
   transition: opacity 0.35s ease, padding-top 0.5s cubic-bezier(0.22, 1, 0.36, 1);
@@ -632,6 +632,14 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
 }
 
 @media (max-width: 720px) {
+  /* phones: a comfortable tap target */
+  .merch-btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   /* video */
   .video-modal {
     padding: 12px;

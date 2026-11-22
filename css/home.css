@@ -142,41 +142,6 @@
   text-align: left;
 }
 
-/* the two formats, named side by side under the main description */
-.show-formats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  max-width: 1000px;
-  margin: 0 0 40px;
-}
-
-.show-format {
-  min-width: 0;
-}
-
-.show-format h3 {
-  margin: 0 0 6px;
-  font-size: 17px;
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--signal-white);
-}
-
-.show-format p {
-  margin: 0;
-  font-size: 17px;
-  line-height: 1.75;
-  color: var(--text-soft);
-}
-
-@media (max-width: 720px) {
-  .show-formats {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
-  }
-}
-
 .show-copy {
   max-width: 1000px;
   font-size: 17px;
@@ -224,24 +189,14 @@
 .guest-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 24px;
+  gap: 20px;
   align-items: start;
 }
 
-/* watch: the format label above each show heading — smaller than the WATCH section label above it */
-.watch-kicker {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--graphite-light);
-  margin-bottom: 10px;
-}
-
-/* watch: the second format in the Watch section (Cue to Cue), set off from the first */
-.watch-next {
-  margin-top: 96px;
-}
+/* tiles in a row arrive together, so a small step across the columns reads as a wave */
+.guest-tag:nth-child(4n + 2) { transition-delay: 0.06s; }
+.guest-tag:nth-child(4n + 3) { transition-delay: 0.12s; }
+.guest-tag:nth-child(4n + 4) { transition-delay: 0.18s; }
 
 /* the line that sits under a show heading */
 .watch-note {
@@ -250,12 +205,6 @@
   font-size: 18px;
   line-height: 1.7;
   color: var(--text-soft);
-}
-
-@media (max-width: 720px) {
-  .watch-next {
-    margin-top: 64px;
-  }
 }
 
 /* watch: one show's video slot and audio slot, side by side */
@@ -298,11 +247,6 @@
   width: 100%;
   height: 175px;
   border: 0;
-}
-
-/* an empty slot is just the solid block — no dashed outline, the caption says what goes there */
-.video-placeholder {
-  cursor: default;
 }
 
 /* the tags above an audio player are labels, not buttons */
@@ -425,22 +369,6 @@
   }
 }
 
-/* who's on: scroll flip-board, on every screen size. The grid opens row by row as you scroll down (each role tile flips down from
-   its top edge) and folds back up as you scroll up. Script adds .flip-on only while some rows are still closed; once all are open
-   the grid is plain again. --flip-gap is the grid's own row gap, read by the script. */
-.guest-grid.flip-on {
-  row-gap: 0;
-  margin-bottom: calc(var(--flip-gap, 24px) * -1);
-  perspective: 1400px;
-  perspective-origin: 50% 0;
-}
-
-.guest-grid.flip-on > .guest-tag {
-  margin-bottom: var(--flip-gap, 24px);
-  transform-origin: 50% 0;
-  backface-visibility: hidden;
-}
-
 @media (max-width: 720px) {
   /* hero */
   .hero {
@@ -480,6 +408,33 @@
   .guest-grid > *,
   .merch-grid > * {
     grid-column: span 6;
+  }
+
+  .guest-grid {
+    gap: 12px;
+  }
+
+  /* phones: fingers need a bigger target than a mouse pointer */
+  .watch-seg-btn,
+  .watch-seg-tag {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* phones: smaller role tiles so the section is not an endless scroll */
+  .guest-tag {
+    min-height: 0;
+    padding: 14px 14px 16px;
+  }
+
+  .guest-badge {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .guest-tag span {
+    font-size: 16px;
   }
 
   /* watch: the episode card fills the width on phones */
