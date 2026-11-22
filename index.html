@@ -537,7 +537,7 @@
           if (firstRow.has(e.target)) { e.target.classList.add('visible'); return; }
           e.target.classList.toggle('visible', e.isIntersecting);
         });
-      }, { rootMargin: '300% 0px -45% 0px', threshold: 0.01 });
+      }, { rootMargin: '300% 0px -5% 0px', threshold: 0.01 });
       guestEls.forEach(el => gio.observe(el));
       markFirstRow();
       let rt;                                  // the row splits 4-up or 2-up, so recheck after a resize
