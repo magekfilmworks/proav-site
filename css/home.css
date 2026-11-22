@@ -31,8 +31,8 @@
   align-self: flex-start;
   margin-left: var(--hero-left);
   width: min(1392px, calc(100% - var(--hero-left) - 24px));
-  color: var(--signal-white);   /* the cycle tints the wordmark: white -> amber -> cyan */
-  transition: color 1.4s ease-in-out;
+  color: var(--signal-white);   /* the cycle tints the wordmark; the order lives in index.html */
+  transition: color 0.9s ease-in-out;   /* shorter than the hold, so each colour still reads */
 }
 
 .hero-lockup {
@@ -95,12 +95,25 @@
 }
 
 /* svg */
+/* the wordmark cycle: white, amber, cyan, red, deep green, hot yellow */
 .hero-word.tint-amber {
   color: var(--tungsten-amber);
 }
 
 .hero-word.tint-cyan {
   color: var(--data-cyan);
+}
+
+.hero-word.tint-red {
+  color: var(--tally-red);
+}
+
+.hero-word.tint-green {
+  color: var(--deep-green);
+}
+
+.hero-word.tint-yellow {
+  color: var(--hot-yellow);
 }
 
 .hero-word svg {

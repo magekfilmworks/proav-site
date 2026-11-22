@@ -1139,26 +1139,33 @@
     v.defaultPlaybackRate = SPEED; v.playbackRate = SPEED;
     v.addEventListener('loadedmetadata', () => { v.playbackRate = SPEED; });
 
-    // One cycle: the white wordmark, then amber, then cyan, five seconds each, then the clip plays
-    // through the letters. When the clip finishes the cycle starts over.
-    const PHASE_MS = 9000;   // how long each colour holds before the fade to the next
-    const SHOW_CLIP = false; // true brings the clip back after cyan; false cycles the colours on their own
+    // The wordmark cycles white, amber, cyan, red, deep green, hot yellow, then starts over. Order
+    // and pace are the two lines below — add, drop or reorder a colour in TINTS and nothing else
+    // needs touching. Each name is a .tint-* class in home.css; '' is the plain white wordmark.
+    const TINTS = ['', 'tint-amber', 'tint-cyan', 'tint-red', 'tint-green', 'tint-yellow'];
+    const PHASE_MS = 3200;   // how long each colour holds before the fade to the next
+    const SHOW_CLIP = false; // true plays the clip at the end of the cycle; false is colours only
+    const COLOURS = TINTS.filter(Boolean);
     let timers = [];
     const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+    const clearTints = () => COLOURS.forEach(c => word.classList.remove(c));
 
     function startCycle() {
       timers.forEach(clearTimeout); timers = [];
-      word.classList.remove('video-on', 'tint-amber', 'tint-cyan');
+      word.classList.remove('video-on');
+      clearTints();
       v.pause();
       try { v.currentTime = 0; } catch (e) {}
-      later(() => word.classList.add('tint-amber'), PHASE_MS);
-      later(() => { word.classList.remove('tint-amber'); word.classList.add('tint-cyan'); }, PHASE_MS * 2);
+      TINTS.forEach((cls, i) => {
+        if (!i) return;                            // phase one is the plain wordmark, already showing
+        later(() => { clearTints(); word.classList.add(cls); }, PHASE_MS * i);
+      });
       later(() => {
-        word.classList.remove('tint-cyan');
-        if (!SHOW_CLIP) { startCycle(); return; }   // straight back to white
+        clearTints();
+        if (!SHOW_CLIP) { startCycle(); return; }  // straight back to white
         const p = v.play();
         if (p && p.catch) p.catch(startCycle);     // autoplay refused: keep cycling the colours
-      }, PHASE_MS * 3);
+      }, PHASE_MS * TINTS.length);
     }
 
     v.addEventListener('playing', () => { v.playbackRate = SPEED; word.classList.add('video-on'); });
