@@ -1,0 +1,27 @@
+/* Design tokens — colors, type families, borders. Change a value here and it changes everywhere. */
+
+:root {
+  /* color */
+  --stage-black: #0B0B0D;
+  --stage-black-raised: #131316;
+  --tungsten-amber: #FF9C3D;
+  --data-cyan: #2AD9EC;
+  --signal-white: #F5F5F0;
+  --graphite: #4A4A52;
+  --graphite-light: #8a8a92;
+  --text-soft: #d8d8dc;                      /* body copy on dark */
+  --tile-bg: var(--stage-black-raised);      /* .tile surface (merch, Signal Flow) */
+  --tile-bg-hover: #18181c;
+
+  /* lines */
+  --border-quiet: rgba(245,245,240,0.12);    /* default hairline / tile outline */
+  --border-strong: rgba(245,245,240,0.22);   /* buttons, controls */
+
+  /* signal line — amber, white, cyan */
+  --signal-gradient: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
+
+  /* type families */
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
