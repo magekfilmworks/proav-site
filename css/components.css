@@ -148,6 +148,20 @@
 }
 
 /* guest */
+/* role tiles hinge down from their top edge as each row reaches the trigger line */
+.guest-reveal {
+  opacity: 0;
+  transform: rotateX(-85deg);
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+  transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.guest-reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
 .guest-tag {
   position: relative;
   display: grid;

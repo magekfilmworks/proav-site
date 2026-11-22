@@ -191,12 +191,14 @@
   grid-template-columns: repeat(12, 1fr);
   gap: 20px;
   align-items: start;
+  perspective: 1200px;        /* gives the tiles their hinge depth */
+  perspective-origin: 50% 0;
 }
 
 /* tiles in a row arrive together, so a small step across the columns reads as a wave */
-.guest-tag:nth-child(4n + 2) { transition-delay: 0.06s; }
-.guest-tag:nth-child(4n + 3) { transition-delay: 0.12s; }
-.guest-tag:nth-child(4n + 4) { transition-delay: 0.18s; }
+.guest-reveal:nth-child(4n + 2) { transition-delay: 0.06s; }
+.guest-reveal:nth-child(4n + 3) { transition-delay: 0.12s; }
+.guest-reveal:nth-child(4n + 4) { transition-delay: 0.18s; }
 
 /* the line that sits under a show heading */
 .watch-note {
