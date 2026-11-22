@@ -148,18 +148,31 @@
 }
 
 /* guest */
-/* role tiles hinge down from their top edge as each row reaches the trigger line */
+/* Role tiles hinge down from their top edge as each row arrives. The hidden state deliberately
+   carries no transform — a tile flattened in 3D can stop being reported by the browser's
+   visibility watcher (Safari does this), which strands it hidden for good. So hiding is opacity
+   only, and the hinge plays as an animation on the way in. No fill mode, so the hover lift still
+   works once the animation has finished. */
 .guest-reveal {
   opacity: 0;
-  transform: rotateX(-85deg);
   transform-origin: 50% 0;
   backface-visibility: hidden;
-  transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.35s ease;
 }
 
 .guest-reveal.visible {
   opacity: 1;
-  transform: none;
+  animation: guestHinge 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes guestHinge {
+  from { opacity: 0; transform: rotateX(-85deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guest-reveal { opacity: 1; transition: none; }
+  .guest-reveal.visible { animation: none; }
 }
 
 .guest-tag {

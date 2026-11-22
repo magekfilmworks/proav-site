@@ -519,11 +519,31 @@
           if (firstRow.has(e.target)) { e.target.classList.add('visible'); return; }
           e.target.classList.toggle('visible', e.isIntersecting);
         });
-      }, { rootMargin: '300% 0px 10% 0px', threshold: 0.01 });
+      }, { rootMargin: '300% 0px 10% 0px', threshold: 0 });
       guestEls.forEach(el => gio.observe(el));
       markFirstRow();
+
+      // Safety net. Safari has been known to stop reporting an element that CSS has flattened or
+      // moved in 3D, which would leave a tile hidden for good. This costs one rect read per tile on
+      // a scroll frame and guarantees nothing stays blank while it is on screen.
+      let pending = false;
+      const sweep = () => {
+        pending = false;
+        const h = window.innerHeight;
+        for (let i = 0; i < guestEls.length; i++) {
+          const el = guestEls[i];
+          const r = el.getBoundingClientRect();
+          const near = r.top < h * 1.1 && r.bottom > -h * 3;
+          if (near) el.classList.add('visible');
+          else if (!firstRow.has(el)) el.classList.remove('visible');
+        }
+      };
+      const queue = () => { if (!pending) { pending = true; requestAnimationFrame(sweep); } };
+      window.addEventListener('scroll', queue, { passive: true });
       let rt;                                  // the row splits 4-up or 2-up, so recheck after a resize
-      window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(markFirstRow, 150); });
+      window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { markFirstRow(); sweep(); }, 150); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { markFirstRow(); sweep(); });
+      sweep();
     }
   }
 
