@@ -498,47 +498,58 @@
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
 
-  // Who's On: the role tiles hinge down in one wave the first time the grid comes into view, then stay.
-  // The whole grid fits on a single screen, so a scroll-linked reveal has no room to read — this plays
-  // the motion once, on screen, as the section's introduction.
+  // Who's On: the role tiles hinge down in a wave as the grid comes up the window, and fold back up in
+  // reverse when you scroll away from it. Two trigger lines rather than one — open at halfway up the
+  // window, close only once the grid has fallen back past 92% — so the gap between them stops a small
+  // thumb movement near a single line from flipping the whole grid open and shut.
   const guestEls = document.querySelectorAll('.guest-reveal');
   if (guestEls.length) {
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
     if (calm.matches) {
-      guestEls.forEach(el => el.classList.add('visible'));
+      guestEls.forEach(el => el.classList.add('settled'));
     } else {
-      // The grid fits on one screen, so there is nothing to reveal row by row as you scroll. The
-      // cascade instead plays once, when the grid itself comes into view, and the tiles then stay.
-      // Watching the grid rather than the 24 tiles is deliberate: the container carries no 3D
-      // transform, so it can never be the flattened element a browser stops reporting.
-      Array.prototype.forEach.call(guestEls, (el, i) => el.style.setProperty('--i', i));
-      let played = false;
-      const play = () => {
-        if (played) return;
-        played = true;
-        guestEls.forEach(el => el.classList.add('visible'));
-      };
-      const grid = guestEls[0].parentElement;
-      const gio = new IntersectionObserver((entries) => {
-        // half the grid on screen: far enough in that the wave is watched, not missed. On a phone the
-        // grid is taller than the window and never reaches half, so the scroll check below fires first.
-        if (entries.some(e => e.isIntersecting)) { play(); gio.disconnect(); }
-      }, { threshold: 0.5 });
-      gio.observe(grid);
+      const n = guestEls.length;
+      Array.prototype.forEach.call(guestEls, (el, i) => {
+        el.style.setProperty('--i', i);          // order of the wave opening
+        el.style.setProperty('--o', n - 1 - i);  // and of the wave closing, which runs the other way
+        // Each tile hands its animation off to a resting class as it finishes, so nothing is left
+        // holding a transform that would outrank the hover lift.
+        el.addEventListener('animationend', (e) => {
+          if (e.target !== el) return;
+          if (el.classList.contains('out')) { el.classList.remove('out', 'settled'); }
+          else if (el.classList.contains('in')) { el.classList.remove('in'); el.classList.add('settled'); }
+        });
+      });
 
-      // Safety net, in case the observer never reports: if the grid's top third is on screen, play.
-      // One rect read per scroll frame, and it stops listening the moment the wave has run.
+      // The grid is watched, not the 24 tiles: the container carries no 3D transform, so it can never
+      // be the flattened element a browser quietly stops reporting on.
+      const grid = guestEls[0].parentElement;
+      let open = false;
+      const setOpen = (want) => {
+        if (want === open) return;
+        open = want;
+        guestEls.forEach(el => el.classList.remove('in', 'out'));
+        void grid.offsetWidth;                   // one reflow for the grid, so the animations restart
+        guestEls.forEach(el => {                 // rather than resume the one that was mid-flight
+          if (want) el.classList.remove('settled');
+          el.classList.add(want ? 'in' : 'out');
+        });
+      };
+
+      // Two lines, not one. Opening at 45% up the window puts the wave on screen where it can be
+      // watched. Closing at 78% keeps the top row still in frame as it folds — it closes last, since
+      // the wave retreats in reverse — so the fold-up is seen rather than happening below the fold.
+      // The 33%-of-a-window gap between the two lines is what stops a small scroll chattering it.
       const check = () => {
         const r = grid.getBoundingClientRect();
-        if (r.top < window.innerHeight * 0.62 && r.bottom > 0) {
-          play();
-          gio.disconnect();
-          window.removeEventListener('scroll', queue);
-        }
+        const h = window.innerHeight;
+        if (!open && r.top < h * 0.45) setOpen(true);
+        else if (open && r.top > h * 0.78) setOpen(false);
       };
       let pending = false;
       const queue = () => { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; check(); }); } };
       window.addEventListener('scroll', queue, { passive: true });
+      window.addEventListener('resize', queue, { passive: true });
       check();
     }
   }

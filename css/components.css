@@ -148,9 +148,11 @@
 }
 
 /* guest */
-/* The roster introduces itself once. The grid fits on a single screen, so there is nothing to
-   reveal gradually on scroll — instead the tiles hinge down from their top edge in one wave when
-   the section arrives, then stay put. One orchestrated moment, played on screen, never re-run. */
+/* The role tiles hinge down from their top edge in a wave on the way down, and fold back up in the
+   reverse order on the way up. Three states rather than two: .in and .out play the animations, and
+   .settled is the resting state they hand off to. The handoff matters — an animation holding its
+   end state would outrank the hover lift below, so once the wave has landed the animation is taken
+   off the tile and .settled holds it in place instead. */
 .guest-reveal {
   opacity: 0;
   transform: rotateX(-82deg);
@@ -158,13 +160,19 @@
   backface-visibility: hidden;
 }
 
-/* backwards, not forwards: the tile holds the rotated state through its delay, then settles on the
-   values below once the animation ends. No fill left behind, so the hover lift still works. */
-.guest-reveal.visible {
+.guest-reveal.in {
+  animation: guestHinge 0.62s cubic-bezier(0.18, 0.9, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);   /* each tile waits its turn, so the grid reads as a wave */
+}
+
+.guest-reveal.settled {
   opacity: 1;
   transform: none;
-  animation: guestHinge 0.62s cubic-bezier(0.18, 0.9, 0.3, 1) backwards;
-  animation-delay: calc(var(--i, 0) * 45ms);   /* each tile waits its turn, so the grid reads as a wave */
+}
+
+.guest-reveal.out {
+  animation: guestHingeOut 0.4s cubic-bezier(0.5, 0, 0.85, 0.4) both;
+  animation-delay: calc(var(--o, 0) * 28ms);   /* reverse order, so the wave retreats the way it came */
 }
 
 @keyframes guestHinge {
@@ -172,9 +180,19 @@
   to   { opacity: 1; transform: none; }
 }
 
+@keyframes guestHingeOut {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: rotateX(-82deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .guest-reveal { opacity: 1; transform: none; }
-  .guest-reveal.visible { animation: none; }
+  .guest-reveal,
+  .guest-reveal.in,
+  .guest-reveal.out {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
 
 .guest-tag {
