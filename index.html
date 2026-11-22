@@ -508,10 +508,8 @@
     if (calm.matches) {
       guestEls.forEach(el => el.classList.add('settled'));
     } else {
-      const n = guestEls.length;
       Array.prototype.forEach.call(guestEls, (el, i) => {
-        el.style.setProperty('--i', i);          // order of the wave opening
-        el.style.setProperty('--o', n - 1 - i);  // and of the wave closing, which runs the other way
+        el.style.setProperty('--i', i);          // position in the wave, both opening and closing
         // Each tile hands its animation off to a resting class as it finishes, so nothing is left
         // holding a transform that would outrank the hover lift.
         el.addEventListener('animationend', (e) => {
@@ -524,32 +522,55 @@
       // The grid is watched, not the 24 tiles: the container carries no 3D transform, so it can never
       // be the flattened element a browser quietly stops reporting on.
       const grid = guestEls[0].parentElement;
+
+      // The top row stays down once it has arrived. Without it, scrolling back up leaves the heading
+      // sitting over an empty black gap, which reads as a broken section rather than a closed one.
+      let firstRow = new Set();
+      const markFirstRow = () => {
+        const top0 = guestEls[0].offsetTop;
+        firstRow = new Set(Array.prototype.filter.call(guestEls, el => el.offsetTop === top0));
+      };
+      markFirstRow();
+
       let open = false;
       const setOpen = (want) => {
         if (want === open) return;
         open = want;
-        guestEls.forEach(el => el.classList.remove('in', 'out'));
+        // opening skips whatever is already down; closing skips the top row
+        const moving = Array.prototype.filter.call(guestEls, el =>
+          want ? !el.classList.contains('settled') : !firstRow.has(el));
+        if (!moving.length) return;
+        moving.forEach(el => el.classList.remove('in', 'out'));
         void grid.offsetWidth;                   // one reflow for the grid, so the animations restart
-        guestEls.forEach(el => {                 // rather than resume the one that was mid-flight
+        moving.forEach(el => {                   // rather than resume the one that was mid-flight
           if (want) el.classList.remove('settled');
           el.classList.add(want ? 'in' : 'out');
         });
       };
 
-      // Two lines, not one. Opening at 45% up the window puts the wave on screen where it can be
-      // watched. Closing at 78% keeps the top row still in frame as it folds — it closes last, since
-      // the wave retreats in reverse — so the fold-up is seen rather than happening below the fold.
-      // The 33%-of-a-window gap between the two lines is what stops a small scroll chattering it.
+      // Two lines plus a direction test. Open at 40% up the window, close at 55% — and only close
+      // while actually scrolling up. The 15%-of-a-window dead zone between the lines, together with
+      // the direction test, is what stops a small scroll chattering it open and shut; keeping the
+      // lines close together is what makes the fold-up happen while the grid is still in frame.
+      let lastY = window.scrollY;
       const check = () => {
         const r = grid.getBoundingClientRect();
         const h = window.innerHeight;
-        if (!open && r.top < h * 0.45) setOpen(true);
-        else if (open && r.top > h * 0.78) setOpen(false);
+        const y = window.scrollY;
+        const goingUp = y < lastY - 1;
+        lastY = y;
+        if (!open && r.top < h * 0.40) setOpen(true);
+        else if (open && goingUp && r.top > h * 0.55) setOpen(false);
       };
       let pending = false;
       const queue = () => { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; check(); }); } };
       window.addEventListener('scroll', queue, { passive: true });
-      window.addEventListener('resize', queue, { passive: true });
+      let rt;                                    // the row runs 4-up or 2-up, so recheck after a resize
+      window.addEventListener('resize', () => {
+        clearTimeout(rt);
+        rt = setTimeout(() => { markFirstRow(); check(); }, 150);
+      }, { passive: true });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(markFirstRow);
       check();
     }
   }

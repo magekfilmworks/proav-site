@@ -170,9 +170,12 @@
   transform: none;
 }
 
+/* Closing is quicker than opening, and runs top-first rather than in reverse. Scrolling up pushes
+   the grid down the window, so the top row is the part still on screen — folding it first is what
+   makes the retraction feel immediate instead of arriving a beat after the scroll. */
 .guest-reveal.out {
-  animation: guestHingeOut 0.4s cubic-bezier(0.5, 0, 0.85, 0.4) both;
-  animation-delay: calc(var(--o, 0) * 28ms);   /* reverse order, so the wave retreats the way it came */
+  animation: guestHingeOut 0.3s cubic-bezier(0.5, 0, 0.85, 0.4) both;
+  animation-delay: calc(var(--i, 0) * 10ms);
 }
 
 @keyframes guestHinge {
