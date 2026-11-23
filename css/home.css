@@ -23,43 +23,6 @@
   pointer-events: none;
 }
 
-/* The room photo sits in the top right of the hero, behind the wordmark. The box is cropped to
-   the top 55% of the frame, which is where the walls and truss are — below that the shot is an
-   empty floor. Masked on its left and bottom edges so it reads as part of the background
-   rather than a pasted-in picture. */
-.hero::after {
-  content: "";
-  position: absolute;
-  top: 56px;
-  right: 0;
-  width: min(1180px, 70%);
-  aspect-ratio: 2576 / 801;     /* 55% of the photo's 2576 x 1456 */
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.8;
-  background: url("../images/hero-rig.png") right top / cover no-repeat;
-  -webkit-mask-image: linear-gradient(to right, transparent 8%, #000 52%), linear-gradient(to bottom, #000 58%, transparent);
-  mask-image: linear-gradient(to right, transparent 8%, #000 52%), linear-gradient(to bottom, #000 58%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
-}
-
-/* the hero copy stays above the drawing */
-.hero-lockup,
-.hero-hook,
-.hero-ctas {
-  position: relative;
-  z-index: 1;
-}
-
-@media (max-width: 720px) {
-  /* on a phone the drawing would sit on top of the wordmark, so it steps back */
-  .hero::after {
-    width: 100%;
-    top: 40px;
-    opacity: 0.45;
-  }
-}
 
 .hero-word {
   font-size: clamp(80px, 16vw, 250px);
