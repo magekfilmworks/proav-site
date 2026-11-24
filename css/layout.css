@@ -414,11 +414,12 @@
   opacity: 0.8;
 }
 
+/* a child of .hero-word, so it marks the logo at every width instead of the hero's corner */
 .bracket.tl {
-  top: 92px;
+  top: -16px;
+  left: -16px;
   width: 36px;
   height: 36px;
-  left: max(8px, calc((100% - 1440px) / 2 + 8px));
   border-top: 2px solid;
   border-left: 2px solid;
 }
@@ -431,6 +432,8 @@
   border-bottom: 2px solid;
   border-right: 2px solid;
 }
+
+
 
 /* footer */
 footer {

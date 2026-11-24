@@ -10,6 +10,12 @@
   justify-content: flex-start;
   text-align: left;
   --hero-left: calc(max(0px, (100% - 1440px) / 2) + 24px);
+  /* the wordmark's own box, so the screen can be aligned to it rather than guessed at.
+     Its svg viewBox is 1200x200, hence /6. */
+  /* vw, not %. A percentage inside a custom property is resolved against whatever property
+     consumes it — in `height` that means the parent's height, which collapses this to zero. */
+  --word-w: min(1392px, calc(100vw - (max(0px, (100vw - 1440px) / 2) + 24px) - 24px));
+  --word-h: calc(var(--word-w) / 6);
   padding: 108px 0 80px;
   overflow: hidden;
   min-height: 100svh;
@@ -19,8 +25,77 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 12% 15%, rgba(255,156,61,0.22), transparent 45%), radial-gradient(ellipse at 88% 85%, rgba(42,217,236,0.20), transparent 50%);
+  /* Both glows are pinned a fixed distance from the top, not a percentage of the hero. The hero
+     box is ~1430px tall because The Show sits inside it, so a percentage put the cyan 300px
+     below the fold and left the right-hand side of the visible header with no light at all. */
+  background: radial-gradient(ellipse 1200px 760px at 12% 200px, rgba(255,156,61,0.22), transparent 70%), radial-gradient(ellipse 1100px 700px at 88% 330px, rgba(42,217,236,0.20), transparent 70%);
   pointer-events: none;
+}
+
+
+/* ---- the LED screen: a content slot, flown off two drops ---- */
+.hero-screen{
+  /* The hero has ~310px between the nav and the hook. A panel at the wall's own 2.56:1 cannot
+     be both full width and sit inside the logo's cap-to-baseline band — that band is only
+     ~160px, which makes it a letterbox strip. Height wins: the panel is sized from its own
+     aspect and tucked under the nav, so its bottom clears the hook. */
+  position:absolute;
+  top: 88px;
+  aspect-ratio: 750 / 293;
+  right:var(--hero-left);
+  width:min(760px,48%);   /* capped so the panel clears the wordmark, and the hook at 1920 */
+  z-index:1; pointer-events:none;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 36%);
+  mask-image:linear-gradient(to right,transparent 0%,#000 36%);
+}
+/* whatever goes in the slot is clipped to the wall and sits under the panel grid */
+.screen-content{
+  position:absolute; inset:0;
+  /* the trapezoid, in the cropped box's coordinates */
+  clip-path:polygon(0.00% 10.24%, 100.00% 0.00%, 100.00% 100.00%, 0.00% 90.10%);
+  background:#0B0B0D;
+  overflow:hidden;
+}
+.screen-content video{width:100%;height:100%;object-fit:cover;display:block;opacity:.92}
+.screen-frame{position:absolute;inset:0;width:100%;height:100%}
+
+/* The wordmark must never sit on the panel. Below 1024px there is no room beside it, so the
+   screen moves above the wordmark as a band rather than shrinking into the corner — a shrunk
+   panel is unreadable anyway, and the overlap reads as a mistake. */
+@media (max-width: 1024px) {
+  /* The wall sits 16.7% in from the element's own left edge, so a flush-left element leaves a
+     dead gutter and pushes the wall off the right. Overhanging to the left by 15% lands the
+     wall's left edge on the same gutter as the text below it, and keeps its right edge on
+     screen. The left mask goes too — there is no wordmark beside it to protect here. */
+  .hero-screen {
+    position: relative;
+    top: 0;
+    right: auto;                 /* the desktop `right` would shift a relative box leftwards */
+    height: auto;          /* the logo-aligned height is a desktop idea; here it is a band */
+    aspect-ratio: 750 / 293;
+    align-self: flex-start;      /* .hero centres its children; this one is gutter-aligned */
+    width: calc(100% - var(--hero-left) * 2);   /* a gutter on BOTH sides — never bleeds right */
+    margin: 0 var(--hero-left) 26px;
+    opacity: 0.38;
+    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
+    mask-image: linear-gradient(to bottom, #000 72%, transparent);
+    -webkit-mask-composite: add;
+    mask-composite: add;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-screen {
+    width: calc(100% - var(--hero-left) * 2);
+    margin: 0 var(--hero-left) 18px;
+    opacity: 0.46;
+  }
+}
+
+/* A still frame is enough when motion is unwelcome. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-screen video { display: none; }
+  .screen-content { background: #0B0B0D; }
 }
 
 
@@ -33,7 +108,7 @@
   margin-left: var(--hero-left);
   width: min(1392px, calc(100% - var(--hero-left) - 24px));
   color: var(--signal-white);   /* the cycle tints the wordmark; the order lives in index.html */
-  transition: color 0.9s ease-in-out;   /* shorter than the hold, so each colour still reads */
+  transition: color 1.4s ease-in-out;   /* shorter than the hold, so each colour still reads */
 }
 
 .hero-lockup {

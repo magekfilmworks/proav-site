@@ -142,9 +142,26 @@
 
 <header class="hero" id="top">
   <h1 class="sr-only">ProAV Podcast — Mainstage, Backstage, Cloud</h1>
-  <div class="bracket tl"></div>
   <div class="bracket br"></div>
+  <!-- LED wall: a content slot. Swap what is inside .screen-content and it is
+       clipped to the wall and takes the panel grid on top automatically. -->
+  <div class="hero-screen" aria-hidden="true">
+    <div class="screen-content">
+      <video src="images/hero-logo-v132.mp4" autoplay muted loop playsinline preload="auto"></video>
+    </div>
+    <svg class="screen-frame" viewBox="150 28 750 293" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMaxYMid meet">
+  <defs>
+    <clipPath id="wallClip"><path d="M150 58 L900 28 L900 321 L150 292 Z"/></clipPath>
+    <pattern id="panels" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0V26M0 26H26" stroke="#0B0B0D" stroke-opacity=".55" stroke-width="1.5"/><path d="M24.5 0V26M0 24.5H26" stroke="#F5F5F0" stroke-opacity=".13" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <g clip-path="url(#wallClip)"><rect x="150" y="28" width="750" height="293" fill="url(#panels)"/></g>
+  <path d="M150 58 L900 28 L900 321 L150 292 Z" fill="none" stroke="#F5F5F0" stroke-opacity=".30" stroke-width="1.5"/>
+</svg>
+  </div>
   <div class="hero-word display">
+    <div class="bracket tl" aria-hidden="true"></div>
     <div class="hero-word-video" aria-hidden="true"><video src="images/hero-logo-v132.mp4" muted playsinline preload="auto"></video></div>
     <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -179,16 +196,12 @@
     <div class="section-eyebrow reveal">THE SHOW</div>
     <h2 class="section-title display reveal">Where live production actually happens.</h2>
     <p class="show-copy reveal">
-      ProAV goes where the show actually happens — Mainstage, Backstage, and
-      increasingly, Cloud. Each episode pairs a hands-on look at the gear and
-      workflows driving live production with real conversations from the people
-      behind them: FOH engineers, LDs, video directors, production managers,
-      and the hardware companies building the tools that make it all work —
-      plus the teams rethinking what "live" means as more of it moves to
-      remote and cloud-based workflows. Some episodes run the full
+      Each episode pairs a hands-on look at the gear and workflows driving live
+      production with FOH engineers, LDs, video
+      directors, production managers, and the hardware companies building the
+      tools that make it all work. Some episodes run the full
       demo-plus-conversation format with a single guest; others go deep with
-      multiple guests for a full hour. Available as audio and video, wherever
-      you listen or watch.
+      multiple guests for a full hour.
     </p>
     <div class="segments-wrap">
       <div class="segments">
@@ -1143,7 +1156,7 @@
     // and pace are the two lines below — add, drop or reorder a colour in TINTS and nothing else
     // needs touching. Each name is a .tint-* class in home.css; '' is the plain white wordmark.
     const TINTS = ['', 'tint-amber', 'tint-cyan', 'tint-red', 'tint-green', 'tint-yellow'];
-    const PHASE_MS = 3200;   // how long each colour holds before the fade to the next
+    const PHASE_MS = 5200;   // how long each colour holds before the fade to the next
     const SHOW_CLIP = false; // true plays the clip at the end of the cycle; false is colours only
     const COLOURS = TINTS.filter(Boolean);
     let timers = [];
