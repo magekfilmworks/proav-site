@@ -209,18 +209,11 @@
 /* The wordmark must never sit on the panel. Below 1024px there is no room beside it, so the
    screen moves above the wordmark as a band rather than shrinking into the corner — a shrunk
    panel is unreadable anyway, and the overlap reads as a mistake. */
-/* The wall is dimmed on phones so it does not compete with the wordmark under it. The opacity
-   goes on the picture and the frame rather than on .hero-screen, because opacity on a parent
-   cannot be undone by a child and it would take the sound button down with it. */
-@media (max-width: 1024px) {
-  .screen-content,
-  .screen-frame { opacity: 0.38; }
-}
-
-@media (max-width: 720px) {
-  .screen-content,
-  .screen-frame { opacity: 0.46; }
-}
+/* No dimming at any width. The wall used to sit BEHIND the wordmark on small screens, so it was
+   knocked back to 0.38/0.46 to stop it competing. It is a band above the wordmark now, so that
+   dimming only made the mobile wall dark where desktop is full strength — and being 54%
+   transparent is what let the background glow show through the panel. Full strength everywhere,
+   same as desktop. */
 
 @media (max-width: 1024px) {
   /* The wall sits 16.7% in from the element's own left edge, so a flush-left element leaves a
@@ -245,10 +238,9 @@
        desktop does not fade its right, so neither does this.
        The two composite keywords are the same operation: `intersect` is the standard, and
        `source-in` is what the -webkit- prefixed property understands. */
-    /* Only a bottom fade, so the wall dissolves into the page above the logo. There is no left
-       feather at any width — the left edge is hard on mobile and on desktop alike. */
-    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
-    mask-image: linear-gradient(to bottom, #000 72%, transparent);
+    /* No mask at any width. The bottom fade that used to live here dissolved the wall's lower
+       28%, which let the cyan background glow shine out through the panel. Desktop has no mask,
+       so neither does this: all four edges are hard, mobile and desktop alike. */
   }
 }
 

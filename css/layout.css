@@ -417,13 +417,17 @@
 /* a child of .hero-word, so it marks the logo at every width instead of the hero's corner.
    The colour is named rather than left to the shorthand's currentColor default: .hero-word's
    colour is what the wordmark cycle animates, so an inherited border rode the cycle with it. */
-/* Sits ON the gutter line, not outside it. The -16px it used to carry put it 16px left of the
-   wordmark box, which on phones is only 20px in — it hung at the window edge. The ink term
-   cancels .hero-word's bearing correction, so this lands at exactly --hero-left, the same
-   gutter line .bracket.br is pinned to on the right. */
+/* Sits INSIDE the gutter: clear of the window edge, clear of the P. The -16px it once carried
+   put it 16px left of the wordmark box, which on phones is only 20px in, so it hung at the
+   window edge; landing it exactly on the gutter line instead put it on the P's ink. The ink
+   term cancels .hero-word's bearing correction so the arm lands relative to the gutter line
+   whether or not Impact is installed, and the 10px pulls it back into the gutter. One value
+   covers both sizes because the clearance it leaves is the same at each: the 24px desktop
+   gutter puts the arm 14px from the window edge, the 20px phone gutter puts it 10px from the
+   edge, and either way there is 8px of clear space between the arm and the P. */
 .bracket.tl {
   top: -16px;
-  left: calc(var(--word-w) * var(--ink-l));
+  left: calc(var(--word-w) * var(--ink-l) - 10px);
   width: 36px;
   height: 36px;
   border-top: 2px solid var(--signal-white);
@@ -491,6 +495,20 @@ footer {
   color: #5c5c62;
   margin-top: 10px;
   letter-spacing: 0.03em;
+}
+
+/* Desktop: the bracket's arm sits ON the gutter line, so its inset from the window edge is the
+   same number as the wall's right edge — they read as one margin. At that x it is directly over
+   the P's stem, so it also lifts to -30px, which puts its foot clear above the cap. The cap top
+   is a fixed 13.45% down the wordmark box (Impact's cap height against the SVG's viewBox), and
+   the box is 6:1, so the clearance grows with the window instead of pinching: ~16px at 1025,
+   ~25px at 1440, ~34px at 1920. Below 1025 the wall stacks above the wordmark and there is no
+   headroom to lift into, so that layout keeps the -10px sideways offset instead. */
+@media (min-width: 1025px) {
+  .bracket.tl {
+    top: -30px;
+    left: calc(var(--word-w) * var(--ink-l));
+  }
 }
 
 @keyframes navSignalSweep {
