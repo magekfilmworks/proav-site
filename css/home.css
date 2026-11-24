@@ -16,7 +16,7 @@
      consumes it — in `height` that means the parent's height, which collapses this to zero. */
   --word-w: min(1392px, calc(100vw - (max(0px, (100vw - 1440px) / 2) + 24px) - 24px));
   --word-h: calc(var(--word-w) / 6);
-  padding: 108px 0 80px;
+  padding: 108px 0 56px;
   overflow: hidden;
   min-height: 100svh;
 }
@@ -28,7 +28,18 @@
   /* Both glows are pinned a fixed distance from the top, not a percentage of the hero. The hero
      box is ~1430px tall because The Show sits inside it, so a percentage put the cyan 300px
      below the fold and left the right-hand side of the visible header with no light at all. */
-  background: radial-gradient(ellipse 1200px 760px at 12% 200px, rgba(255,156,61,0.22), transparent 70%), radial-gradient(ellipse 1100px 700px at 88% 330px, rgba(42,217,236,0.20), transparent 70%);
+  /* The two alphas are the hero's brightness. Measured on the wash alone with the content
+     hidden: .22/.20 read mean 23.0 / peak 46.0; these read 18.8 / 32.9. Lower them together
+     to go darker still — .11/.10 gives 17.1 / 28.5.
+
+     The SIZES are capped against the viewport, and that cap is load-bearing. The centres sit at
+     12% and 88% of the hero, so they converge as the window narrows: at 390px they are 296px
+     apart while a flat 1200px ellipse is 1200px wide, which puts the whole screen inside the
+     bright core of BOTH glows. Amber over cyan with no falloff left is a washed-out grey-green,
+     and the phone background measured mean 28.4 against the desktop's 18.8. The vw terms keep
+     the ellipse smaller than the gap it has to fade across. The px terms still win at 1440 and
+     1920, so desktop is unchanged. */
+  background: radial-gradient(ellipse min(1200px,85vw) min(760px,54vw) at 12% 200px, rgba(255,156,61,0.14), transparent 70%), radial-gradient(ellipse min(1100px,78vw) min(700px,50vw) at 88% 330px, rgba(42,217,236,0.13), transparent 70%);
   pointer-events: none;
 }
 
@@ -171,7 +182,8 @@
 }
 
 /* svg */
-/* the wordmark cycle: white, amber, cyan, red, deep green, hot yellow */
+/* the wordmark cycle: white, amber, cyan. White is the logo's own colour, so it has no class —
+   the cycle returns to it by removing these. */
 .hero-word.tint-amber {
   color: var(--tungsten-amber);
 }
@@ -180,16 +192,19 @@
   color: var(--data-cyan);
 }
 
-.hero-word.tint-red {
-  color: var(--tally-red);
+.hero-podcast {
+  /* same 1200-unit grid as the wordmark above it, so it scales in step. The 62-unit
+     viewBox is cropped straight out of the brand pack's lockup. */
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 2px 0 0;
 }
 
-.hero-word.tint-green {
-  color: var(--deep-green);
-}
-
-.hero-word.tint-yellow {
-  color: var(--hot-yellow);
+/* Pinned, not currentColor: PROAV cycles and PODCAST holds. This overrides the fill attribute
+   on the <text>, which is left in the markup as a no-CSS fallback. */
+.hero-podcast text {
+  fill: var(--signal-white);
 }
 
 .hero-word svg {
@@ -205,7 +220,8 @@
   height: 18px;
 }
 
-.hero-word.video-on svg {
+/* the clip replaces PROAV only; the PODCAST line is not part of it and stays put */
+.hero-word.video-on svg:not(.hero-podcast) {
   opacity: 0;
 }
 
@@ -251,7 +267,7 @@
 }
 
 .segment-card {
-  padding: 22px 4px 8px 0;
+  padding: 14px 4px 8px 0;
 }
 
 /* h3 */
@@ -476,14 +492,16 @@
 
   /* show */
   .show-in-hero {
-    margin-top: 56px;
+    margin-top: 40px;
     padding: 0 20px;
   }
 
   /* segments (Mainstage / Backstage / Cloud): one full-width column on phones, read like a stack of paragraphs */
   .segments {
     grid-template-columns: minmax(0, 1fr);
-    gap: 44px;
+    /* 44px here, on top of each card's own top and bottom padding, put ~66px of nothing between
+       one card's last line and the next card's chip. 22px reads as a paragraph break instead. */
+    gap: 22px;
   }
 
   .segments > * {

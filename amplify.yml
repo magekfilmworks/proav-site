@@ -11,8 +11,6 @@ frontend:
       - 'index.html'
       - 'contact.html'
       - 'signal-flow-daily.html'
-      - 'bg-test-css.html'
-      - 'bg-test-frames.html'
       - 'robots.txt'
       - 'sitemap.xml'
       - 'og-image.png'

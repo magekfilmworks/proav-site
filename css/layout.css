@@ -414,14 +414,16 @@
   opacity: 0.8;
 }
 
-/* a child of .hero-word, so it marks the logo at every width instead of the hero's corner */
+/* a child of .hero-word, so it marks the logo at every width instead of the hero's corner.
+   The colour is named rather than left to the shorthand's currentColor default: .hero-word's
+   colour is what the wordmark cycle animates, so an inherited border rode the cycle with it. */
 .bracket.tl {
   top: -16px;
   left: -16px;
   width: 36px;
   height: 36px;
-  border-top: 2px solid;
-  border-left: 2px solid;
+  border-top: 2px solid var(--signal-white);
+  border-left: 2px solid var(--signal-white);
 }
 
 .bracket.br {

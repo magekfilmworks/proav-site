@@ -7,11 +7,11 @@
 <meta name="theme-color" content="#0B0B0D">
 <meta name="robots" content="index, follow">
 <title>ProAV — Mainstage, Backstage, Cloud</title>
-<meta name="description" content="ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real gear, real crews, real conversations from the people driving live production.">
+<meta name="description" content="ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real Conversations, real crews, real gear from the people driving live production.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ProAV Podcast">
 <meta property="og:title" content="ProAV — Mainstage, Backstage, Cloud">
-<meta property="og:description" content="Real gear, real crews, real conversations — from the rig on stage to the cloud infrastructure taking live production remote.">
+<meta property="og:description" content="Real Conversations, real crews, real gear — from the rig on stage to the cloud infrastructure taking live production remote.">
 <meta property="og:image" content="/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
 <link rel="canonical" href="https://proavpodcast.fm/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ProAV — Mainstage, Backstage, Cloud">
-<meta name="twitter:description" content="Real gear, real crews, real conversations — from the rig on stage to the cloud infrastructure taking live production remote.">
+<meta name="twitter:description" content="Real Conversations, real crews, real gear — from the rig on stage to the cloud infrastructure taking live production remote.">
 <meta name="twitter:image" content="/og-image.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNjQgNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iNiIgZmlsbD0iIzBCMEIwRCIvPgogIDx0ZXh0IHg9IjMyIiB5PSI1MyIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICAgICBmb250LWZhbWlseT0iJ0FyaWFsIEJsYWNrJywgSW1wYWN0LCBIYWV0dGVuc2Nod2VpbGVyLCAnQXJpYWwgTmFycm93IEJvbGQnLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iNTgiCiAgICAgICAgdGV4dExlbmd0aD0iNTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIKICAgICAgICBmaWxsPSIjRjVGNUYwIj5QQTwvdGV4dD4KPC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,7 +47,7 @@
   "@type": "PodcastSeries",
   "name": "ProAV Podcast",
   "alternateName": "ProAV — Mainstage, Backstage, Cloud",
-  "description": "ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real gear, real crews, real conversations from the people driving live production.",
+  "description": "ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real Conversations, real crews, real gear from the people driving live production.",
   "url": "https://proavpodcast.fm/",
   "image": "https://proavpodcast.fm/og-image.png",
   "inLanguage": "en"
@@ -175,13 +175,24 @@
       <text x="0" y="220" text-anchor="start" font-family="Impact, Haettenschweiler, sans-serif"
             font-size="200" fill="currentColor" mask="url(#stencilMask)">PROAV</text>
     </svg>
+    <!-- PODCAST, from the brand pack's proav-wordmark-podcast lockup (Arial bold, 56,
+         letter-spacing 22, 75%). It is a second svg on the same 1200-unit grid rather than a
+         swapped-in asset, because the wordmark svg above carries the colour cycle and the
+         masked video clip and replacing it would break both. Anchored at x="0" like PROAV, so
+         the two line up on the real Impact rather than on a fitted offset. currentColor means
+         it tints with the cycle, keeping the two lines one lockup. -->
+    <svg class="hero-podcast" viewBox="0 258 1200 62" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <text x="0" y="300" text-anchor="start" font-family="Arial, Helvetica, sans-serif"
+            font-weight="bold" font-size="56" letter-spacing="22" fill="currentColor"
+            opacity="0.75">PODCAST</text>
+    </svg>
   </div>
   <div class="hero-lockup">
     <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
     <div class="signal-line-css" aria-hidden="true"></div>
   </div>
   <p class="hero-hook">
-    Real gear, real crews, real conversations — from the rig on stage to the
+    Real Conversations, real crews, real gear — from the rig on stage to the
     cloud infrastructure taking live production remote. Audio &amp; video,
     wherever you listen or watch.
   </p>
@@ -1152,10 +1163,11 @@
     v.defaultPlaybackRate = SPEED; v.playbackRate = SPEED;
     v.addEventListener('loadedmetadata', () => { v.playbackRate = SPEED; });
 
-    // The wordmark cycles white, amber, cyan, red, deep green, hot yellow, then starts over. Order
-    // and pace are the two lines below — add, drop or reorder a colour in TINTS and nothing else
-    // needs touching. Each name is a .tint-* class in home.css; '' is the plain white wordmark.
-    const TINTS = ['', 'tint-amber', 'tint-cyan', 'tint-red', 'tint-green', 'tint-yellow'];
+    // The wordmark cycles white, amber, cyan, then starts over. Order and pace are the two lines
+    // below — reorder or drop a colour in TINTS and nothing else needs touching. Each name is a
+    // .tint-* class in home.css; '' is the plain white wordmark, which has no class of its own.
+    // Adding a colour now needs its .tint-* rule written too: only amber and cyan still exist.
+    const TINTS = ['', 'tint-amber', 'tint-cyan'];   // '' is the logo's own white
     const PHASE_MS = 5200;   // how long each colour holds before the fade to the next
     const SHOW_CLIP = false; // true plays the clip at the end of the cycle; false is colours only
     const COLOURS = TINTS.filter(Boolean);

@@ -69,7 +69,9 @@ section {
   position: relative;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 64px 24px;
+  /* 64px here meant 128px between every pair of adjacent sections. 44 keeps the bands
+     reading as separate without the dead run between them. */
+  padding: 40px 24px;
   border-top: 0;
   clip-path: inset(0 -100vmax);
 }
@@ -77,7 +79,7 @@ section {
 .section-title {
   font-size: clamp(32px, 5vw, 52px);
   line-height: 1.05;
-  margin: 0 0 28px;
+  margin: 0 0 22px;
   max-width: none;
 }
 
@@ -91,7 +93,7 @@ section {
   letter-spacing: 0.02em;
   text-transform: uppercase;
   max-width: none;
-  margin: 0 0 36px;
+  margin: 0 0 26px;
   text-wrap: initial;
   color: rgba(var(--tc, 245,245,240), var(--dim, 1));
   overflow-wrap: anywhere;   /* a long word never pushes the page sideways, even before the web font loads */
@@ -148,6 +150,9 @@ section.band-plain {
   section {
     padding-right: 20px;
     padding-left: 20px;
+    /* a phone shows one band at a time, so it needs less air to separate them than a desktop */
+    padding-top: 28px;
+    padding-bottom: 28px;
   }
 }
 
