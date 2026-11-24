@@ -1,6 +1,11 @@
 /* Design tokens — colors, type families, borders. Change a value here and it changes everywhere. */
 
 :root {
+  /* layout shell — the widest the content column grows before it stops and centres.
+     This was hardcoded as 1440px in five separate rules across three stylesheets; it is one
+     number now. Lower it to bring the content back into a narrower column. */
+  --shell: 2560px;
+
   /* color */
   --stage-black: #0B0B0D;
   --stage-black-raised: #131316;

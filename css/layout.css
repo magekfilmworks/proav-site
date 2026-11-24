@@ -417,9 +417,13 @@
 /* a child of .hero-word, so it marks the logo at every width instead of the hero's corner.
    The colour is named rather than left to the shorthand's currentColor default: .hero-word's
    colour is what the wordmark cycle animates, so an inherited border rode the cycle with it. */
+/* Sits ON the gutter line, not outside it. The -16px it used to carry put it 16px left of the
+   wordmark box, which on phones is only 20px in — it hung at the window edge. The ink term
+   cancels .hero-word's bearing correction, so this lands at exactly --hero-left, the same
+   gutter line .bracket.br is pinned to on the right. */
 .bracket.tl {
   top: -16px;
-  left: -16px;
+  left: calc(var(--word-w) * var(--ink-l));
   width: 36px;
   height: 36px;
   border-top: 2px solid var(--signal-white);
@@ -430,7 +434,7 @@
   width: 36px;
   height: 36px;
   bottom: 20px;
-  right: max(24px, calc((100% - 1440px) / 2 + 24px));
+  right: max(24px, calc((100% - var(--shell)) / 2 + 24px));
   border-bottom: 2px solid;
   border-right: 2px solid;
 }

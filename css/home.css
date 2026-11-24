@@ -9,14 +9,21 @@
   align-items: center;
   justify-content: flex-start;
   text-align: left;
-  --hero-left: calc(max(0px, (100% - 1440px) / 2) + 24px);
-  /* the wordmark's own box, so the screen can be aligned to it rather than guessed at.
-     Its svg viewBox is 1200x200, hence /6. */
-  /* vw, not %. A percentage inside a custom property is resolved against whatever property
-     consumes it — in `height` that means the parent's height, which collapses this to zero. */
-  --word-w: min(1392px, calc(100vw - (max(0px, (100vw - 1440px) / 2) + 24px) - 24px));
-  --word-h: calc(var(--word-w) / 6);
-  padding: 108px 0 56px;
+  --hero-left: calc(max(0px, (100% - var(--shell)) / 2) + 24px);
+  /* The wordmark's own box, so the wall can be placed against where PROAV actually prints.
+     This repeats .hero-word's own width expression. It uses % rather than vw: html carries
+     zoom: 0.95, which vw arithmetic does not see but percentages of this element do. Only
+     `width` and `margin-left` consume it, and both resolve a percentage against this element's
+     width, so it means what it says. (It must never be consumed by `height` — a percentage
+     there resolves against the parent's height and collapses to zero.)
+
+     --ink-l and --ink-r are where PROAV's ink starts and ends as fractions of that box, set by
+     the script in index.html. The values here are what a machine without Impact measures, so
+     the layout still holds if the script never runs. */
+  --word-w: min(calc(var(--shell) - 48px), calc(100% - var(--hero-left) - 24px));
+  --ink-l: 0;
+  --ink-r: 0.79;
+  padding: 132px 0 56px;   /* 108 + 24: clearance under the nav */
   overflow: hidden;
   min-height: 100svh;
 }
@@ -70,14 +77,120 @@
      ~160px, which makes it a letterbox strip. Height wins: the panel is sized from its own
      aspect and tucked under the nav, so its bottom clears the hook. */
   position:absolute;
-  top: 88px;
+  top: 112px;   /* 88 + 24, matching the hero's top padding so the wall moves with it */
   aspect-ratio: 750 / 293;
   right:var(--hero-left);
-  width:min(760px,48%);   /* capped so the panel clears the wordmark, and the hook at 1920 */
+
+  /* Left edge starts where PROAV's ink ends, plus --wall-gap. The right edge is on the gutter,
+     so the wall simply fills whatever is left — it grows with the window instead of stopping
+     at a fixed cap. --ink-r is measured in the page (see index.html), so this lands in the same
+     place whether or not Impact is installed. */
+  --wall-gap: 2.3%;
+  width: calc(100% - var(--hero-left) * 2 - var(--word-w) * var(--ink-r) - var(--wall-gap));
+
   z-index:1; pointer-events:none;
-  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 36%);
-  mask-image:linear-gradient(to right,transparent 0%,#000 36%);
 }
+
+/* ---- the wall's timecode burn-in ---- */
+/* The wall's top-left corner is clipped 10.24% down, so a flat 10px top floated the badge
+   off the panel into the glow. The percentage follows the slant at any wall size. */
+.wall-tc {
+  position: absolute;
+  top: calc(10.24% + 7px);
+  left: 10px;
+  z-index: 3;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 4px 9px 4px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: rgba(11, 11, 13, 0.62);
+  backdrop-filter: blur(3px);
+  font-family: var(--font-mono, "SFMono-Regular", Menlo, Consolas, monospace);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.wall-tc-name {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--graphite-light);
+}
+
+.wall-tc-code {
+  /* tabular figures so the frame digits do not jitter the box 30 times a second */
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--signal-white);
+}
+
+@media (max-width: 720px) {
+  .wall-tc { top: calc(10.24% + 5px); left: 8px; gap: 7px; padding: 3px 7px 3px 6px; }
+  .wall-tc-name { font-size: 8px; }
+  .wall-tc-code { font-size: 10.5px; }
+}
+
+/* ---- the wall's sound button ---- */
+.wall-audio {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  pointer-events: auto;      /* .hero-screen sets none; the button is the one thing you can hit */
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: rgba(11, 11, 13, 0.62);
+  backdrop-filter: blur(3px);
+  color: var(--signal-white);
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.wall-audio:hover,
+.wall-audio:focus-visible {
+  opacity: 1;
+  background: rgba(11, 11, 13, 0.85);
+  border-color: var(--tungsten-amber);
+}
+
+.wall-audio:focus-visible {
+  outline: 2px solid var(--data-cyan);
+  outline-offset: 2px;
+}
+
+.wall-audio svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wall-audio .wa-speaker { fill: currentColor; stroke: none; }
+
+/* muted is the resting state: the cross shows, the waves do not. aria-pressed carries the
+   state for assistive tech and drives the icon, so there is one source of truth. */
+.wall-audio[aria-pressed="false"] .wa-on,
+.wall-audio[aria-pressed="true"] .wa-off { display: none; }
+
+.wall-audio[aria-pressed="true"] { opacity: 1; border-color: var(--data-cyan); }
+
+@media (max-width: 720px) {
+  .wall-audio { top: 8px; right: 8px; width: 30px; height: 30px; }
+  .wall-audio svg { width: 17px; height: 17px; }
+}
+
 /* whatever goes in the slot is clipped to the wall and sits under the panel grid */
 .screen-content{
   position:absolute; inset:0;
@@ -86,17 +199,34 @@
   background:#0B0B0D;
   overflow:hidden;
 }
-.screen-content video{width:100%;height:100%;object-fit:cover;display:block;opacity:.92}
+/* contain, not cover: the wall is 2.56:1 and the clips are 16:9, so cover was cropping 31%
+   off the top and bottom — which sliced the SDO clip's title and its bottom captions. The
+   source now scales down whole and pillarboxes onto the grid, the way a real wall runs a
+   16:9 feed. */
+.screen-content video{width:100%;height:100%;object-fit:contain;display:block;opacity:.92}
 .screen-frame{position:absolute;inset:0;width:100%;height:100%}
 
 /* The wordmark must never sit on the panel. Below 1024px there is no room beside it, so the
    screen moves above the wordmark as a band rather than shrinking into the corner — a shrunk
    panel is unreadable anyway, and the overlap reads as a mistake. */
+/* The wall is dimmed on phones so it does not compete with the wordmark under it. The opacity
+   goes on the picture and the frame rather than on .hero-screen, because opacity on a parent
+   cannot be undone by a child and it would take the sound button down with it. */
+@media (max-width: 1024px) {
+  .screen-content,
+  .screen-frame { opacity: 0.38; }
+}
+
+@media (max-width: 720px) {
+  .screen-content,
+  .screen-frame { opacity: 0.46; }
+}
+
 @media (max-width: 1024px) {
   /* The wall sits 16.7% in from the element's own left edge, so a flush-left element leaves a
      dead gutter and pushes the wall off the right. Overhanging to the left by 15% lands the
      wall's left edge on the same gutter as the text below it, and keeps its right edge on
-     screen. The left mask goes too — there is no wordmark beside it to protect here. */
+     screen. */
   .hero-screen {
     position: relative;
     top: 0;
@@ -104,13 +234,21 @@
     height: auto;          /* the logo-aligned height is a desktop idea; here it is a band */
     aspect-ratio: 750 / 293;
     align-self: flex-start;      /* .hero centres its children; this one is gutter-aligned */
-    width: calc(100% - var(--hero-left) * 2);   /* a gutter on BOTH sides — never bleeds right */
+    /* Plain gutter on both sides. The wordmark's ink now sits on that same gutter, so the
+       wall's left edge and the P line up without any extra offset here. */
+    width: calc(100% - var(--hero-left) * 2);
     margin: 0 var(--hero-left) 26px;
-    opacity: 0.38;
+
+    /* Two masks, intersected: the wall dissolves downward toward the logo and fades in from the
+       left. The left ramp is the same `transparent 0% -> #000 36%` the desktop wall uses, so
+       both sizes soften on the same edge by the same amount. The right edge is NOT faded —
+       desktop does not fade its right, so neither does this.
+       The two composite keywords are the same operation: `intersect` is the standard, and
+       `source-in` is what the -webkit- prefixed property understands. */
+    /* Only a bottom fade, so the wall dissolves into the page above the logo. There is no left
+       feather at any width — the left edge is hard on mobile and on desktop alike. */
     -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
     mask-image: linear-gradient(to bottom, #000 72%, transparent);
-    -webkit-mask-composite: add;
-    mask-composite: add;
   }
 }
 
@@ -122,7 +260,6 @@
        leaves 17px above the bracket, about the same as the 15px below it, so the bracket reads
        as marking the logo rather than as crowding the wall. */
     margin: 0 var(--hero-left) 34px;
-    opacity: 0.46;
   }
 
   /* A phone is not a narrow desktop. The desktop glows sit at 6% and 94% and fall off by 42%,
@@ -141,6 +278,9 @@
 
 /* A still frame is enough when motion is unwelcome. */
 @media (prefers-reduced-motion: reduce) {
+  .wall-audio,
+  .wall-tc { display: none; }
+
   .hero-screen video { display: none; }
   .screen-content { background: #0B0B0D; }
 }
@@ -151,9 +291,17 @@
   line-height: 0.9;
   position: relative;
   z-index: 1;
+  /* Decorative. This is a 1322x220 box that paints over the wall, so without this it swallows
+     the clicks meant for the wall's sound button underneath it. Nothing in here is
+     interactive — no links, no hover state — so it takes no pointer events. */
+  pointer-events: none;
   align-self: flex-start;
-  margin-left: var(--hero-left);
-  width: min(1392px, calc(100% - var(--hero-left) - 24px));
+  /* Pulled left by the wordmark's own left side bearing so PROAV's INK starts on the gutter,
+     not its box. The box edge is invisible; what a visitor measures the gutter against is the
+     stem of the P. Without this the left gutter reads 42px wider than the right at 1440 in
+     Impact, and the error grows with the window. --ink-l is measured in the page. */
+  margin-left: calc(var(--hero-left) - var(--word-w) * var(--ink-l));
+  width: min(calc(var(--shell) - 48px), calc(100% - var(--hero-left) - 24px));
   color: var(--signal-white);   /* the cycle tints the wordmark; the order lives in index.html */
   transition: color 1.4s ease-in-out;   /* shorter than the hold, so each colour still reads */
 }
@@ -301,7 +449,7 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1440px;
+  max-width: var(--shell);
   margin: 112px auto 0;
   padding: 0 24px;
   text-align: left;
@@ -535,6 +683,11 @@
   /* hero */
   .hero {
     --hero-left: 20px;
+    /* The wordmark runs 1.65x the content width on phones, and --word-w has to carry that
+       factor too: it is what the bearing correction on .hero-word's margin is scaled against.
+       Left at the unmultiplied value the correction under-shoots and the gutters come out
+       7px apart. */
+    --word-w: calc((100% - var(--hero-left) - 24px) * 1.65);
   }
 
   .hero-lockup {

@@ -145,10 +145,29 @@
   <div class="bracket br"></div>
   <!-- LED wall: a content slot. Swap what is inside .screen-content and it is
        clipped to the wall and takes the panel grid on top automatically. -->
-  <div class="hero-screen" aria-hidden="true">
-    <div class="screen-content">
-      <video src="images/hero-logo-v132.mp4" autoplay muted loop playsinline preload="auto"></video>
+  <div class="hero-screen">
+    <div class="screen-content" aria-hidden="true">
+      <!-- No `loop`: the playlist in the script below advances on `ended`. -->
+      <video id="wall-video" src="images/hero-artemis-v1.mp4" autoplay muted playsinline preload="auto"></video>
     </div>
+    <!-- Timecode burn-in. A sibling of .screen-content rather than a child, so the 46% opacity
+         the picture carries on phones does not dim it. Top-left: the one corner nothing masks,
+         and it balances the sound button opposite. -->
+    <div class="wall-tc" aria-hidden="true">
+      <span class="wall-tc-name">ARTEMIS I</span>
+      <span class="wall-tc-code">00:00:00;00</span>
+    </div>
+    <!-- The wall starts muted because every browser refuses to autoplay a video with sound;
+         unmuted, it would not play at all. This button is the visitor's way to turn it on. It
+         sits top-right, the one corner no mask fades, and carries pointer-events:auto to
+         override the wall's pointer-events:none. -->
+    <button class="wall-audio" type="button" aria-pressed="false" aria-label="Turn on video sound">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path class="wa-speaker" d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z"/>
+        <g class="wa-off"><path d="M15 9.5l4.5 5M19.5 9.5L15 14.5"/></g>
+        <g class="wa-on"><path d="M14.8 9.4a3.6 3.6 0 0 1 0 5.2"/><path d="M17.2 7.2a7 7 0 0 1 0 9.6"/></g>
+      </svg>
+    </button>
     <svg class="screen-frame" viewBox="150 28 750 293" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMaxYMid meet">
   <defs>
     <clipPath id="wallClip"><path d="M150 58 L900 28 L900 321 L150 292 Z"/></clipPath>
@@ -1163,6 +1182,111 @@
     // below — reorder or drop a colour in TINTS and nothing else needs touching. Each name is a
     // .tint-* class in home.css; '' is the plain white wordmark, which has no class of its own.
     // Adding a colour now needs its .tint-* rule written too: only amber and cyan still exist.
+    // Where PROAV's ink actually starts and ends, as a FRACTION of the wordmark's 1200-unit
+    // box. Impact's glyph bearings are not something a fixed percentage can predict, and a
+    // machine without Impact falls back to a face with different ones, so this is measured
+    // rather than assumed. A ratio rather than a pixel count on purpose: html carries
+    // zoom: 0.95, so pixels read back from getBoundingClientRect do not match the pixels a
+    // calc() works in, but a ratio is the same number either side of the zoom.
+    (() => {
+      const hero = document.querySelector('.hero');
+      const svg = document.querySelector('.hero-word svg');
+      const text = svg && svg.querySelector('text');
+      if (!hero || !text) return;
+      const sync = () => {
+        let bb;
+        try { bb = text.getBBox(); } catch (e) { return; }   // throws if not yet rendered
+        if (!bb.width) return;
+        const vb = svg.viewBox.baseVal;
+        hero.style.setProperty('--ink-l', ((bb.x - vb.x) / vb.width).toFixed(5));
+        hero.style.setProperty('--ink-r', ((bb.x + bb.width - vb.x) / vb.width).toFixed(5));
+      };
+      sync();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+      addEventListener('resize', sync, { passive: true });
+      addEventListener('load', sync);
+    })();
+
+    // The wall's playlist and its timecode burn-in.
+    //
+    // Both clips are 29.97 (30000/1001), so the readout is drop-frame and uses the ';' that
+    // broadcast convention reserves for it. Frames come from currentTime, which is real elapsed
+    // seconds, so the count tracks the wall clock the way drop-frame is meant to.
+    //
+    // The clock runs off requestAnimationFrame, not `timeupdate` — timeupdate fires about four
+    // times a second, which would make the frame digits stutter. The loop only runs while the
+    // video is actually playing AND the wall is on screen, so a scrolled-away hero costs
+    // nothing.
+    (() => {
+      const vid = document.getElementById('wall-video');
+      const tc = document.querySelector('.wall-tc-code');
+      const nameEl = document.querySelector('.wall-tc-name');
+      if (!vid) return;
+
+      const PLAYLIST = [
+        { src: 'images/hero-artemis-v1.mp4', name: 'ARTEMIS I', fps: 30000 / 1001 },
+        { src: 'images/hero-sun-v1.mp4',     name: 'SDO / SOLAR CYCLE', fps: 30000 / 1001 }
+      ];
+      let i = 0;
+
+      const pad = (n, w) => String(Math.floor(n)).padStart(w, '0');
+      const draw = () => {
+        if (!tc) return;
+        const t = vid.currentTime || 0;
+        const fps = PLAYLIST[i].fps;
+        tc.textContent =
+          pad(t / 3600, 2) + ':' + pad((t / 60) % 60, 2) + ':' + pad(t % 60, 2) +
+          ';' + pad((t % 1) * fps, 2);
+      };
+
+      let raf = 0, onScreen = true;
+      const tick = () => { draw(); raf = requestAnimationFrame(tick); };
+      const start = () => { if (!raf && onScreen && !vid.paused) raf = requestAnimationFrame(tick); };
+      const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+
+      vid.addEventListener('play', start);
+      vid.addEventListener('pause', stop);
+      vid.addEventListener('seeked', draw);
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => {
+          onScreen = e.isIntersecting;
+          onScreen ? start() : stop();
+        }, { threshold: 0 }).observe(vid);
+      }
+
+      // advance the playlist, carrying the mute state the visitor chose
+      vid.addEventListener('ended', () => {
+        i = (i + 1) % PLAYLIST.length;
+        const next = PLAYLIST[i];
+        if (nameEl) nameEl.textContent = next.name;
+        vid.src = next.src;
+        const r = vid.play();
+        if (r && r.catch) r.catch(() => {});
+        draw();
+      });
+
+      draw();
+      start();
+    })();
+
+    // The wall's sound. It stays muted on load because browsers will not autoplay audio — an
+    // unmuted video simply never starts. The button flips .muted and nothing else; aria-pressed
+    // is the state, and CSS reads it to swap the icon.
+    (() => {
+      const btn = document.querySelector('.wall-audio');
+      const vid = document.getElementById('wall-video');
+      if (!btn || !vid) return;
+      btn.addEventListener('click', () => {
+        const turningOn = vid.muted;
+        vid.muted = !turningOn;
+        // a tab that has never been interacted with can still have playback paused
+        if (turningOn) { const r = vid.play(); if (r && r.catch) r.catch(() => {}); }
+        btn.setAttribute('aria-pressed', String(turningOn));
+        btn.setAttribute('aria-label', turningOn ? 'Mute the video' : 'Turn on video sound');
+      });
+    })();
+
     const TINTS = ['', 'tint-amber', 'tint-cyan'];   // '' is the logo's own white
     const PHASE_MS = 5200;   // how long each colour holds before the fade to the next
     const SHOW_CLIP = false; // true plays the clip at the end of the cycle; false is colours only

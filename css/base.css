@@ -67,7 +67,7 @@ a {
 /* section scaffold */
 section {
   position: relative;
-  max-width: 1440px;
+  max-width: var(--shell);
   margin: 0 auto;
   /* 64px here meant 128px between every pair of adjacent sections. 44 keeps the bands
      reading as separate without the dead run between them. */
