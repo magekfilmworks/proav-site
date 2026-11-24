@@ -1193,16 +1193,104 @@
       const svg = document.querySelector('.hero-word svg');
       const text = svg && svg.querySelector('text');
       if (!hero || !text) return;
+      // Canvas first, SVG second, and NOT the other way round. The two engines disagree about
+      // what getBBox() on a <text> returns: Blink gives the tight ink box, WebKit gives the text
+      // layout box, which starts at the element's x attribute. On Safari that makes bb.x read 0,
+      // the bearing correction silently becomes a no-op, and PROAV's stem sits a few px right of
+      // the gutter every other element is lined up on. measureText's actualBoundingBox* are true
+      // ink extents in both engines, so they are the measurement and getBBox is only the
+      // fallback for anything that does not report them.
+      const FACE = 'Impact, Haettenschweiler, sans-serif';
+      // Rasterise the wordmark once and scan the pixels for its real ink edges.
+      //
+      // Three cheaper methods were tried first and all three were wrong on the page:
+      //   getBBox()        — returns the LAYOUT box in both engines, so the left bearing read 0
+      //                      and the correction silently did nothing;
+      //   a cap-height     — Impact's nominal cap height put the bracket's arm ~17px low, below
+      //     constant         the top of the P instead of above it;
+      //   measureText()'s  — closer, but its reported bounds sit ~3px off the rasterised glyph
+      //     actualBounding   edge once the SVG scales 1200 user units up to ~1400 CSS px.
+      //
+      // Scanning the bitmap has no such gap: it measures the glyphs that actually get drawn, in
+      // the font the page actually resolved. It runs once per font change, not per resize — the
+      // result is a ratio of the viewBox, so it is the same number at every screen size.
+      let cached = null;
+      const measureInk = () => {
+        if (cached) return cached;
+        if (!window.HTMLCanvasElement) return null;
+        const PAD = 200, FS = 200, W = 1600 + PAD * 2, H = 600;
+        const c = document.createElement('canvas');
+        c.width = W; c.height = H;
+        const ctx = c.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return null;
+        let fam = FACE;                       // the SVG's own resolved family, not a copy
+        try { fam = getComputedStyle(text).fontFamily || FACE; } catch (e) {}
+        ctx.font = FS + 'px ' + fam;
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = '#fff';
+        const BASE = 400;                     // baseline inside the scratch canvas
+        ctx.fillText(text.textContent || 'PROAV', PAD, BASE);
+        let d;
+        try { d = ctx.getImageData(0, 0, W, H).data; } catch (e) { return null; }
+        let minX = W, maxX = -1, minY = H;
+        for (let y = 0; y < H; y++) {
+          const row = y * W * 4;
+          for (let x = 0; x < W; x++) {
+            if (d[row + x * 4 + 3] > 24) {    // 24: ignore the antialiased fringe
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+              if (y < minY) minY = y;
+            }
+          }
+        }
+        if (maxX < 0) return null;
+        // Back into the SVG's own coordinates: x=0 at the text origin, baseline at y=220.
+        cached = { x: minX - PAD, width: maxX - minX + 1, top: 220 - (BASE - minY) };
+        return cached;
+      };
       const sync = () => {
-        let bb;
-        try { bb = text.getBBox(); } catch (e) { return; }   // throws if not yet rendered
-        if (!bb.width) return;
+        let bb = measureInk();
+        if (!bb) {
+          try { bb = text.getBBox(); } catch (e) { return; }   // throws if not yet rendered
+        }
+        if (!bb || !bb.width) return;
         const vb = svg.viewBox.baseVal;
         hero.style.setProperty('--ink-l', ((bb.x - vb.x) / vb.width).toFixed(5));
         hero.style.setProperty('--ink-r', ((bb.x + bb.width - vb.x) / vb.width).toFixed(5));
+
+        // Where the cap top falls inside the box, as a fraction of the box's HEIGHT — the same
+        // trick as --ink-l, for the other axis. This was a hardcoded 13.45%, derived from
+        // Impact's nominal cap height, and it was wrong on the page by about 17px: the bracket
+        // sat below the top of the P instead of above it. Cap height is not something to assume
+        // any more than side bearing was. getBBox cannot give it either, for the same reason it
+        // could not give the bearing, so it comes from the canvas ascent and the SVG's own
+        // baseline. The viewBox is 200 units tall and the box is 6:1, so a fraction of the
+        // viewBox is a fraction of the rendered height.
+        if (bb.top != null) {
+          hero.style.setProperty('--ink-t', ((bb.top - vb.y) / vb.height).toFixed(5));
+        }
+
+        // The brackets are NOT sized from the wordmark. They were, for one version, so that they
+        // held one proportion to the logo at every width. That is right on paper and wrong on
+        // the page: at 1440 the arm grew to 78px with a 4px rule and the mark stopped reading as
+        // a corner tick beside the logo and started reading as a frame around it. They are a
+        // fixed 36px with a 2px rule at every size, which is what they have always been.
+        // getComputedStyle, not getBoundingClientRect: html carries zoom: 0.95, so the rect is
+        // in post-zoom pixels while CSS does its arithmetic in pre-zoom ones. The computed
+        // width is the pre-zoom used value, which is the number CSS needs back.
+        const ww = parseFloat(getComputedStyle(word).width);
+
+        // The gutter as a resolved number. CSS cannot hand it to the bracket itself: --hero-left
+        // carries a 100%, and a custom property's percentages resolve against whatever element
+        // uses them, so inside .hero-word it would re-resolve against the wordmark box. The
+        // wordmark's own margin is that gutter minus the bearing it was pulled left by, so
+        // adding the bearing back recovers it, in pre-zoom pixels.
+        const ml = parseFloat(getComputedStyle(word).marginLeft);
+        const inkL = (bb.x - vb.x) / vb.width;
+        if (ww && isFinite(ml)) hero.style.setProperty('--gut', (ml + ww * inkL).toFixed(2) + 'px');
       };
       sync();
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { cached = null; sync(); });
       addEventListener('resize', sync, { passive: true });
       addEventListener('load', sync);
     })();
@@ -1223,9 +1311,11 @@
       const nameEl = document.querySelector('.wall-tc-name');
       if (!vid) return;
 
+      // All three clips are 29.97, so one drop-frame convention covers the lot.
       const PLAYLIST = [
         { src: 'images/hero-artemis-v1.mp4', name: 'ARTEMIS I', fps: 30000 / 1001 },
-        { src: 'images/hero-sun-v1.mp4',     name: 'SDO / SOLAR CYCLE', fps: 30000 / 1001 }
+        { src: 'images/hero-sun-v1.mp4',     name: 'SDO / SOLAR CYCLE', fps: 30000 / 1001 },
+        { src: 'images/gymkhana-v1.mp4',     name: 'GYMKHANA SEVEN', fps: 30000 / 1001 }
       ];
       let i = 0;
 

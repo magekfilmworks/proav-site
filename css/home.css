@@ -10,6 +10,31 @@
   justify-content: flex-start;
   text-align: left;
   --hero-left: calc(max(0px, (100% - var(--shell)) / 2) + 24px);
+
+  /* How far the wordmark and the wall are held INSIDE the gutter to make room for the corner
+     bracket. The bracket's arm is the leftmost ink on the page, so by the rule in the grid bible
+     — gutters are measured against ink, not boxes — the arm is what sits ON --hero-left, and
+     everything it marks steps in by this much: 2px of rule plus 12px of air. Carries no
+     percentage, so it is safe to read from inside .hero-word, which --hero-left is not. */
+  --brk-clear: 14px;
+
+  /* THE COLUMN. Every piece of hero content starts here — the wordmark, PODCAST, the tagline,
+     the signal rule, the hook, the buttons, and the wall's left edge on phones. Nothing in the
+     hero should write its own left offset; use this. It exists because the pieces each carried
+     their own copy of the gutter, so moving the wordmark to clear the bracket left PODCAST and
+     the body text 14px behind it. One token, one edge, nothing to keep in sync by hand.
+     --hero-left stays what the OUTER edges sit on: the bracket's arm and the wall's right edge.
+     Contains a percentage by way of --hero-left, so it resolves against .hero — read it from
+     .hero's own children only, never from inside .hero-word. */
+  --col-left: calc(var(--hero-left) + var(--brk-clear));
+
+  /* The column's other edge, mirroring --col-left. Same formula on purpose: the content column
+     is symmetric inside the outer edges, so hero content ends as far from the window's right as
+     it starts from its left. It is a separate token rather than a reuse of --col-left so the two
+     sides can be read — and if ever needed, moved — independently. Hero content widths are
+     `calc(100% - var(--col-left) - var(--col-right))`; the hardcoded 24px they used before was
+     the old gutter written out by hand and did not follow --hero-left out on wide screens. */
+  --col-right: calc(var(--hero-left) + var(--brk-clear));
   /* The wordmark's own box, so the wall can be placed against where PROAV actually prints.
      This repeats .hero-word's own width expression. It uses % rather than vw: html carries
      zoom: 0.95, which vw arithmetic does not see but percentages of this element do. Only
@@ -86,18 +111,27 @@
      at a fixed cap. --ink-r is measured in the page (see index.html), so this lands in the same
      place whether or not Impact is installed. */
   --wall-gap: 2.3%;
-  width: calc(100% - var(--hero-left) * 2 - var(--word-w) * var(--ink-r) - var(--wall-gap));
+  /* Right edge on --hero-left, left edge on --col-left: the wordmark starts at the column, so
+     its ink ends that much further right, and the wall gives back the same amount. */
+  width: calc(100% - var(--hero-left) - var(--col-left)
+              - var(--word-w) * var(--ink-r) - var(--wall-gap));
 
   z-index:1; pointer-events:none;
 }
 
 /* ---- the wall's timecode burn-in ---- */
-/* The wall's top-left corner is clipped 10.24% down, so a flat 10px top floated the badge
-   off the panel into the glow. The percentage follows the slant at any wall size. */
+/* Burned in along the wall's bottom edge, lying on the wall's plane rather than on the screen's.
+   The clip path takes that edge from 0% 90.10% to 100% 100%, so it drops 9.90% of the panel's
+   height across its full width; at the fixed 750/293 aspect that is a constant 2.215deg, which
+   is why one rotation works at every size. `bottom` is measured from the same 9.90%, so the
+   badge keeps its distance from the edge as the wall grows, and the origin is the bottom-left
+   corner so the rotation pivots on the edge instead of swinging the badge off it. */
 .wall-tc {
   position: absolute;
-  top: calc(10.24% + 7px);
+  bottom: calc(9.9% + 7px);
   left: 10px;
+  transform: rotate(2.215deg);
+  transform-origin: 0 100%;
   z-index: 3;
   display: flex;
   align-items: baseline;
@@ -128,7 +162,7 @@
 }
 
 @media (max-width: 720px) {
-  .wall-tc { top: calc(10.24% + 5px); left: 8px; gap: 7px; padding: 3px 7px 3px 6px; }
+  .wall-tc { bottom: calc(9.9% + 5px); left: 8px; gap: 7px; padding: 3px 7px 3px 6px; }
   .wall-tc-name { font-size: 8px; }
   .wall-tc-code { font-size: 10.5px; }
 }
@@ -184,7 +218,16 @@
 .wall-audio[aria-pressed="false"] .wa-on,
 .wall-audio[aria-pressed="true"] .wa-off { display: none; }
 
-.wall-audio[aria-pressed="true"] { opacity: 1; border-color: var(--data-cyan); }
+/* Unmuted is the "nothing to do here" state, so the chrome goes away and only the white speaker
+   is left on the wall. Muted keeps its circle because that one is a call to action. The hover
+   rule above still repaints border and background, so both are cleared here too, not just the
+   border colour — and the rule sits after :hover so it wins on equal specificity. */
+.wall-audio[aria-pressed="true"] {
+  opacity: 1;
+  border-color: transparent;
+  background: none;
+  backdrop-filter: none;
+}
 
 @media (max-width: 720px) {
   .wall-audio { top: 8px; right: 8px; width: 30px; height: 30px; }
@@ -227,8 +270,9 @@
     height: auto;          /* the logo-aligned height is a desktop idea; here it is a band */
     aspect-ratio: 750 / 293;
     align-self: flex-start;      /* .hero centres its children; this one is gutter-aligned */
-    /* Plain gutter on both sides. The wordmark's ink now sits on that same gutter, so the
-       wall's left edge and the P line up without any extra offset here. */
+    /* Both edges on --hero-left, the outer edge: the wall lines up with the corner bracket's
+       arm, not with the P's stem. The stem sits --brk-clear further in, so the wall is the wider
+       of the two by design. */
     width: calc(100% - var(--hero-left) * 2);
     margin: 0 var(--hero-left) 26px;
 
@@ -248,9 +292,10 @@
   .hero-screen {
     width: calc(100% - var(--hero-left) * 2);
     /* 34, not 18. The gap that matters here is not the wall to the wordmark box but the wall to
-       the corner bracket, which hangs 15px above that box and so sat 2px under the wall. 34
-       leaves 17px above the bracket, about the same as the 15px below it, so the bracket reads
-       as marking the logo rather than as crowding the wall. */
+       the corner bracket, which hangs above that box and so sat 2px under the wall. 34 leaves
+       room above the bracket to match the air below it, so the bracket reads as marking the logo
+       rather than as crowding the wall. Both side margins are --hero-left, so the
+       wall lines up with the corner bracket like the ≤1024 rule. */
     margin: 0 var(--hero-left) 34px;
   }
 
@@ -292,7 +337,7 @@
      not its box. The box edge is invisible; what a visitor measures the gutter against is the
      stem of the P. Without this the left gutter reads 42px wider than the right at 1440 in
      Impact, and the error grows with the window. --ink-l is measured in the page. */
-  margin-left: calc(var(--hero-left) - var(--word-w) * var(--ink-l));
+  margin-left: calc(var(--col-left) - var(--word-w) * var(--ink-l));
   width: min(calc(var(--shell) - 48px), calc(100% - var(--hero-left) - 24px));
   color: var(--signal-white);   /* the cycle tints the wordmark; the order lives in index.html */
   transition: color 1.4s ease-in-out;   /* shorter than the hold, so each colour still reads */
@@ -300,9 +345,12 @@
 
 .hero-lockup {
   align-self: flex-start;
-  margin-left: var(--hero-left);
+  /* --col-left, same as .hero-word: PODCAST, the tagline and the signal rule all hang off this
+     box. When this carried its own copy of the gutter instead, the P in PODCAST sat 14px left of
+     the P in PROAV. */
+  margin-left: var(--col-left);
   width: fit-content;
-  max-width: calc(100% - var(--hero-left) - 24px);
+  max-width: calc(100% - var(--col-left) - var(--col-right));
   font-size: clamp(15px, 1.2vw, 18px);
   --track: 0.35em;
 }
@@ -331,12 +379,12 @@
 
 .hero-hook {
   align-self: flex-start;
-  width: calc(100% - var(--hero-left) - 24px);
+  width: calc(100% - var(--col-left) - var(--col-right));
   max-width: 860px;
   font-size: 17px;
   line-height: 1.6;
   color: #cfcfd4;
-  margin: 0 0 0 var(--hero-left);
+  margin: 0 0 0 var(--col-left);
 }
 
 .hero-ctas {
@@ -345,8 +393,8 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   align-self: flex-start;
-  margin-left: var(--hero-left);
-  width: calc(100% - var(--hero-left) - 24px);
+  margin-left: var(--col-left);
+  width: calc(100% - var(--col-left) - var(--col-right));
 }
 
 .hero-word-video {
@@ -674,7 +722,10 @@
 @media (max-width: 720px) {
   /* hero */
   .hero {
-    --hero-left: 20px;
+    /* 28, not 20. A 20px gutter could not hold the corner bracket AND clear air between it and
+       the P — the arm ended up 9px off the window edge. Option D's 28 buys that room; the
+       content column narrows by 8px to pay for it. */
+    --hero-left: 28px;
     /* The wordmark runs 1.65x the content width on phones, and --word-w has to carry that
        factor too: it is what the bearing correction on .hero-word's margin is scaled against.
        Left at the unmultiplied value the correction under-shoots and the gutters come out
