@@ -49,7 +49,16 @@
      and the phone background measured mean 28.4 against the desktop's 18.8. The vw terms keep
      the ellipse smaller than the gap it has to fade across. The px terms still win at 1440 and
      1920, so desktop is unchanged. */
-  background: radial-gradient(ellipse min(1200px,85vw) min(760px,54vw) at 6% 200px, rgba(255,156,61,0.34), rgba(255,156,61,0) 42%), radial-gradient(ellipse min(1100px,78vw) min(700px,50vw) at 94% 330px, rgba(42,217,236,0.30), rgba(42,217,236,0) 42%);
+  /* The noise layer on top is a dither, not a texture. A wide low-alpha gradient over near
+     black crosses only ~40 of the 256 levels across 1440px, so each step sits in a flat band
+     up to 28px wide and the eye reads those bands as contour rings. 1% noise scatters each
+     pixel by a level and the bands break up: widest flat run goes 587px -> 6px, while a black
+     pixel moves only from rgb(11,11,13) to rgb(12,12,14). No gradient curve fixes this; it is
+     8-bit quantisation, not the falloff. */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.010'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse min(1200px,85vw) min(760px,54vw) at 6% 200px, rgba(255,156,61,0.34), rgba(255,156,61,0) 42%),
+    radial-gradient(ellipse min(1100px,78vw) min(700px,50vw) at 94% 330px, rgba(42,217,236,0.30), rgba(42,217,236,0) 42%);
   pointer-events: none;
 }
 
@@ -120,6 +129,7 @@
      old flat wash. Both colours present, and still darker than what it replaced. */
   .hero::before {
     background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.010'/%3E%3C/svg%3E"),
       radial-gradient(ellipse 110vw 70vw at 0% 180px, rgba(255,156,61,0.34), rgba(255,156,61,0) 55%),
       radial-gradient(ellipse 110vw 70vw at 100% 430px, rgba(42,217,236,0.30), rgba(42,217,236,0) 55%);
   }
@@ -215,19 +225,29 @@
 }
 
 .hero-podcast {
-  /* same 1200-unit grid as the wordmark above it, so it scales in step. The 62-unit
-     viewBox is cropped straight out of the brand pack's lockup. */
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 2px 0 0;
+  /* The same width the signal rule takes, so the two edges agree. Both are a share of
+     .hero-lockup, whose width is set by the tagline's text, so this holds at every size.
+     space-between does the tracking: the letters are pushed apart to fill the line rather
+     than spaced by a fixed em value that would only land on one particular font. */
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - var(--track));
+  margin: 4px 0 2px;
+  font-family: Arial, Helvetica, var(--font-body), sans-serif;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--signal-white);
+  opacity: 0.75;
 }
 
-/* Pinned, not currentColor: PROAV cycles and PODCAST holds. This overrides the fill attribute
-   on the <text>, which is left in the markup as a no-CSS fallback. */
-.hero-podcast text {
-  fill: var(--signal-white);
+/* The size goes on the letters, not the row. --track is 0.35em and resolves against whatever
+   font-size the element using it has, so sizing the row itself made its width calc subtract a
+   45px em instead of the lockup's 18px one and the right edge landed 9px short of the rule. */
+.hero-podcast span {
+  font-size: 2.6em;
 }
+
+
 
 .hero-word svg {
   width: 100%;

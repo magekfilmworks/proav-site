@@ -175,19 +175,15 @@
       <text x="0" y="220" text-anchor="start" font-family="Impact, Haettenschweiler, sans-serif"
             font-size="200" fill="currentColor" mask="url(#stencilMask)">PROAV</text>
     </svg>
-    <!-- PODCAST, from the brand pack's proav-wordmark-podcast lockup (Arial bold, 56,
-         letter-spacing 22, 75%). It is a second svg on the same 1200-unit grid rather than a
-         swapped-in asset, because the wordmark svg above carries the colour cycle and the
-         masked video clip and replacing it would break both. Anchored at x="0" like PROAV, so
-         the two line up on the real Impact rather than on a fitted offset. currentColor means
-         it tints with the cycle, keeping the two lines one lockup. -->
-    <svg class="hero-podcast" viewBox="0 258 1200 62" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <text x="0" y="300" text-anchor="start" font-family="Arial, Helvetica, sans-serif"
-            font-weight="bold" font-size="56" letter-spacing="22" fill="currentColor"
-            opacity="0.75">PODCAST</text>
-    </svg>
   </div>
   <div class="hero-lockup">
+    <!-- PODCAST. Each letter is its own span in a space-between row, so the word spreads to
+         exactly the width of its box however the font measures — Arial here, something else on a
+         machine without it, same width either way. The box is a share of .hero-lockup, which is
+         sized by the tagline's text, so PODCAST, the tagline and the signal rule below all end on
+         the same edge at every screen size. Drawn as text rather than swapped in from the brand
+         pack's svg because the wordmark above carries the colour cycle and the masked clip. -->
+    <div class="hero-podcast" aria-hidden="true"><span>P</span><span>O</span><span>D</span><span>C</span><span>A</span><span>S</span><span>T</span></div>
     <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
     <div class="signal-line-css" aria-hidden="true"></div>
   </div>
