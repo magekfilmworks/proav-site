@@ -10,12 +10,9 @@
   justify-content: flex-start;
   text-align: left;
   --hero-left: calc(max(0px, (100% - 1440px) / 2) + 24px);
-  /* the wordmark's own box, so the screen can be aligned to it rather than guessed at.
-     Its svg viewBox is 1200x200, hence /6. */
-  /* vw, not %. A percentage inside a custom property is resolved against whatever property
-     consumes it — in `height` that means the parent's height, which collapses this to zero. */
-  --word-w: min(1392px, calc(100vw - (max(0px, (100vw - 1440px) / 2) + 24px) - 24px));
-  --word-h: calc(var(--word-w) / 6);
+  /* --word-w / --word-h lived here to size the panel against the wordmark while the panel was
+     absolutely positioned beside it. The wall is stacked above the logo now and sized from the
+     window instead, so nothing reads them. */
   padding: 108px 0 80px;
   overflow: hidden;
   min-height: 100svh;
@@ -33,20 +30,25 @@
 }
 
 
-/* ---- the LED screen: a content slot, flown off two drops ---- */
+/* ---- the LED screen: a content slot, hung above the wordmark ---- */
 .hero-screen{
-  /* The hero has ~310px between the nav and the hook. A panel at the wall's own 2.56:1 cannot
-     be both full width and sit inside the logo's cap-to-baseline band — that band is only
-     ~160px, which makes it a letterbox strip. Height wins: the panel is sized from its own
-     aspect and tucked under the nav, so its bottom clears the hook. */
-  position:absolute;
-  top: 88px;
+  /* One arrangement at every width: the wall sits above the logo, left edge on the same gutter
+     as everything under it. It is never stretched — 2.56:1 is the wall's own geometry and the
+     taper reads wrong at any other ratio — so when the window is too short to show a full-width
+     wall and the hook together, the wall NARROWS instead.
+
+     --wall-reserve is the vertical space the rest of the hero needs below it: nav + top padding,
+     the gap, the wordmark, the tagline, the rule and the hook. Measured, not guessed — see the
+     table in the bible. Subtract it from the viewport and what is left is the wall's height
+     budget; x2.56 turns that into a width. On a tall window the first term wins and the wall is
+     full width; on a 13" laptop the second wins and it pulls in from the right. */
+  --wall-reserve: 480px;
+  position:relative;
   aspect-ratio: 750 / 293;
-  right:var(--hero-left);
-  width:min(760px,48%);   /* capped so the panel clears the wordmark, and the hook at 1920 */
+  align-self:flex-start;        /* .hero centres its children; this one is gutter-aligned */
+  width:min(calc(100% - var(--hero-left) * 2), calc((100svh - var(--wall-reserve)) * 2.56));
+  margin:0 var(--hero-left) 26px;
   z-index:1; pointer-events:none;
-  -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 36%);
-  mask-image:linear-gradient(to right,transparent 0%,#000 36%);
 }
 /* whatever goes in the slot is clipped to the wall and sits under the panel grid */
 .screen-content{
@@ -59,23 +61,12 @@
 .screen-content video{width:100%;height:100%;object-fit:cover;display:block;opacity:.92}
 .screen-frame{position:absolute;inset:0;width:100%;height:100%}
 
-/* The wordmark must never sit on the panel. Below 1024px there is no room beside it, so the
-   screen moves above the wordmark as a band rather than shrinking into the corner — a shrunk
-   panel is unreadable anyway, and the overlap reads as a mistake. */
+/* Below 1024px the arrangement is already the same — only the tuning changes. A phone hero
+   scrolls anyway, so the height budget is dropped and the wall runs the full content width;
+   it stays a faded band there because nothing is placed in it yet at that size. */
 @media (max-width: 1024px) {
-  /* The wall sits 16.7% in from the element's own left edge, so a flush-left element leaves a
-     dead gutter and pushes the wall off the right. Overhanging to the left by 15% lands the
-     wall's left edge on the same gutter as the text below it, and keeps its right edge on
-     screen. The left mask goes too — there is no wordmark beside it to protect here. */
   .hero-screen {
-    position: relative;
-    top: 0;
-    right: auto;                 /* the desktop `right` would shift a relative box leftwards */
-    height: auto;          /* the logo-aligned height is a desktop idea; here it is a band */
-    aspect-ratio: 750 / 293;
-    align-self: flex-start;      /* .hero centres its children; this one is gutter-aligned */
     width: calc(100% - var(--hero-left) * 2);   /* a gutter on BOTH sides — never bleeds right */
-    margin: 0 var(--hero-left) 26px;
     opacity: 0.38;
     -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
     mask-image: linear-gradient(to bottom, #000 72%, transparent);
@@ -86,7 +77,6 @@
 
 @media (max-width: 720px) {
   .hero-screen {
-    width: calc(100% - var(--hero-left) * 2);
     margin: 0 var(--hero-left) 18px;
     opacity: 0.46;
   }
