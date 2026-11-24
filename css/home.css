@@ -28,9 +28,19 @@
   /* Both glows are pinned a fixed distance from the top, not a percentage of the hero. The hero
      box is ~1430px tall because The Show sits inside it, so a percentage put the cyan 300px
      below the fold and left the right-hand side of the visible header with no light at all. */
-  /* The two alphas are the hero's brightness. Measured on the wash alone with the content
-     hidden: .22/.20 read mean 23.0 / peak 46.0; these read 18.8 / 32.9. Lower them together
-     to go darker still — .11/.10 gives 17.1 / 28.5.
+  /* Three things set this wash, and they trade off against each other rather than one being
+     "brightness". The alpha is the colour in the core. The stop is how fast it falls to nothing.
+     The centre percentages are how far apart the two glows sit.
+
+     A low alpha with a long falloff (.14 to transparent at 70%) spreads thin colour over the
+     whole hero: the amber core only reached rgb(41,28,18) and the two glows met in the middle
+     with no black between them, so both read as grey rather than as amber and cyan. Raising the
+     alpha and pulling the stop in concentrates that same amount of light into a smaller core —
+     amber now reaches rgb(74,48,26), cyan rgb(18,61,67), with 424px of true black between them,
+     and the page's mean brightness is 18.2 against 18.8 before. Darker overall, far more colour.
+
+     Fade to rgba(hue,0), never `transparent`: `transparent` is rgba(0,0,0,0), so the ramp drags
+     the hue toward black and greys the mid-tones.
 
      The SIZES are capped against the viewport, and that cap is load-bearing. The centres sit at
      12% and 88% of the hero, so they converge as the window narrows: at 390px they are 296px
@@ -39,7 +49,7 @@
      and the phone background measured mean 28.4 against the desktop's 18.8. The vw terms keep
      the ellipse smaller than the gap it has to fade across. The px terms still win at 1440 and
      1920, so desktop is unchanged. */
-  background: radial-gradient(ellipse min(1200px,85vw) min(760px,54vw) at 12% 200px, rgba(255,156,61,0.14), transparent 70%), radial-gradient(ellipse min(1100px,78vw) min(700px,50vw) at 88% 330px, rgba(42,217,236,0.13), transparent 70%);
+  background: radial-gradient(ellipse min(1200px,85vw) min(760px,54vw) at 6% 200px, rgba(255,156,61,0.34), rgba(255,156,61,0) 42%), radial-gradient(ellipse min(1100px,78vw) min(700px,50vw) at 94% 330px, rgba(42,217,236,0.30), rgba(42,217,236,0) 42%);
   pointer-events: none;
 }
 
@@ -100,6 +110,18 @@
     width: calc(100% - var(--hero-left) * 2);
     margin: 0 var(--hero-left) 18px;
     opacity: 0.46;
+  }
+
+  /* A phone is not a narrow desktop. The desktop glows sit at 6% and 94% and fall off by 42%,
+     which works across 1440px of width; on a 390px screen the cyan one lands so far off the
+     edge that it never arrives — measured rgb(11,11,13), i.e. nothing. So phones get their own
+     geometry: the glows sit at the two edges, run wider than the screen, and fall off later.
+     Amber reads rgb(77,50,26) and cyan rgb(19,63,70) at a mean of 16.4, against the 28.4 of the
+     old flat wash. Both colours present, and still darker than what it replaced. */
+  .hero::before {
+    background:
+      radial-gradient(ellipse 110vw 70vw at 0% 180px, rgba(255,156,61,0.34), rgba(255,156,61,0) 55%),
+      radial-gradient(ellipse 110vw 70vw at 100% 430px, rgba(42,217,236,0.30), rgba(42,217,236,0) 55%);
   }
 }
 
