@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: flex-start;
   text-align: left;
-  --hero-left: calc(max(0px, (100% - var(--shell)) / 2) + 24px);
+  --hero-left: calc(max(0px, (100% - var(--shell)) / 2) + var(--gutter));
 
   /* How far the wordmark and the wall are held INSIDE the gutter to make room for the corner
      bracket. The bracket's arm is the leftmost ink on the page, so by the rule in the grid bible
@@ -491,7 +491,7 @@
   width: 100%;
   max-width: var(--shell);
   margin: 112px auto 0;
-  padding: 0 24px;
+  padding: 0 var(--col-pad);
   text-align: left;
 }
 
@@ -722,10 +722,7 @@
 @media (max-width: 720px) {
   /* hero */
   .hero {
-    /* 28, not 20. A 20px gutter could not hold the corner bracket AND clear air between it and
-       the P — the arm ended up 9px off the window edge. Option D's 28 buys that room; the
-       content column narrows by 8px to pay for it. */
-    --hero-left: 28px;
+    /* inherits the ≤720 --gutter (28px) from tokens.css, same as every section */
     /* The wordmark runs 1.65x the content width on phones, and --word-w has to carry that
        factor too: it is what the bearing correction on .hero-word's margin is scaled against.
        Left at the unmultiplied value the correction under-shoots and the gutters come out
@@ -749,7 +746,7 @@
   /* show */
   .show-in-hero {
     margin-top: 40px;
-    padding: 0 20px;
+    padding: 0 var(--col-pad);
   }
 
   /* segments (Mainstage / Backstage / Cloud): one full-width column on phones, read like a stack of paragraphs */

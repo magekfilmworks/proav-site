@@ -6,6 +6,24 @@
      number now. Lower it to bring the content back into a narrower column. */
   --shell: 2560px;
 
+  /* THE PAGE COLUMN — one source of truth for every left and right edge on the site.
+     --gutter      the OUTER edge: what the hero's corner bracket and the LED wall sit on.
+     --brk-clear   how far content steps inside that so the bracket has room: 2px of rule
+                   plus 12px of air.
+     Content — the wordmark, PODCAST, the hook, every section title and every body paragraph —
+     starts at --gutter + --brk-clear. The hero built its own version of this and the sections
+     kept a hardcoded 24px, so moving the hero to clear the bracket left every band below it
+     13px out of line. Both now read these. The phone values are in the ≤720 block at the
+     bottom of this file. */
+  --gutter: 24px;
+  --brk-clear: 14px;
+
+  /* Use these, not a number. --col-pad for anything already capped at --shell and centred
+     (sections, .show-in-hero); --page-edge for anything that spans the whole window and has to
+     do its own centring maths (the nav, the footer, the hero). Both land on the same line. */
+  --col-pad: calc(var(--gutter) + var(--brk-clear));
+  --page-edge: calc(max(0px, (100% - var(--shell)) / 2) + var(--gutter) + var(--brk-clear));
+
   /* color */
   --stage-black: #0B0B0D;
   --stage-black-raised: #131316;
@@ -32,4 +50,10 @@
   --font-body: 'Inter', sans-serif;
   --font-display: 'Barlow Condensed', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Phones: the hero gutter is wider here (option D), and the sections follow it so the whole
+   page keeps one column. */
+@media (max-width: 720px) {
+  :root { --gutter: 28px; }
 }

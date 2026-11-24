@@ -448,6 +448,12 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
   line-height: 1.4;
   margin: 2px 0 14px;
   font-style: italic;
+  /* The tiles narrowed when the sections moved onto the page column, which tipped this line
+     into wrapping and left "color." stranded on a line of its own. balance splits it evenly
+     instead of orphaning the last word; browsers without it just wrap as before.
+     min-height holds three lines' worth so the Shop Now buttons stay on one baseline across
+     the row whether a tile's note takes one line or three. */
+  text-wrap: balance;
 }
 
 .tile {
@@ -466,6 +472,11 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
 .merch-card {
   overflow: hidden;
   transition: transform 0.2s ease;
+  /* A column with the button pushed to the bottom, so a tile whose name or note runs to an
+     extra line does not drop its Shop Now below the others in the row. Grid stretches the
+     cards to equal height already; this makes the buttons share one baseline. */
+  display: flex;
+  flex-direction: column;
 }
 
 .merch-swatch-wrap {
@@ -513,6 +524,9 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
   font-weight: 600;
   color: var(--signal-white);
   margin-bottom: 4px;
+  /* .merch-card clips its overflow, and a slash is not a break opportunity, so
+     "Mainstage/Backstage/Cloud Sticker" lost its last 23px on a phone. Let it wrap. */
+  overflow-wrap: anywhere;
 }
 
 .merch-price {
@@ -522,6 +536,7 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
 }
 
 .merch-btn {
+  margin-top: auto;     /* holds the button on the card's bottom edge */
   display: inline-block;
   width: 100%;
   text-align: center;
@@ -543,6 +558,12 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
 
 .merch-meta {
   padding: 16px 0 20px;
+  /* The button sits in here, not directly in the card, so the card's flex column has to carry
+     through this level too — otherwise `margin-top: auto` on the button has nothing to push
+     against and a two-line name drops that tile's Shop Now below the rest of the row. */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 }
 
 /* image */

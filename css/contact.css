@@ -5,10 +5,11 @@
 }
 
 .contact-block {
-  background: var(--stage-black-raised);
-  border: 1px solid var(--border-quiet);
-  border-radius: 12px;
-  padding: 40px 36px;
+  /* Was a bordered card. A box cannot hold its contents on the page column AND have side
+     padding or a side border — the 36px inset put the copy, the form and every field 36px off
+     the line every other left edge on the site sits on, and the 1px border still cost a pixel
+     after the padding went. The card treatment is gone; the content sits on the column. */
+  padding: 40px 0;
   max-width: 560px;
 }
 
@@ -113,6 +114,6 @@
 
 @media (max-width: 720px) {
   .contact-block {
-    padding: 28px 22px;
+    padding: 28px 0;
   }
 }
