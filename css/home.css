@@ -171,6 +171,20 @@
   font-weight: 600;
 }
 
+/* The hook's break after "cloud" is forced rather than left to the wrap, because where a line
+   lands depends on the font and Inter is not guaranteed to have loaded. Below 1025px the
+   paragraph is already several lines and breaks there on its own, so the rule is switched off
+   and the extra break does not leave a stub line. */
+.hook-br {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .hook-br {
+    display: inline;
+  }
+}
+
 .hero-hook {
   align-self: flex-start;
   width: calc(100% - var(--hero-left) - 24px);
