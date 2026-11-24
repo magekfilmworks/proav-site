@@ -117,7 +117,11 @@
 @media (max-width: 720px) {
   .hero-screen {
     width: calc(100% - var(--hero-left) * 2);
-    margin: 0 var(--hero-left) 18px;
+    /* 34, not 18. The gap that matters here is not the wall to the wordmark box but the wall to
+       the corner bracket, which hangs 15px above that box and so sat 2px under the wall. 34
+       leaves 17px above the bracket, about the same as the 15px below it, so the bracket reads
+       as marking the logo rather than as crowding the wall. */
+    margin: 0 var(--hero-left) 34px;
     opacity: 0.46;
   }
 
