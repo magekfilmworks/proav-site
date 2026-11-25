@@ -7,14 +7,15 @@
   --shell: 2560px;
 
   /* THE PAGE COLUMN — one source of truth for every left and right edge on the site.
-     --gutter      the OUTER edge: what the hero's corner bracket and the LED wall sit on.
-     --brk-clear   how far content steps inside that so the bracket has room: 2px of rule
-                   plus 12px of air.
+     --gutter      the OUTER edge: what the LED wall's right edge sits on.
+     --brk-clear   how far content steps inside that. It is named for the corner brackets that
+                   used to need the room; they have been removed, but the inset stays so the
+                   whole site keeps the position it was tuned to. Collapse it to 0 and every
+                   left edge on the site moves out by 14px together.
      Content — the wordmark, PODCAST, the hook, every section title and every body paragraph —
-     starts at --gutter + --brk-clear. The hero built its own version of this and the sections
-     kept a hardcoded 24px, so moving the hero to clear the bracket left every band below it
-     13px out of line. Both now read these. The phone values are in the ≤720 block at the
-     bottom of this file. */
+     starts at --gutter + --brk-clear. The hero once built its own version of this while the
+     sections kept a hardcoded 24px, which left every band below the hero 13px out of line.
+     Both read these now. The phone values are in the ≤720 block at the bottom of this file. */
   --gutter: 24px;
   --brk-clear: 14px;
 

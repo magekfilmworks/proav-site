@@ -12,18 +12,17 @@
   --hero-left: calc(max(0px, (100% - var(--shell)) / 2) + var(--gutter));
 
   /* How far the wordmark and the wall are held INSIDE the gutter to make room for the corner
-     bracket. The bracket's arm is the leftmost ink on the page, so by the rule in the grid bible
-     — gutters are measured against ink, not boxes — the arm is what sits ON --hero-left, and
-     everything it marks steps in by this much: 2px of rule plus 12px of air. Carries no
-     percentage, so it is safe to read from inside .hero-word, which --hero-left is not. */
+     corner brackets that used to sit on --hero-left. They have been removed; the inset stays so
+     the site keeps the position it was tuned to. Carries no percentage, so it is safe to read
+     from inside .hero-word, which --hero-left is not. */
   --brk-clear: 14px;
 
   /* THE COLUMN. Every piece of hero content starts here — the wordmark, PODCAST, the tagline,
      the signal rule, the hook, the buttons, and the wall's left edge on phones. Nothing in the
      hero should write its own left offset; use this. It exists because the pieces each carried
-     their own copy of the gutter, so moving the wordmark to clear the bracket left PODCAST and
-     the body text 14px behind it. One token, one edge, nothing to keep in sync by hand.
-     --hero-left stays what the OUTER edges sit on: the bracket's arm and the wall's right edge.
+     their own copy of the gutter, so moving the wordmark in by --brk-clear left PODCAST and the
+     body text 14px behind it. One token, one edge, nothing to keep in sync by hand.
+     --hero-left stays what the OUTER edge sits on: the wall's right edge.
      Contains a percentage by way of --hero-left, so it resolves against .hero — read it from
      .hero's own children only, never from inside .hero-word. */
   --col-left: calc(var(--hero-left) + var(--brk-clear));
@@ -126,6 +125,67 @@
    is why one rotation works at every size. `bottom` is measured from the same 9.90%, so the
    badge keeps its distance from the edge as the wall grows, and the origin is the bottom-left
    corner so the rotation pivots on the edge instead of swinging the badge off it. */
+/* The sequence's readout, mirrored onto the wall's TOP edge. Same construction as the burn-in
+   below, same distances, opposite plane: the clip path takes the top edge from 0% 10.24% to
+   100% 0%, so it RISES 10.24% of the panel's height across its width — 2.291deg at the fixed
+   750/293 aspect, and negative because it climbs to the right where the bottom edge falls.
+   (Worked out from the clip path, not eyeballed: atan(0.1024 x 293/750) = 2.2909.)
+   `top` is measured from the same 10.24%, so it keeps its distance from the edge as the wall
+   grows, and the origin is the top-left corner so the rotation pivots on the edge. */
+.wall-seq {
+  position: absolute;
+  top: calc(10.24% + 7px);
+  left: 10px;
+  transform: rotate(-2.291deg);
+  transform-origin: 0 0;
+  z-index: 3;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 4px 9px 4px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: rgba(11, 11, 13, 0.62);
+  backdrop-filter: blur(3px);
+  font-family: var(--font-mono, "SFMono-Regular", Menlo, Consolas, monospace);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.wall-seq[hidden] { display: none !important; }
+
+.wall-seq {
+  transition: opacity 0.3s ease;
+}
+
+/* Only a PHONE needs this. There the slate shares the top row with this readout and there is
+   not room for both, so the readout steps aside while a call is up. On a desktop the slate
+   sits on the bottom edge, nowhere near this, and the clock keeps running in view. */
+/* The slate no longer shares a row with this readout — it sits on the bottom edge — so the
+   readout has nothing to step aside for and the clock stays in view throughout. */
+
+.wall-seq-name {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--graphite-light);
+}
+
+.wall-seq-trt,
+.wall-tc-trt {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--graphite-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.wall-seq-code {
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--signal-white);
+  font-variant-numeric: tabular-nums;
+}
+
 .wall-tc {
   position: absolute;
   bottom: calc(9.9% + 7px);
@@ -163,8 +223,19 @@
 
 @media (max-width: 720px) {
   .wall-tc { bottom: calc(9.9% + 5px); left: 8px; gap: 7px; padding: 3px 7px 3px 6px; }
+
+  /* On a 320px phone the panel is only ~267px wide, and the burn-in plus the cue slate
+     measured 3px over that. The clip's TRT is the one piece that can go: its timecode and
+     name still read, and the sequence TRT above is unaffected. */
+  @media (max-width: 420px) {
+    .wall-tc-trt { display: none; }
+  }
   .wall-tc-name { font-size: 8px; }
   .wall-tc-code { font-size: 10.5px; }
+  .wall-seq { top: calc(10.24% + 5px); left: 8px; gap: 7px; padding: 3px 7px 3px 6px; }
+  .wall-seq-name { font-size: 8px; letter-spacing: 0.1em; }
+  .wall-seq-trt, .wall-tc-trt { font-size: 8px; }
+  .wall-seq-code { font-size: 10.5px; }
 }
 
 /* ---- the wall's sound button ---- */
@@ -188,6 +259,55 @@
   opacity: 0.55;
   transition: opacity 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
+
+/* Sits under the sound button and says the audio is on, for as long as it is on. Fades with
+   the cue on the same curve as the cue's own builds, so it arrives as part of the cue rather
+   than as a notification bolted to it. */
+.wall-audio-note {
+  position: absolute;
+  top: 50px;
+  /* Aligned to the SPEAKER GLYPH, not to the button's box. The button is a 34px circle whose
+     border is all but invisible on the panel, so what the eye reads as the right edge up there
+     is the 19px glyph — which sits (34 - 19) / 2 inside the button. Matching the button's own
+     10px inset left this note overhanging the icon by about 7px.
+     Written as the arithmetic rather than 17.5px so it stays true if either size changes. */
+  right: calc(10px + (34px - 19px) / 2);
+  z-index: 3;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  color: var(--graphite-light);
+  background: rgba(11, 11, 13, 0.72);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  padding: 3px 6px;
+  white-space: nowrap;
+  opacity: 0;
+  /* Same rule as the cue slate: ON fades, OFF cuts. The transition is on .is-in only, so the
+     note clears on the frame the sound stops rather than lingering for a second and a half
+     claiming audio that is no longer playing. */
+  transition: none;
+}
+
+.wall-audio-note.is-in { opacity: 1; transition: opacity 320ms ease; }
+
+/* On a phone the wall is only ~130px tall, so 50px down from its top edge is the middle of
+   the panel — the note landed straight on the cue's first line. Below the wall instead, in
+   the margin that is already there under it. */
+@media (max-width: 1024px) {
+  .wall-audio-note {
+    top: 100%;
+    /* same line as the glyph above it, on the phone's smaller button: 30px circle, 17px glyph */
+    right: calc(8px + (30px - 17px) / 2);
+    margin-top: 7px;
+    background: none;
+    border-color: var(--border-quiet);
+  }
+}
+/* [hidden] is a plain display:none and any later display declaration beats it; this one has
+   none, but the rule is kept explicit so adding one later cannot resurrect the note. */
+.wall-audio-note[hidden] { display: none !important; }
 
 .wall-audio:hover,
 .wall-audio:focus-visible {
@@ -270,9 +390,8 @@
     height: auto;          /* the logo-aligned height is a desktop idea; here it is a band */
     aspect-ratio: 750 / 293;
     align-self: flex-start;      /* .hero centres its children; this one is gutter-aligned */
-    /* Both edges on --hero-left, the outer edge: the wall lines up with the corner bracket's
-       arm, not with the P's stem. The stem sits --brk-clear further in, so the wall is the wider
-       of the two by design. */
+    /* Both edges on --hero-left, the outer edge. The P's stem sits --brk-clear further in, so
+       the wall is the wider of the two by design. */
     width: calc(100% - var(--hero-left) * 2);
     margin: 0 var(--hero-left) 26px;
 
@@ -291,11 +410,8 @@
 @media (max-width: 720px) {
   .hero-screen {
     width: calc(100% - var(--hero-left) * 2);
-    /* 34, not 18. The gap that matters here is not the wall to the wordmark box but the wall to
-       the corner bracket, which hangs above that box and so sat 2px under the wall. 34 leaves
-       room above the bracket to match the air below it, so the bracket reads as marking the logo
-       rather than as crowding the wall. Both side margins are --hero-left, so the
-       wall lines up with the corner bracket like the ≤1024 rule. */
+    /* 34, not 18: clearance between the wall's bottom edge and the top of the wordmark. Both
+       side margins are --hero-left, the outer edge, like the ≤1024 rule. */
     margin: 0 var(--hero-left) 34px;
   }
 
@@ -316,6 +432,7 @@
 /* A still frame is enough when motion is unwelcome. */
 @media (prefers-reduced-motion: reduce) {
   .wall-audio,
+  .wall-seq,
   .wall-tc { display: none; }
 
   .hero-screen video { display: none; }
@@ -340,8 +457,17 @@
   margin-left: calc(var(--col-left) - var(--word-w) * var(--ink-l));
   width: min(calc(var(--shell) - 48px), calc(100% - var(--hero-left) - 24px));
   color: var(--signal-white);   /* the cycle tints the wordmark; the order lives in index.html */
-  transition: color 1.4s ease-in-out;   /* shorter than the hold, so each colour still reads */
+  /* 3.2s against the 20s hold. At 1.4s the change registered as an event in itself; long
+     enough and it reads as a drift you only catch if you are looking at it.
+     filter is the --ch-logo channel from the cue sheet in base.css, on the same curve, so a
+     cue and a colour change feel like one system. This list has to carry BOTH: `transition`
+     is a shorthand, so the cue sheet cannot add filter to it from its own rule without
+     replacing the colour fade. */
+  transition: color 3.2s ease-in-out, filter var(--cue-fade, 3.2s) ease-in-out;
 }
+
+/* The wordmark's cue level lives in the cue sheet in css/base.css as --ch-logo, wired there
+   like every other channel. Nothing for it here. */
 
 .hero-lockup {
   align-self: flex-start;
@@ -815,5 +941,31 @@
   /* svg */
   .hero-word.video-on svg {
     opacity: 1;
+  }
+}
+
+/* ── A PHONE HELD SIDEWAYS ─────────────────────────────────────────────────────
+   Landscape gives the wall its best shape — it is a 2.56:1 panel and a landscape phone is
+   about 2.2:1 — but the hero's top padding is sized for a tall screen, so measured at
+   844x390 the wall ran 47px past the bottom of the viewport and the visitor had to scroll to
+   see the bottom of it.
+   Here the hero tucks up under the nav, and the wall is sized by whichever runs out first:
+   the width available, or the HEIGHT available. The second term is the panel's own aspect
+   ratio solved for width, so the wall shrinks to fit the viewport instead of overflowing it
+   and keeps its 750/293 exactly.
+   svh, not vh: on a phone vh is the tallest the viewport ever gets, which is the one number
+   guaranteed to be too big while the browser chrome is showing. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero {
+    padding-top: 84px;
+    padding-bottom: 20px;
+  }
+
+  .hero-screen {
+    width: min(
+      calc(100% - var(--hero-left) * 2),
+      calc((100svh - 84px) * 750 / 293)
+    );
+    margin-bottom: 14px;
   }
 }

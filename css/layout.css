@@ -398,75 +398,6 @@
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* bracket */
-/* TEMPORARY — corner brackets hidden. Delete these three lines to bring them back; everything
-   that positions them is untouched below, and the markup is still in index.html. The page column
-   still carries --brk-clear, so nothing else moves while they are off. */
-.bracket { display: none; }
-
-.bracket {
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  border-color: var(--border-quiet);
-  opacity: 0.8;
-}
-
-/* a child of .hero-word, so it marks the logo at every width instead of the hero's corner.
-   The colour is named rather than left to the shorthand's currentColor default: .hero-word's
-   colour is what the wordmark cycle animates, so an inherited border rode the cycle with it. */
-/* Sits INSIDE the gutter: clear of the window edge, clear of the P. The -16px it once carried
-   put it 16px left of the wordmark box, which on phones is only 20px in, so it hung at the
-   window edge; landing it exactly on the gutter line instead put it on the P's ink. The ink
-   term cancels .hero-word's bearing correction so the arm lands relative to the gutter line
-   whether or not Impact is installed, and the 10px pulls it back into the gutter. One value
-   covers both sizes because the clearance it leaves is the same at each: the 24px desktop
-   gutter puts the arm 14px from the window edge, the 20px phone gutter puts it 10px from the
-   edge, and either way there is 8px of clear space between the arm and the P.
-
-   `100%`, NOT var(--word-w). The two are the same formula, but a custom property's percentages
-   resolve against whatever element USES them: in .hero-word's own margin that is .hero, which is
-   right, but this bracket's containing block is .hero-word itself, so --word-w here re-resolved
-   against the wordmark box and came out ~55% too large. A plain 100% is .hero-word's width,
-   which IS --word-w, so it is both correct and one fewer indirection. */
-.bracket.tl {
-  /* Option D: a 36px arm set 18px out from the P's ink and 2px up. Fixed pixels, not a fraction
-     of the wordmark — scaling it with the logo made the desktop mark a 78px frame around the
-     logo instead of a tick beside it. The ink term is what puts the P's stem on the gutter, so
-     the offset is measured from the ink, not from the invisible box edge. */
-  /* Inset EQUALLY from the P's corner in both axes — 12px of clear air left of the stem and
-     12px above the cap (14 = 12 + the 2px rule). Both numbers are measured from the INK, never
-     from the wordmark's invisible box: the box carries the font's leading above the cap, so a
-     box-relative offset put the corner 12px left of the P but 33px above it. --ink-t is the
-     measured cap top as a fraction of the box height, the vertical twin of --ink-l; the 13.45%
-     constant it replaces came from Impact's nominal cap height and was ~17px out in the
-     browser, which left the bracket's arm BELOW the top of the P. */
-  top: calc(100% * var(--ink-t, 0.1345) - 14px);
-  /* Lands the arm exactly ON the gutter. The wordmark's margin already carries +--brk-clear, so
-     subtracting the same amount here puts the arm back on --hero-left — the same line the wall's
-     right edge sits on. No floor needed any more: it cannot reach the window edge by
-     construction, because the gutter is where it is aimed. */
-  left: calc(100% * var(--ink-l) - var(--brk-clear));
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid var(--signal-white);
-  border-left: 2px solid var(--signal-white);
-}
-
-/* Its partner matches it exactly and sits on the hero's own bottom-right gutter. bottom is the
-   gutter too, not 20px: the corner has to be inset the same amount on both axes or it is not a
-   square corner, and 24-against-20 read as a tilt. */
-.bracket.br {
-  width: 36px;
-  height: 36px;
-  bottom: 24px;
-  right: max(24px, calc((100% - var(--shell)) / 2 + 24px));
-  border-bottom: 2px solid;
-  border-right: 2px solid;
-}
-
-
-
 /* footer */
 footer {
   padding: 56px var(--page-edge) 40px;
@@ -519,13 +450,6 @@ footer {
   letter-spacing: 0.03em;
 }
 
-/* Desktop: the bracket's arm sits ON the gutter line, so its inset from the window edge is the
-   same number as the wall's right edge — they read as one margin. At that x it is directly over
-   the P's stem, so it also lifts to -30px, which puts its foot clear above the cap. The cap top
-   is a fixed 13.45% down the wordmark box (Impact's cap height against the SVG's viewBox), and
-   the box is 6:1, so the clearance grows with the window instead of pinching: ~16px at 1025,
-   ~25px at 1440, ~34px at 1920. Below 1025 the wall stacks above the wordmark and there is no
-   headroom to lift into, so that layout keeps the -10px sideways offset instead. */
 @keyframes navSignalSweep {
   0% { background-position: 100% 0; }
   50% { background-position: 0% 0; }
@@ -581,13 +505,6 @@ footer {
 }
 
 @media (max-width: 720px) {
-  /* bracket — on the phone gutter, which is 28 now, and square on both axes like its partner.
-     At 20 it sat 8px outboard of the wall and the text it is supposed to line up with. */
-  .bracket.br {
-    right: 28px;
-    bottom: 28px;
-  }
-
   /* nav */
   .nav {
     padding: 16px var(--page-edge);

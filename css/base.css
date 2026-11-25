@@ -95,9 +95,109 @@ section {
   max-width: none;
   margin: 0 0 26px;
   text-wrap: initial;
+  /* Two values multiply into this colour and each has its own owner — do not collapse them.
+       --tc   the hue. The scroll script ramps it white -> amber -> cyan as a title rises.
+              Its own white constant must match the 245,245,240 fallback here, or the first
+              scroll tick repaints a different white than the stylesheet painted.
+       --dim  the scroll ramp's own level, 1 down to 0.15 as the title leaves the screen.
+              Set on the element, many times a second while scrolling.
+     The cue sheet below does NOT touch this colour. It rides a filter instead, so a cue can
+     move while the scroll ramp is mid-ramp and neither one drags the other. */
   color: rgba(var(--tc, 245,245,240), var(--dim, 1));
   overflow-wrap: anywhere;   /* a long word never pushes the page sideways, even before the web font loads */
 }
+
+/* ══ CUE SHEET ═══════════════════════════════════════════════════════════════════════════
+   Stage lighting for the page. Every channel is a brightness level: 1 is full, 0 is out.
+   To change a look, change a level here. Nothing else needs touching.
+
+   HOW A CHANNEL WORKS
+   Each channel is a --ch-* value read by one `filter: brightness()` rule in THE PATCH below.
+   brightness() rather than opacity, deliberately: .reveal already drives opacity on most of
+   this content, and the section titles' colour already carries the scroll ramp's two values.
+   A filter collides with neither, so every channel is wired the same way and a level can move
+   at any time without fighting another rule. Dimming a colour with brightness() also keeps
+   its hue, which is what dimming a real fixture does — the amber and cyan phases of the
+   wordmark and of the title ramp come down without turning grey.
+
+   THE PATCH
+     --ch-logo     PROAV wordmark
+     --ch-lockup   PODCAST and the Mainstage · Backstage · Cloud tagline
+     --ch-title    the big display heading on every section
+     --ch-card     the segment-card headings
+     --ch-body     body copy
+   The LED wall is deliberately NOT patched. It has no channel, so no cue can dim it. That is
+   the whole point of the dim cue: everything else steps back and the wall is left as the
+   brightest thing on the page.
+
+   THE CUES — data-cue on <html>. Levels go up as well as down; a cue is just a set of levels,
+   so taking HOUSE after CUE 1 brings everything back.
+     (no attribute)   HOUSE   everything at full. The page loads here.
+     data-cue="cue1"  CUE 1   takes Logo and Titles to --cue1-level.
+   CUE 1 is called by the LED wall, in two builds, once the site has loaded — see PLAYLIST in
+   index.html. The other pages carry data-cue="cue1" in the markup, since there is no arrival
+   to play on a page you have already arrived at.
+   To add a cue: add a block beside CUE 1 and call take('<its name>').
+
+   0.55 renders the wordmark rgb(140,140,138) — 5.8:1 against the page, and about 2.4x below
+   the LED wall's brightest decile (0.619 luminance, measured at 1440 with a clip running). */
+:root {
+  --ch-logo: 1;
+  --ch-lockup: 1;
+  --ch-title: 1;
+  --ch-card: 1;
+  --ch-body: 1;
+  --cue-fade: 3.2s;   /* how long a cue takes to MOVE LEVELS, matched to the wordmark's crossfade */
+
+  /* How long each element of a cue takes to fade UP on the LED wall — the standby, the take,
+     the "audio unmuted" note. Those sit in different boxes, so this has to be inherited from
+     the root rather than declared on any one of them.
+     1800, not 1000: at a second, grey type arriving on a black panel reads as appearing rather
+     than fading. A fade has to be slow enough to watch. The beats BETWEEN elements are not
+     here — they are in the cue's PLAYLIST entry in index.html. */
+  --cue-in: 1800ms;
+
+  /* CUE 1's level, kept here on :root rather than inside the cue block below, so it can be
+     read whether or not the cue is up. The LED wall reads it and prints it as the percentage
+     in the cue it calls — change 0.55 here and the wall says the new number by itself. Leave
+     it as a 0-1 decimal; the wall does the x100. */
+  --cue1-level: 0.55;
+}
+
+/* CUE 1 takes the WHOLE page down, not just the wordmark and the headings: the PODCAST
+   lockup, the tagline, the body copy and the card headings go with them. Anything left at
+   full would simply become the brightest thing on the page and undo the cue — at 55% the
+   PODCAST lockup was reading 3.5x brighter than the PROAV above it, and the 37px card
+   headings were outshining the 104px display headings beneath them.
+   The LED wall has no channel, so it cannot be dimmed. That is the point. */
+html[data-cue="cue1"] {
+  --ch-logo:   var(--cue1-level);
+  --ch-lockup: var(--cue1-level);
+  --ch-title:  var(--cue1-level);
+  --ch-card:   var(--cue1-level);
+  --ch-body:   var(--cue1-level);
+}
+
+/* the patch — each channel wired to its fixtures */
+.hero-word             { filter: brightness(var(--ch-logo)); }
+.hero-lockup           { filter: brightness(var(--ch-lockup)); }
+.section-title.display { filter: brightness(var(--ch-title)); }
+.segment-card h3       { filter: brightness(var(--ch-card)); }
+.show-copy,
+.hero-hook,
+.segment-card p,
+.watch-note            { filter: brightness(var(--ch-body)); }
+
+/* Fade times. .hero-word is absent on purpose: it also crossfades colour, so its whole
+   transition list lives with the rest of its rule in home.css and already carries filter.
+   Declaring `transition` for it here too would replace that list and kill the colour fade. */
+.hero-lockup,
+.section-title.display,
+.segment-card h3,
+.show-copy,
+.hero-hook,
+.segment-card p,
+.watch-note { transition: filter var(--cue-fade) ease-in-out; }
 
 /* the eyebrow label above each section title */
 .section-eyebrow {
@@ -167,5 +267,10 @@ section.band-plain {
     transition: none;
     opacity: 1;
     transform: none;
+  }
+
+  /* a cue still lands — it is a level change, not an effect — it just snaps instead of fading */
+  :root {
+    --cue-fade: 0s;
   }
 }
