@@ -399,6 +399,11 @@
 }
 
 /* bracket */
+/* TEMPORARY — corner brackets hidden. Delete these three lines to bring them back; everything
+   that positions them is untouched below, and the markup is still in index.html. The page column
+   still carries --brk-clear, so nothing else moves while they are off. */
+.bracket { display: none; }
+
 .bracket {
   position: absolute;
   width: 64px;
