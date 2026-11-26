@@ -1603,96 +1603,110 @@
         const queue = [];
 
         // ── THE RECORDED LINE ──────────────────────────────────────────────────────────────
-        // ONE <audio>, re-pointed at each file. Not one element per file, which is what this
-        // was and why the voice died on a phone after the first cue.
+        // WEB AUDIO, not an <audio> element. This matters only on iOS, and it is the third
+        // thing tried there.
         //
-        // iOS gives a page playback permission PER ELEMENT, and one user gesture unlocks ONE
-        // of them. With 25 elements the visitor's press unlocked whichever spoke first and
-        // every later line was refused — CUE 1 called, then silence for the rest of the show.
-        // A single element is unlocked by that same press and stays unlocked for the night,
-        // so every line after it plays. Desktop never cared either way.
-        let voGen = 0;                 // the element is reused, so stale events must be ignored
-        const player = new Audio();
-        player.preload = 'auto';
-        let unlocked = false;
-        // 44 bytes of nothing. The unlock needs a source it can actually start: play() on an
-        // element with no source rejects, and that rejection arrived a second later — after
-        // the first real line had begun — and paused it. That was the voice dying after CUE 1
-        // on the bench. A real (silent) source settles immediately and locally.
-        const SILENCE = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAABErAAABAAgAZGF0YQAAAAA=';
+        //   25 elements, one per file  — iOS unlocks ONE element per gesture, so the visitor's
+        //                                press freed whichever spoke first and refused the rest.
+        //   one element, src swapped   — unlocked fine and spoke the opening cues, then went
+        //                                permanently silent the instant the first clip rolled:
+        //                                iOS takes the permission back when another media
+        //                                element starts, and it does not come back. Measured
+        //                                on the phone: the voice never returned, not even over
+        //                                the slides, where nothing else is playing.
+        //   Web Audio (here)           — an AudioContext is not a media element. It is unlocked
+        //                                once, by the same press, and the video cannot take
+        //                                that away. It also mixes WITH the clip instead of
+        //                                fighting it, which is what a comms channel does.
+        //
+        // The clock is better too: a buffer's position comes from ctx.currentTime, which is a
+        // sample clock, so the GO still lands on the word.
+        const AC = window.AudioContext || window.webkitAudioContext;
+        let actx = null;
+        const decoded = new Map();     // file -> Promise<AudioBuffer>
+        let liveSrc = null;            // the one source playing, so disable() can stop it
 
-        // Called INSIDE the press, which is the only moment iOS will accept. Starting a muted
-        // element and stopping it at once is what spends the gesture on this element; the
-        // visitor hears nothing. From here on the show can start it whenever it likes.
+        const ctxOf = () => {
+          if (!AC) return null;
+          if (!actx) { try { actx = new AC(); } catch (e) { actx = null; } }
+          return actx;
+        };
+
+        // Called INSIDE the press — the only moment iOS accepts. resume() plus one silent
+        // sample is what spends the gesture on the context. Nothing is heard.
         const unlock = () => {
-          if (unlocked) return;
-          unlocked = true;
-          const gen = voGen;
+          const c = ctxOf();
+          if (!c) return;
           try {
-            player.muted = true;
-            player.src = SILENCE;
-            const p = player.play();
-            const settle = () => {
-              player.muted = false;
-              // If a real line started while this was settling, it is not ours to stop.
-              if (voGen !== gen) return;
-              try { player.pause(); player.currentTime = 0; } catch (e) {}
-            };
-            if (p && p.then) p.then(settle, settle); else settle();
-          } catch (e) { player.muted = false; }
+            if (c.state === 'suspended' && c.resume) c.resume();
+            const src = c.createBufferSource();
+            src.buffer = c.createBuffer(1, 1, 22050);
+            src.connect(c.destination);
+            src.start(0);
+          } catch (e) {}
         };
 
-        // Preload into the HTTP cache so swapping the source costs nothing at a GO. These are
-        // fetches, not players — the single element above does all the playing.
-        const warm = () => {
-          unlock();
-          VO_LINES.forEach(([, f]) => {
-            try { fetch(VO_DIR + f + '.mp3', { cache: 'force-cache' }).catch(() => {}); }
-            catch (e) {}
-          });
+        const load = file => {
+          let p = decoded.get(file);
+          if (p) return p;
+          const c = ctxOf();
+          if (!c) return null;
+          p = fetch(VO_DIR + file + '.mp3')
+            .then(r => r.arrayBuffer())
+            .then(ab => new Promise((res, rej) => {
+              // the callback form as well as the promise form — older WebKit only has callbacks
+              const d = c.decodeAudioData(ab, res, rej);
+              if (d && d.then) d.then(res, rej);
+            }));
+          decoded.set(file, p);
+          return p;
         };
+        // Fetch and decode all 25 on the press, so a GO never waits on the network.
+        const warm = () => { unlock(); VO_LINES.forEach(([, f]) => { try { load(f); } catch (e) {} }); };
 
         function speakFile(hit, text, then, onGo, who) {
-          const a = player, gen = ++voGen;
+          const c = ctxOf();
           let went = false, closed = false, raf = 0;
-          const mine = () => gen === voGen;
           const go = () => { if (!went) { went = true; if (onGo) onGo(); } };
           const done = () => {
             if (closed) return;
             closed = true;
             cancelAnimationFrame(raf);
-            a.removeEventListener('ended', onEnd);
-            a.removeEventListener('error', onEnd);
-            a.removeEventListener('playing', onPlaying);
+            clearTimeout(bail);
             live = Math.max(0, live - 1);
             if (then) then();
             const nextUp = queue.shift();
             if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
           };
+          const fail = () => { go(); done(); };
           live++;
-          // THE GO IS READ OFF THE AUDIO CLOCK, not off a timer. A setTimeout drifts with the
-          // main thread; a.currentTime is the sound itself, so the picture lands on the word
-          // under load as well as idle. GO_AT was measured off the file.
-          const watch = () => {
-            if (closed || !mine()) return;
-            if (onGo && hit.goAt > 0 && a.currentTime >= hit.goAt) { go(); return; }
-            raf = requestAnimationFrame(watch);
-          };
-          const onEnd = () => { if (mine()) { go(); done(); } };
-          const onPlaying = () => { if (!mine()) return;
-                                    spoke = true; clearTimeout(bail); watch(); };
-          a.addEventListener('ended', onEnd);
-          a.addEventListener('error', onEnd);
-          a.addEventListener('playing', onPlaying);
-          // backstop: a line that never plays must not hold the show behind it
-          const bail = setTimeout(onEnd, 6000);
-          try {
-            a.src = VO_DIR + hit.file + '.mp3';   // re-point, do not build a new element
-            a.currentTime = 0;
-            a.volume = 1;                      // no ducking — these sit on top of the clip
-            const p = a.play();
-            if (p && p.catch) p.catch(() => onEnd());
-          } catch (e) { onEnd(); }
+          // A line that never arrives must not hold the show behind it.
+          const bail = setTimeout(fail, 9000);
+          const p = c && load(hit.file);
+          if (!p) { fail(); return; }
+
+          p.then(buf => {
+            if (closed) return;
+            if (c.state === 'suspended' && c.resume) c.resume();
+            const src = c.createBufferSource();
+            src.buffer = buf;
+            src.connect(c.destination);          // straight out: no ducking, no gain stage
+            liveSrc = src;
+            src.onended = () => { if (liveSrc === src) liveSrc = null; go(); done(); };
+            const t0 = c.currentTime;
+            src.start();
+            spoke = true;
+            clearTimeout(bail);
+            // THE GO IS READ OFF THE AUDIO CLOCK. ctx.currentTime is a sample clock, so the
+            // picture lands on the word under load as well as idle. GO_AT was measured off
+            // the recording.
+            const watch = () => {
+              if (closed) return;
+              if (onGo && hit.goAt > 0 && (c.currentTime - t0) >= hit.goAt) { go(); return; }
+              raf = requestAnimationFrame(watch);
+            };
+            watch();
+          }).catch(fail);
         }
 
         // Which engine says this line. A recording if there is one for it, the browser's own
@@ -1840,8 +1854,8 @@
             live = 0;
             try { synth.cancel(); } catch (e) {}
             // and stop the recording mid-line, for the same reason
-            voGen++;                 // anything still in flight is no longer ours
-            try { player.pause(); player.currentTime = 0; } catch (e) {}
+            try { if (liveSrc) { liveSrc.onended = null; liveSrc.stop(); liveSrc = null; } }
+            catch (e) {}
           },
           pick, pickOp, list, rate: r => (rate = r),
           // what the matcher thinks each voice is, so the bench can show its working
