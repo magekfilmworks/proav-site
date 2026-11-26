@@ -390,10 +390,12 @@ html, body {
 .wall-full[aria-pressed="true"] .wf-out { display: block; }
 .wall-full[hidden] { display: none !important; }
 
-/* ═══ NO PICTURE BEHIND THE INVITATION ══════════════════════════════════════════════════ */
-/* The first screen is the wall at rest: the panel grid and the invitation, nothing running
-   behind them. The clip used to show through, which put the idle rotation on screen before
-   anyone had asked for it. The video is hidden rather than paused — the engine owns playback
-   and must not be second-guessed here, and the clip is wanted the moment the show is called,
-   which is also the moment the invitation goes. */
-.screen-content:has(.wall-invite:not([hidden])) > video { visibility: hidden; }
+/* ═══ THE PICTURE IS UP ONLY WHILE A CLIP ROLLS ═════════════════════════════════════════ */
+/* A paused clip holds its last frame, so the wall used to carry the ARTEMIS frame behind the
+   invitation and behind every call made before the playback was taken. A call belongs on the
+   grid; the picture belongs to the clip that was called. The engine puts .is-clip on the slot
+   when it rolls one and takes it off when it leaves, so this follows real playback state
+   rather than guessing from what is on screen. Hidden, not paused — playback stays the
+   engine's to run. */
+.screen-content > video { visibility: hidden; }
+.screen-content.is-clip > video { visibility: visible; }

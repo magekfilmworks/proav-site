@@ -1177,7 +1177,15 @@
       // Take a running clip down gently. A clip that is cut away from mid-audio should fade,
       // not stop dead on a frame — the only place a hard stop is right is when it has already
       // played to its end, where there is nothing left to fade.
-      function leaveClip() { stop(); vid.pause(); }
+      // The wall's picture. A paused clip keeps its last frame on screen, so leaving one put
+      // the ARTEMIS frame behind the invitation and behind every call the caller made before
+      // the playback was taken. The picture is now up only while a clip is rolling: the grid
+      // is what a call is read against, and the clip arrives when it is called.
+      const scEl = document.querySelector('.screen-content');
+      const clipOn  = () => { if (scEl) scEl.classList.add('is-clip'); };
+      const clipOff = () => { if (scEl) scEl.classList.remove('is-clip'); };
+
+      function leaveClip() { stop(); vid.pause(); clipOff(); }
 
       function show(item, done) {
         cur = item;
@@ -1293,6 +1301,7 @@
         vid.playsInline = true;
         const r = vid.play();
         if (r && r.catch) r.catch(() => {});
+        clipOn();                  // the picture, on the roll — not before it is called
         draw();
         start();
         // The clip is finished by whichever comes first: the word GO of its out-call, or its
