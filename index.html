@@ -178,7 +178,7 @@
             <path d="M17.2 7.2a7 7 0 0 1 0 9.6"/>
           </svg>
         </span>
-        <span class="wall-invite-line">UNMUTED TO EXPERIENCE THE SHOW CALLERS CUES</span>
+        <span class="wall-invite-line">CLICK, UNMUTE, AND EXPERIENCE THE SHOW CALLERS CUES</span>
       </button>
       <!-- A call given while something else is still on the wall — over a running clip, or
            over a slide being read. It does not replace what is up; it sits beside it on the
@@ -1156,7 +1156,7 @@
         const h = Math.round((1 - p) * 40) / 40;
         if (t._h !== h) {
           t._h = h;
-          const W = [245, 245, 240], A = [255, 156, 61], C = [42, 217, 236];   // --signal-white; must match the --tc fallback in base.css
+          const W = [216, 216, 220], A = [255, 156, 61], C = [42, 217, 236];   // #d8d8dc; must match the --tc fallback in base.css. Amber and cyan unchanged.
           const f = h < 0.5 ? h * 2 : (h - 0.5) * 2, a = h < 0.5 ? W : A, b = h < 0.5 ? A : C;
           t.style.setProperty('--tc', a.map((x, i) => Math.round(x + (b[i] - x) * f)).join(','));
         }

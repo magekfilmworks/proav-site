@@ -97,13 +97,16 @@ section {
   text-wrap: initial;
   /* Two values multiply into this colour and each has its own owner — do not collapse them.
        --tc   the hue. The scroll script ramps it white -> amber -> cyan as a title rises.
-              Its own white constant must match the 245,245,240 fallback here, or the first
+              Its own white constant must match the 216,216,220 fallback here, or the first
               scroll tick repaints a different white than the stylesheet painted.
+              216,216,220 is #d8d8dc, the palette's secondary white — the titles used to
+              rest on #F5F5F0 and read too hot. ONLY the white end moved; the amber and
+              cyan the ramp runs to are untouched.
        --dim  the scroll ramp's own level, 1 down to 0.15 as the title leaves the screen.
               Set on the element, many times a second while scrolling.
      The cue sheet below does NOT touch this colour. It rides a filter instead, so a cue can
      move while the scroll ramp is mid-ramp and neither one drags the other. */
-  color: rgba(var(--tc, 245,245,240), var(--dim, 1));
+  color: rgba(var(--tc, 216,216,220), var(--dim, 1));
   overflow-wrap: anywhere;   /* a long word never pushes the page sideways, even before the web font loads */
 }
 
@@ -161,7 +164,7 @@ section {
      read whether or not the cue is up. The LED wall reads it and prints it as the percentage
      in the cue it calls — change 0.55 here and the wall says the new number by itself. Leave
      it as a 0-1 decimal; the wall does the x100. */
-  --cue1-level: 0.55;
+  --cue1-level: 0.50;
 }
 
 /* CUE 1 takes the WHOLE page down, not just the wordmark and the headings: the PODCAST
