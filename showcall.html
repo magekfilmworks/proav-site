@@ -57,14 +57,13 @@
            hoped for. The whole wall is the button. -->
       <button class="wall-invite" type="button">
         <span class="wall-invite-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-               stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <path d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z" fill="currentColor" stroke="none"/>
-            <path d="M14.8 9.4a3.6 3.6 0 0 1 0 5.2"/>
-            <path d="M17.2 7.2a7 7 0 0 1 0 9.6"/>
+          <!-- Play, not a speaker. Sound is on from the press — nothing here is being unmuted,
+               a show is being started, and the icon should say the same thing the line does. -->
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M9 6.5v11l9-5.5z" fill="currentColor" stroke="none"/>
           </svg>
         </span>
-        <span class="wall-invite-line">CLICK, UNMUTE, AND EXPERIENCE THE SHOW CALLERS CUES</span>
+        <span class="wall-invite-line">PLAY AND EXPERIENCE THE SHOW CALL CUES</span>
       </button>
       <!-- A call given while something else is still on the wall — over a running clip, or
            over a slide being read. It does not replace what is up; it sits beside it on the
