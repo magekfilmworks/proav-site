@@ -1254,9 +1254,30 @@
         c.width = W; c.height = H;
         const ctx = c.getContext('2d', { willReadFrequently: true });
         if (!ctx) return null;
-        let fam = FACE;                       // the SVG's own resolved family, not a copy
-        try { fam = getComputedStyle(text).fontFamily || FACE; } catch (e) {}
-        ctx.font = FS + 'px ' + fam;
+        // MEASURE WHAT WILL ACTUALLY BE DRAWN — the family is not enough on its own.
+        // .hero-word carries .display, which sets font-weight 800 and letter-spacing 0.02em,
+        // and SVG <text> inherits both. The canvas was measuring plain weight with no
+        // tracking, so it reported narrower ink than the page then rendered:
+        //   * Impact ships one weight, so 800 is SYNTHESISED — the engine smears the glyphs
+        //     wider, and how much it smears differs by engine. That is why Chrome and Safari
+        //     both measured --ink-r at 0.434 and only Safari's V ran into the wall: the
+        //     measurement agreed, the rendering did not.
+        //   * 0.02em at 200px is 4px per gap, four gaps, so 16 user units unaccounted for.
+        // Taking both from the element means each engine measures its own synthesis, which is
+        // correct by construction instead of by a number that happens to work here.
+        let fam = FACE, wt = '', ls = '';     // the SVG's own resolved values, not a copy
+        try {
+          const cs = getComputedStyle(text);
+          fam = cs.fontFamily || FACE;
+          wt  = cs.fontWeight || '';
+          ls  = cs.letterSpacing || '';
+        } catch (e) {}
+        ctx.font = (wt ? wt + ' ' : '') + FS + 'px ' + fam;
+        // letterSpacing is Chrome 99+ / Safari 17.4+; where it is absent the tracking is
+        // simply not measured, which is the behaviour this had before.
+        if ('letterSpacing' in ctx && ls && ls !== 'normal') {
+          try { ctx.letterSpacing = ls; } catch (e) {}
+        }
         ctx.textBaseline = 'alphabetic';
         ctx.fillStyle = '#fff';
         const BASE = 400;                     // baseline inside the scratch canvas
