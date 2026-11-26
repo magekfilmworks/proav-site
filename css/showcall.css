@@ -389,3 +389,11 @@ html, body {
 .wall-full[aria-pressed="true"] .wf-in  { display: none; }
 .wall-full[aria-pressed="true"] .wf-out { display: block; }
 .wall-full[hidden] { display: none !important; }
+
+/* ═══ NO PICTURE BEHIND THE INVITATION ══════════════════════════════════════════════════ */
+/* The first screen is the wall at rest: the panel grid and the invitation, nothing running
+   behind them. The clip used to show through, which put the idle rotation on screen before
+   anyone had asked for it. The video is hidden rather than paused — the engine owns playback
+   and must not be second-guessed here, and the clip is wanted the moment the show is called,
+   which is also the moment the invitation goes. */
+.screen-content:has(.wall-invite:not([hidden])) > video { visibility: hidden; }
