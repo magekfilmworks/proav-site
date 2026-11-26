@@ -109,7 +109,15 @@
      so the wall simply fills whatever is left — it grows with the window instead of stopping
      at a fixed cap. --ink-r is measured in the page (see index.html), so this lands in the same
      place whether or not Impact is installed. */
-  --wall-gap: 2.3%;
+  /* A LENGTH, never a percentage. This was `2.3%`, and a percentage held in a custom property
+     and then substituted into the `width: calc()` below does not resolve the same way in every
+     engine: measured on one Mac, Chrome and Firefox both gave 2.30% and 2.31%, and Safari gave
+     0.16% — about 3px instead of about 40. The wall then slid left until it was touching the V
+     of PROAV. Expressed as a fraction of --word-w it is a length, every engine agrees, and it
+     still grows with the window the way the percentage was meant to.
+     0.0238 is not a guess: it reproduces the gap Chrome and Firefox were already drawing to
+     within half a pixel at the widths they were measured at. */
+  --wall-gap: calc(var(--word-w) * 0.0238);
   /* Right edge on --hero-left, left edge on --col-left: the wordmark starts at the column, so
      its ink ends that much further right, and the wall gives back the same amount. */
   width: calc(100% - var(--hero-left) - var(--col-left)
