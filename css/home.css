@@ -389,6 +389,12 @@
    source now scales down whole and pillarboxes onto the grid, the way a real wall runs a
    16:9 feed. */
 .screen-content video{width:100%;height:100%;object-fit:contain;display:block;opacity:.92}
+/* ARMING — the beat between the press on the show-call slate and the first cue.
+   The press primes the clip (a muted play(), which is what makes audio legal later) while the
+   slate is still fading, and the slate is the ONLY thing covering the video: left alone, the
+   slate dissolved into a full-frame clip and the wall then jumped to the grid. The slate has
+   to fade to the GRID. Cleared on the frame a clip is actually called up. */
+.screen-content.is-arming video{visibility:hidden}
 .screen-frame{position:absolute;inset:0;width:100%;height:100%}
 
 /* The wordmark must never sit on the panel. Below 1024px there is no room beside it, so the

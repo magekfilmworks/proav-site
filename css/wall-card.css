@@ -34,6 +34,18 @@
   background: var(--stage-black);
 }
 
+/* ═══ THE PRESS: THE SLATE FADES OUT, THE GRID IS WHAT IS LEFT ════════════════════════ */
+/* The card is opaque — it carries --stage-black — so fading IT is what reveals the wall's
+   panel grid underneath, and that empty grid is the beat the first standby is called into.
+   Cutting from the slate straight to CUE 1 read as a jump.
+   .is-out is set by the press and by nothing else: the rotation still swaps slates by
+   cutting, which is how a wall behaves. */
+.wall-card.is-out {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 900ms ease-in-out;
+}
+
 /* slate line — the same vocabulary as the timecode burn-in, in grey */
 .wall-card-slate {
   display: flex;
@@ -61,7 +73,10 @@
 }
 
 .wall-card:hover .wall-card-title,
-.wall-card:focus-visible .wall-card-title { color: var(--signal-white); }
+.wall-card:focus-visible .wall-card-title {
+  color: var(--signal-white);
+  text-decoration-color: var(--signal-white);
+}
 
 .wall-card:focus-visible {
   outline: 2px solid var(--border-strong);
@@ -70,7 +85,14 @@
 
 .wall-card-title {
   display: block;
-  transition: color 0.18s ease;
+  /* A slim rule under the title, so a slate reads as something you can press. It underlines
+     the text itself rather than the slate, so it follows the words when a long title wraps
+     and stops where they stop. In em, so it stays slim as the wall scales. */
+  text-decoration: underline;
+  text-decoration-thickness: 0.03em;
+  text-underline-offset: 0.16em;
+  text-decoration-color: rgba(245, 245, 240, 0.34);
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
   font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
@@ -389,3 +411,7 @@
   .wall-ready { transition: none; }
 }
 
+
+
+/* The invitation is gone from the markup — the wall rolls and nothing sits over it. The
+   .wall-invite rules above are left for the 4K window, which still has one. */
