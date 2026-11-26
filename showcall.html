@@ -1183,8 +1183,18 @@
       // the playback was taken. The picture is now up only while a clip is rolling: the grid
       // is what a call is read against, and the clip arrives when it is called.
       const scEl = document.querySelector('.screen-content');
-      const clipOn  = () => { if (scEl) scEl.classList.add('is-clip'); };
-      const clipOff = () => { if (scEl) scEl.classList.remove('is-clip'); };
+      const cueEl = document.querySelector('.wall-cue');
+      const clipOn  = () => {
+        if (scEl) scEl.classList.add('is-clip');
+        // The standby that announced this playback is spent the moment the picture lands —
+        // it was still sitting over the clip's opening alongside its own GO, which is the
+        // trail. Only the call that was just made stays, for the rest of its read.
+        if (cueEl) cueEl.classList.add('is-over-clip');
+      };
+      const clipOff = () => {
+        if (scEl) scEl.classList.remove('is-clip');
+        if (cueEl) cueEl.classList.remove('is-over-clip');
+      };
 
       function leaveClip() { stop(); vid.pause(); clipOff(); }
 

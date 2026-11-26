@@ -167,7 +167,6 @@ section {
      in the cue it calls — change 0.55 here and the wall says the new number by itself. Leave
      it as a 0-1 decimal; the wall does the x100. */
   --cue1-level: 0.20;
-  --page-rest:  0.55;   /* the interior pages at rest — NOT the wall's cue */
   --logo-cue1:  0.55;   /* the wordmark on CUE 1 — it crossfades colour on the same curve */
   /* WHAT THE CALL SAYS, kept separate from what the cue DOES. The level above is the real
      one. This is the figure the wall prints and the caller speaks, and it stays at 55%
@@ -197,14 +196,13 @@ html[data-cue="cue1"] {
    Set --logo-cue1 to var(--cue1-level) if the logo should follow the house all the way. */
 html[data-cue="cue1"] .hero-word { --ch-site: var(--logo-cue1); }
 
-/* THE INTERIOR PAGES ARE NOT A CUE.
+/* THE INTERIOR PAGES ARE OFF THE CUE.
    signal-flow-daily.html and contact.html used to carry data-cue="cue1" so they would open
-   already looking like the homepage does after the wall has called CUE 1. That tied their
-   resting brightness to --cue1-level, which is the LED WALL's dim level — so taking the wall
-   from 55% to 30% to 20% dragged both pages down with it and left them nearly black. Two
-   different jobs, one token. They carry data-rest now and have a level of their own; 0.55 is
-   where they were authored, and the wordmark figure below is measured at it. */
-html[data-rest] { --ch-site: var(--page-rest); }
+   already looking like the homepage does after the wall calls CUE 1. That tied them to
+   --cue1-level, the LED WALL's dim level, so taking the wall to 20% dragged both pages down
+   with it. They were moved to their own data-rest level, and then off the cue altogether:
+   there is no wall on them and nothing to obey, so they carry no cue attribute and render at
+   the root's --ch-site of 1. Nothing here applies to them any more. */
 
 /* the patch — each channel wired to its fixtures */
 /* ONE CHANNEL, ON THE CONTAINERS. This used to be five channels wired to individual

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<!-- data-rest: this page's resting brightness, --page-rest in the cue sheet at the top of
-     css/base.css. It used to carry data-cue="cue1" so it would open looking like the homepage
-     does once the wall has called CUE 1 — but that tied it to --cue1-level, the LED WALL's dim
-     level, and taking the wall down to 20% took this page with it. They are separate now. -->
-<html lang="en" data-rest>
+<!-- This page is OFF the playback cue. It used to carry data-cue="cue1", then data-rest, so
+     it would open at a dimmed level like the homepage does mid-show. There is no wall here
+     and no cue to obey, so it carries no cue attribute at all and renders at full. -->
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
