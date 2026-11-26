@@ -165,6 +165,11 @@ section {
      in the cue it calls — change 0.55 here and the wall says the new number by itself. Leave
      it as a 0-1 decimal; the wall does the x100. */
   --cue1-level: 0.50;
+  /* WHAT THE CALL SAYS, kept separate from what the cue DOES. The level above is the real
+     one. This is the figure the wall prints and the caller speaks, and it stays at 55%
+     because that is what is on the recording (caller-01 and caller-02 say "fifty-five
+     percent"). When those two lines are re-cut, change this to match --cue1-level. */
+  --cue1-say: 55%;
 }
 
 /* CUE 1 takes the WHOLE page down, not just the wordmark and the headings: the PODCAST

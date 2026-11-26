@@ -1508,6 +1508,12 @@
       // The level CUE 1 takes, read from the cue sheet rather than written out here, so the
       // figure on the wall and the figure in the CSS cannot drift apart. 0.55 -> "55%".
       const cueLevel = () => {
+        // The SPOKEN figure, not the level. --cue1-say is what the recording says; it is
+        // deliberately allowed to differ from --cue1-level, which is what the cue actually
+        // does. Falls back to the level if --cue1-say is ever removed.
+        const say = getComputedStyle(document.documentElement)
+          .getPropertyValue('--cue1-say').trim();
+        if (say) return say;
         const raw = parseFloat(getComputedStyle(document.documentElement)
           .getPropertyValue('--cue1-level'));
         return (isFinite(raw) ? Math.round(raw * 100) : 55) + '%';
