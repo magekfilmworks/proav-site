@@ -158,10 +158,22 @@
 }
 .wall-invite-icon svg { width: 2.4cqw; height: 2.4cqw; }
 
+/* The GO at the end of a call. It is not on the wall at all until the caller says the word —
+   not hidden in place, absent — so the line reads as a standby and the GO POPS IN on the
+   call, growing the slate as it lands. A CUT, no transition, the same frame as the picture.
+   `display` rather than `visibility`: reserving the space first put the word on screen
+   before it was called, which is exactly what a GO must not do. */
+.wall-go { display: none; }
+.wall-go.is-lit { display: inline; }
+
 .wall-invite-line {
   font-size: 2.7cqw;
   letter-spacing: 0.2em;
   line-height: 1.2;
+  /* The line is too long for one row at this size, so it is going to wrap — balance makes
+     the two rows even rather than leaving the last word stranded on its own. A browser
+     without it falls back to the ordinary wrap, which is what this did before. */
+  text-wrap: balance;
 }
 
 @container (max-width: 420px) {
