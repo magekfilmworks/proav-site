@@ -1603,29 +1603,67 @@
         const queue = [];
 
         // ── THE RECORDED LINE ──────────────────────────────────────────────────────────────
-        // One <audio> per file, built once and reused — the operator's numbers are called in
-        // both clips, so these play more than once a show.
-        const pool = new Map();
-        const el = file => {
-          let a = pool.get(file);
-          if (!a) {
-            a = new Audio(VO_DIR + file + '.mp3');
-            a.preload = 'auto';
-            pool.set(file, a);
-          }
-          return a;
+        // ONE <audio>, re-pointed at each file. Not one element per file, which is what this
+        // was and why the voice died on a phone after the first cue.
+        //
+        // iOS gives a page playback permission PER ELEMENT, and one user gesture unlocks ONE
+        // of them. With 25 elements the visitor's press unlocked whichever spoke first and
+        // every later line was refused — CUE 1 called, then silence for the rest of the show.
+        // A single element is unlocked by that same press and stays unlocked for the night,
+        // so every line after it plays. Desktop never cared either way.
+        let voGen = 0;                 // the element is reused, so stale events must be ignored
+        const player = new Audio();
+        player.preload = 'auto';
+        let unlocked = false;
+        // 44 bytes of nothing. The unlock needs a source it can actually start: play() on an
+        // element with no source rejects, and that rejection arrived a second later — after
+        // the first real line had begun — and paused it. That was the voice dying after CUE 1
+        // on the bench. A real (silent) source settles immediately and locally.
+        const SILENCE = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAABErAAABAAgAZGF0YQAAAAA=';
+
+        // Called INSIDE the press, which is the only moment iOS will accept. Starting a muted
+        // element and stopping it at once is what spends the gesture on this element; the
+        // visitor hears nothing. From here on the show can start it whenever it likes.
+        const unlock = () => {
+          if (unlocked) return;
+          unlocked = true;
+          const gen = voGen;
+          try {
+            player.muted = true;
+            player.src = SILENCE;
+            const p = player.play();
+            const settle = () => {
+              player.muted = false;
+              // If a real line started while this was settling, it is not ours to stop.
+              if (voGen !== gen) return;
+              try { player.pause(); player.currentTime = 0; } catch (e) {}
+            };
+            if (p && p.then) p.then(settle, settle); else settle();
+          } catch (e) { player.muted = false; }
         };
-        // Pull them all down during the cue card, so nothing waits on the network at a GO.
-        const warm = () => VO_LINES.forEach(([, f]) => { try { el(f).load(); } catch (e) {} });
+
+        // Preload into the HTTP cache so swapping the source costs nothing at a GO. These are
+        // fetches, not players — the single element above does all the playing.
+        const warm = () => {
+          unlock();
+          VO_LINES.forEach(([, f]) => {
+            try { fetch(VO_DIR + f + '.mp3', { cache: 'force-cache' }).catch(() => {}); }
+            catch (e) {}
+          });
+        };
 
         function speakFile(hit, text, then, onGo, who) {
-          const a = el(hit.file);
+          const a = player, gen = ++voGen;
           let went = false, closed = false, raf = 0;
+          const mine = () => gen === voGen;
           const go = () => { if (!went) { went = true; if (onGo) onGo(); } };
           const done = () => {
             if (closed) return;
             closed = true;
             cancelAnimationFrame(raf);
+            a.removeEventListener('ended', onEnd);
+            a.removeEventListener('error', onEnd);
+            a.removeEventListener('playing', onPlaying);
             live = Math.max(0, live - 1);
             if (then) then();
             const nextUp = queue.shift();
@@ -1636,18 +1674,20 @@
           // main thread; a.currentTime is the sound itself, so the picture lands on the word
           // under load as well as idle. GO_AT was measured off the file.
           const watch = () => {
-            if (closed) return;
+            if (closed || !mine()) return;
             if (onGo && hit.goAt > 0 && a.currentTime >= hit.goAt) { go(); return; }
             raf = requestAnimationFrame(watch);
           };
-          const onEnd = () => { go(); done(); };
-          a.addEventListener('ended', onEnd, { once: true });
-          a.addEventListener('error', onEnd, { once: true });
-          // backstop: a file that never plays must not hold the show behind it
-          const bail = setTimeout(onEnd, 2500 + (a.duration || 4) * 1500);
-          a.addEventListener('playing', () => { spoke = true; clearTimeout(bail); watch(); },
-                             { once: true });
+          const onEnd = () => { if (mine()) { go(); done(); } };
+          const onPlaying = () => { if (!mine()) return;
+                                    spoke = true; clearTimeout(bail); watch(); };
+          a.addEventListener('ended', onEnd);
+          a.addEventListener('error', onEnd);
+          a.addEventListener('playing', onPlaying);
+          // backstop: a line that never plays must not hold the show behind it
+          const bail = setTimeout(onEnd, 6000);
           try {
+            a.src = VO_DIR + hit.file + '.mp3';   // re-point, do not build a new element
             a.currentTime = 0;
             a.volume = 1;                      // no ducking — these sit on top of the clip
             const p = a.play();
@@ -1799,8 +1839,9 @@
             queue.length = 0;        // nothing waiting may speak after she has been stopped
             live = 0;
             try { synth.cancel(); } catch (e) {}
-            // and stop any recording mid-line, for the same reason
-            pool.forEach(a => { try { a.pause(); a.currentTime = 0; } catch (e) {} });
+            // and stop the recording mid-line, for the same reason
+            voGen++;                 // anything still in flight is no longer ours
+            try { player.pause(); player.currentTime = 0; } catch (e) {}
           },
           pick, pickOp, list, rate: r => (rate = r),
           // what the matcher thinks each voice is, so the bench can show its working
