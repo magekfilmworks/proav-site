@@ -122,8 +122,14 @@
   --wall-gap: 2.3vw;
   /* Right edge on --hero-left, left edge on --col-left: the wordmark starts at the column, so
      its ink ends that much further right, and the wall gives back the same amount. */
+  /* --ink-w is the ink's width as a FINISHED LENGTH, set in index.html. It used to be
+     `var(--word-w) * var(--ink-r)` computed here, and that product breaks this calc on WebKit:
+     with it present every way of writing --wall-gap resolved to zero, and the wall slid left
+     into the V of PROAV. Without it, all of them work. There is no multiplication left in this
+     rule — just four lengths — and --ink-w has a fallback so the wall is sane before the
+     measurement lands. */
   width: calc(100% - var(--hero-left) - var(--col-left)
-              - var(--word-w) * var(--ink-r) - var(--wall-gap));
+              - var(--ink-w, 43vw) - var(--wall-gap));
 
   z-index:1; pointer-events:none;
 }

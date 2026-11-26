@@ -1306,8 +1306,26 @@
         }
         if (!bb || !bb.width) return;
         const vb = svg.viewBox.baseVal;
-        hero.style.setProperty('--ink-l', ((bb.x - vb.x) / vb.width).toFixed(5));
-        hero.style.setProperty('--ink-r', ((bb.x + bb.width - vb.x) / vb.width).toFixed(5));
+        const inkL = (bb.x - vb.x) / vb.width;
+        const inkR = (bb.x + bb.width - vb.x) / vb.width;
+        hero.style.setProperty('--ink-l', inkL.toFixed(5));
+        hero.style.setProperty('--ink-r', inkR.toFixed(5));
+
+        // AND THE SAME THING AS A FINISHED LENGTH, because CSS cannot be trusted to do the
+        // multiplication. `var(--word-w) * var(--ink-r)` — a length times a var-substituted
+        // unitless number — breaks the calc it sits in on WebKit: measured on the page, nine
+        // different ways of writing the gap term all came out at zero while that product was
+        // present, and all nine worked without it. So the product is done here and CSS gets
+        // one plain px value to subtract.
+        //
+        // getComputedStyle().width, NOT getBoundingClientRect(): html carries zoom: 0.95, and
+        // the rect is post-zoom in Blink but pre-zoom in WebKit, while the computed width is
+        // the used value in CSS px in both. That is the space the calc works in.
+        const wordEl = document.querySelector('.hero-word');
+        if (wordEl) {
+          const w = parseFloat(getComputedStyle(wordEl).width);
+          if (isFinite(w) && w > 0) hero.style.setProperty('--ink-w', (w * inkR).toFixed(2) + 'px');
+        }
       };
       sync();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { cached = null; sync(); });
