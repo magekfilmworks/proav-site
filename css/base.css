@@ -145,6 +145,8 @@ section {
    0.55 renders the wordmark rgb(140,140,138) — 5.8:1 against the page, and about 2.4x below
    the LED wall's brightest decile (0.619 luminance, measured at 1440 with a clip running). */
 :root {
+  /* The house channel: every part of the page except the LED wall. */
+  --ch-site: 1;
   --ch-logo: 1;
   --ch-lockup: 1;
   --ch-title: 1;
@@ -179,33 +181,34 @@ section {
    headings were outshining the 104px display headings beneath them.
    The LED wall has no channel, so it cannot be dimmed. That is the point. */
 html[data-cue="cue1"] {
-  --ch-logo:   var(--cue1-level);
-  --ch-lockup: var(--cue1-level);
-  --ch-title:  var(--cue1-level);
-  --ch-card:   var(--cue1-level);
-  --ch-body:   var(--cue1-level);
+  /* The entire site, not a list of parts. */
+  --ch-site: var(--cue1-level);
 }
 
 /* the patch — each channel wired to its fixtures */
-.hero-word             { filter: brightness(var(--ch-logo)); }
-.hero-lockup           { filter: brightness(var(--ch-lockup)); }
-.section-title.display { filter: brightness(var(--ch-title)); }
-.segment-card h3       { filter: brightness(var(--ch-card)); }
-.show-copy,
-.hero-hook,
-.segment-card p,
-.watch-note            { filter: brightness(var(--ch-body)); }
+/* ONE CHANNEL, ON THE CONTAINERS. This used to be five channels wired to individual
+   elements — the wordmark, the titles, the card headings, the body copy. The cue now takes
+   the WHOLE site, so the patch moved up to the containers: everything on the page is inside
+   one of these four, and each element is inside exactly one of them, so nothing is dimmed
+   twice. Leaf-level filters cannot do this — .show-in-hero holds a .section-title and a
+   .show-copy that carried their own filter, and a container filter over the top of them
+   multiplies: 0.30 x 0.30 is 0.09, near black.
+   The LED wall is the one thing left out, by name. It has no channel and sits outside this
+   list, so no cue can dim it — everything else steps back and the wall is the brightest
+   thing on the page. That is the whole point of the dim cue. */
+.nav,
+footer,
+body > section,
+.hero > *:not(.hero-screen) { filter: brightness(var(--ch-site)); }
 
 /* Fade times. .hero-word is absent on purpose: it also crossfades colour, so its whole
    transition list lives with the rest of its rule in home.css and already carries filter.
    Declaring `transition` for it here too would replace that list and kill the colour fade. */
 .hero-lockup,
-.section-title.display,
-.segment-card h3,
-.show-copy,
-.hero-hook,
-.segment-card p,
-.watch-note { transition: filter var(--cue-fade) ease-in-out; }
+.nav,
+footer,
+body > section,
+.hero > *:not(.hero-screen) { transition: filter var(--cue-fade) ease-in-out; }
 
 /* the eyebrow label above each section title */
 .section-eyebrow {

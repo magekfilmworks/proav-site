@@ -1294,54 +1294,6 @@
       addEventListener('load', sync);
     })();
 
-    // ── ENGINE READOUT ───────────────────────────────────────────────────────────────────
-    // Open index.html#diag and the page prints what the browser actually resolved, on top of
-    // itself, in type big enough to read in a screenshot. It exists because Safari lays this
-    // hero out differently from Chrome and I cannot run WebKit to find out why — this makes
-    // the engine report its own numbers instead of me inferring them from a picture.
-    // Nothing runs unless the hash says so. Delete this block once the difference is found.
-    if (location.hash === '#diag') addEventListener('load', () => {
-      const S = (q, p) => { try { return getComputedStyle(document.querySelector(q))
-        .getPropertyValue(p).trim() || '-'; } catch (e) { return 'ERR'; } };
-      const R = q => { try { const r = document.querySelector(q).getBoundingClientRect();
-        return Math.round(r.x) + ',' + Math.round(r.width) + 'x' + Math.round(r.height);
-      } catch (e) { return 'ERR'; } };
-      const sup = (p, v) => { try { return CSS.supports(p, v) ? 'yes' : 'NO'; } catch (e) { return '?'; } };
-      const vid = n => { const v = document.querySelectorAll('video')[n];
-        return v ? (v.readyState + ' ' + (v.paused ? 'paused' : 'playing') + ' ' +
-          Math.round(v.videoWidth) + 'x' + Math.round(v.videoHeight)) : 'none'; };
-      const rows = [
-        ['window', innerWidth + ' x ' + innerHeight + '   dpr ' + devicePixelRatio],
-        ['html zoom', S('html', 'zoom') + '   computed ' + (getComputedStyle(document.documentElement).zoom || '-')],
-        ['--shell / --hero-left', S('.hero', '--shell') + '  /  ' + S('.hero', '--hero-left')],
-        ['--col-left', S('.hero', '--col-left')],
-        ['--word-w', S('.hero', '--word-w')],
-        ['--ink-l / --ink-r', S('.hero', '--ink-l') + '  /  ' + S('.hero', '--ink-r')],
-        ['.hero-word  x,wxh', R('.hero-word')],
-        ['.hero-screen x,wxh', R('.hero-screen')],
-        ['face resolved', S('.hero-word svg text', 'font-family')],
-        ['Impact present', (() => { try { return document.fonts.check('200px Impact') ? 'yes' : 'NO'; }
-          catch (e) { return '?'; } })()],
-        ['wall video', vid(0)],
-        ['logo video', vid(1)],
-        ['supports zoom', sup('zoom', '0.95')],
-        ['supports aspect-ratio', sup('aspect-ratio', '750/293')],
-        ['supports container-type', sup('container-type', 'inline-size')],
-        ['supports cqw', sup('width', '10cqw')],
-        ['supports mask-image', sup('mask-image', 'url(a.svg)')],
-        ['supports text-wrap', sup('text-wrap', 'balance')],
-        ['supports svh', sup('height', '10svh')],
-        ['UA', navigator.userAgent.slice(0, 120)]
-      ];
-      const d = document.createElement('div');
-      d.setAttribute('style', 'position:fixed;inset:0;z-index:99999;overflow:auto;' +
-        'background:#000;color:#0f0;font:13px/1.55 ui-monospace,Menlo,monospace;padding:18px 20px;' +
-        'white-space:pre;-webkit-user-select:text;user-select:text');
-      d.textContent = rows.map(r => r[0].padEnd(24) + r[1]).join('\n') +
-        '\n\n(engine readout — index.html#diag. Reload without #diag for the site.)';
-      document.body.appendChild(d);
-    });
-
     // The wall's playlist and its timecode burn-in.
     //
     // Both clips are 29.97 (30000/1001), so the readout is drop-frame and uses the ';' that
