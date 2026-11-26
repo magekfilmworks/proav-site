@@ -1,0 +1,60 @@
+/* Design tokens — colors, type families, borders. Change a value here and it changes everywhere. */
+
+:root {
+  /* layout shell — the widest the content column grows before it stops and centres.
+     This was hardcoded as 1440px in five separate rules across three stylesheets; it is one
+     number now. Lower it to bring the content back into a narrower column. */
+  --shell: 2560px;
+
+  /* THE PAGE COLUMN — one source of truth for every left and right edge on the site.
+     --gutter      the OUTER edge: what the LED wall's right edge sits on.
+     --brk-clear   how far content steps inside that. It is named for the corner brackets that
+                   used to need the room; they have been removed, but the inset stays so the
+                   whole site keeps the position it was tuned to. Collapse it to 0 and every
+                   left edge on the site moves out by 14px together.
+     Content — the wordmark, PODCAST, the hook, every section title and every body paragraph —
+     starts at --gutter + --brk-clear. The hero once built its own version of this while the
+     sections kept a hardcoded 24px, which left every band below the hero 13px out of line.
+     Both read these now. The phone values are in the ≤720 block at the bottom of this file. */
+  --gutter: 24px;
+  --brk-clear: 14px;
+
+  /* Use these, not a number. --col-pad for anything already capped at --shell and centred
+     (sections, .show-in-hero); --page-edge for anything that spans the whole window and has to
+     do its own centring maths (the nav, the footer, the hero). Both land on the same line. */
+  --col-pad: calc(var(--gutter) + var(--brk-clear));
+  --page-edge: calc(max(0px, (100% - var(--shell)) / 2) + var(--gutter) + var(--brk-clear));
+
+  /* color */
+  --stage-black: #0B0B0D;
+  --stage-black-raised: #131316;
+  --tungsten-amber: #FF9C3D;
+  --data-cyan: #2AD9EC;
+  --tally-red: #FF3B30;                      /* the live light on a camera */
+  --deep-green: #0FA958;
+  --hot-yellow: #FFE500;
+  --signal-white: #F5F5F0;
+  --graphite: #4A4A52;
+  --graphite-light: #8a8a92;
+  --text-soft: #d8d8dc;                      /* body copy on dark */
+  --tile-bg: var(--stage-black-raised);      /* .tile surface (merch, Signal Flow) */
+  --tile-bg-hover: #18181c;
+
+  /* lines */
+  --border-quiet: rgba(245,245,240,0.12);    /* default hairline / tile outline */
+  --border-strong: rgba(245,245,240,0.22);   /* buttons, controls */
+
+  /* signal line — amber, white, cyan */
+  --signal-gradient: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
+
+  /* type families */
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Phones: the hero gutter is wider here (option D), and the sections follow it so the whole
+   page keeps one column. */
+@media (max-width: 720px) {
+  :root { --gutter: 28px; }
+}

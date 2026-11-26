@@ -7,11 +7,11 @@
 <meta name="theme-color" content="#0B0B0D">
 <meta name="robots" content="index, follow">
 <title>ProAV — Mainstage, Backstage, Cloud</title>
-<meta name="description" content="ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real gear, real crews, real conversations from the people driving live production.">
+<meta name="description" content="ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real Conversations, real crews, real gear from the people driving live production.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ProAV Podcast">
 <meta property="og:title" content="ProAV — Mainstage, Backstage, Cloud">
-<meta property="og:description" content="Real gear, real crews, real conversations — from the rig on stage to the cloud infrastructure taking live production remote.">
+<meta property="og:description" content="Real Conversations, real crews, real gear — from the rig on stage to the cloud infrastructure taking live production remote.">
 <meta property="og:image" content="/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
 <link rel="canonical" href="https://proavpodcast.fm/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ProAV — Mainstage, Backstage, Cloud">
-<meta name="twitter:description" content="Real gear, real crews, real conversations — from the rig on stage to the cloud infrastructure taking live production remote.">
+<meta name="twitter:description" content="Real Conversations, real crews, real gear — from the rig on stage to the cloud infrastructure taking live production remote.">
 <meta name="twitter:image" content="/og-image.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgNjQgNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iNiIgZmlsbD0iIzBCMEIwRCIvPgogIDx0ZXh0IHg9IjMyIiB5PSI1MyIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICAgICBmb250LWZhbWlseT0iJ0FyaWFsIEJsYWNrJywgSW1wYWN0LCBIYWV0dGVuc2Nod2VpbGVyLCAnQXJpYWwgTmFycm93IEJvbGQnLCBzYW5zLXNlcmlmIgogICAgICAgIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iNTgiCiAgICAgICAgdGV4dExlbmd0aD0iNTIiIGxlbmd0aEFkanVzdD0ic3BhY2luZ0FuZEdseXBocyIKICAgICAgICBmaWxsPSIjRjVGNUYwIj5QQTwvdGV4dD4KPC9zdmc+Cg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,860 +47,18 @@
   "@type": "PodcastSeries",
   "name": "ProAV Podcast",
   "alternateName": "ProAV — Mainstage, Backstage, Cloud",
-  "description": "ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real gear, real crews, real conversations from the people driving live production.",
+  "description": "ProAV goes where the show actually happens — Mainstage, Backstage, and increasingly, Cloud. Real Conversations, real crews, real gear from the people driving live production.",
   "url": "https://proavpodcast.fm/",
   "image": "https://proavpodcast.fm/og-image.png",
   "inLanguage": "en"
 }
 </script>
-<style>
-  :root {
-    --stage-black: #0B0B0D;
-    --stage-black-raised: #131316;
-    --tungsten-amber: #FF9C3D;
-    --data-cyan: #2AD9EC;
-    --signal-white: #F5F5F0;
-    --graphite: #4A4A52;
-    --graphite-light: #8a8a92;
-    --border-quiet: rgba(245,245,240,0.12);
-  }
-
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 96px; zoom: 0.95; }
-  body {
-    margin: 0;
-    background: var(--stage-black);
-    color: var(--signal-white);
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ---------- page background: the hero's glow carried down the page, plus a faint dot grid (static) ---------- */
-  body { position: relative; }
-  body::before {
-    content: ""; position: absolute; left: 0; right: 0; top: 100vh; bottom: 0; z-index: -1; pointer-events: none;
-    background:
-      radial-gradient(ellipse 900px 700px at 6% 18%, rgba(255,156,61,0.13), transparent 70%),
-      radial-gradient(ellipse 900px 700px at 94% 68%, rgba(42,217,236,0.11), transparent 70%);
-    background-size: 100% 2200px;
-    background-repeat: repeat-y;
-  }
-  body::after {
-    content: ""; position: absolute; left: 0; right: 0; top: 100vh; bottom: 0; z-index: -1; pointer-events: none;
-    background-image: radial-gradient(rgba(245,245,240,0.10) 1px, transparent 1.4px);
-    background-size: 28px 28px;
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 360px);
-            mask-image: linear-gradient(to bottom, transparent, #000 360px);
-  }
-  .hero { background: var(--stage-black); }
-
-  .display { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
-  .mono { font-family: 'JetBrains Mono', monospace; }
-  .sr-only {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-  }
-
-  a { color: inherit; }
-
-  /* ---------- top nav ---------- */
-  .nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 40px;
-    background: rgba(11,11,13,0.75);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-quiet);
-  }
-  .nav-logo { display: flex; align-items: center; cursor: pointer; transition: opacity 0.2s ease; }
-  .nav-logo:hover { opacity: 0.75; }
-  .nav-bug { width: 36px; height: 36px; display: block; }
-  .nav-right { display: flex; align-items: center; gap: 32px; }
-  .nav-links { display: flex; gap: 36px; font-size: 14px; font-weight: 500; letter-spacing: 0.03em; }
-  .nav-links a { white-space: nowrap; text-decoration: none; color: var(--graphite-light); transition: color 0.2s; }
-  .nav-links a:hover { color: var(--signal-white); }
-  .nav-links a.active { color: var(--tungsten-amber); }
-  /* Signal line under each menu link: shows on hover/focus and on the section currently in view (scroll). */
-  .nav-links a { position: relative; padding-bottom: 6px; }
-  .nav-links a::after {
-    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
-    background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
-    background-size: 220% 100%; animation: navSignalSweep 4s ease-in-out infinite;
-    opacity: 0; transform: scaleX(0.4); transform-origin: left center;
-    transition: opacity 0.25s ease, transform 0.3s ease;
-  }
-  .nav-links a:hover::after, .nav-links a:focus-visible::after, .nav-links a.active::after { opacity: 1; transform: scaleX(1); }
-  @keyframes navSignalSweep { 0% { background-position: 100% 0; } 50% { background-position: 0% 0; } 100% { background-position: 100% 0; } }
-  @media (prefers-reduced-motion: reduce) { .nav-links a::after { animation: none; transition: none; } }
-  .nav-social { display: flex; align-items: center; gap: 16px; padding-left: 28px; border-left: 1px solid var(--border-quiet); }
-
-  @media (min-width: 1025px) and (max-width: 1280px) {
-    .nav { padding: 20px 24px; }
-    .nav-right { gap: 18px; }
-    .nav-links { gap: 20px; font-size: 13.5px; letter-spacing: 0.01em; }
-    .nav-social { gap: 11px; padding-left: 16px; }
-    .search-btn kbd { display: none; }
-  }
-
-  /* ---------- site search ---------- */
-  .search-btn {
-    display: flex; align-items: center; gap: 8px;
-    background: none; border: 1px solid var(--border-quiet); border-radius: 8px;
-    color: var(--graphite-light); cursor: pointer;
-    padding: 7px 10px; font-family: 'Inter', sans-serif; font-size: 12.5px;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-  .search-btn:hover { border-color: var(--signal-white); color: var(--signal-white); }
-  .search-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-  .search-btn kbd {
-    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
-    border: 1px solid var(--border-quiet); border-radius: 4px; padding: 1px 5px;
-    color: var(--graphite-light);
-  }
-  .mobile-search-btn {
-    display: flex; align-items: center; gap: 10px;
-    background: none; border: 1px solid var(--border-quiet); border-radius: 10px;
-    color: var(--graphite-light); cursor: pointer;
-    padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 15px;
-  }
-  .mobile-search-btn svg { width: 17px; height: 17px; }
-
-  .search-overlay {
-    position: fixed; inset: 0; z-index: 110;
-    background: rgba(0,0,0,0.85);
-    display: flex; align-items: flex-start; justify-content: center;
-    padding: 90px 20px 20px;
-    opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s;
-  }
-  .search-overlay.open { opacity: 1; visibility: visible; }
-  .search-panel {
-    width: min(560px, 100%);
-    background: var(--stage-black-raised);
-    border: 1px solid var(--border-quiet);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 24px 70px rgba(0,0,0,0.6);
-  }
-  .search-input-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 16px 18px; border-bottom: 1px solid var(--border-quiet);
-  }
-  .search-input-row svg { width: 18px; height: 18px; color: var(--graphite-light); flex-shrink: 0; }
-  .search-input {
-    flex: 1; background: none; border: none; outline: none;
-    color: var(--signal-white); font-family: 'Inter', sans-serif; font-size: 16px;
-  }
-  .search-input::placeholder { color: var(--graphite-light); }
-  .search-esc {
-    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--graphite-light);
-    border: 1px solid var(--border-quiet); border-radius: 4px; padding: 2px 6px; cursor: pointer;
-    background: none; flex-shrink: 0;
-  }
-  .search-results { max-height: 60vh; overflow-y: auto; padding: 8px; }
-  .search-result {
-    display: block; width: 100%; text-align: left;
-    background: none; border: none; border-radius: 8px; cursor: pointer;
-    padding: 11px 12px; color: var(--signal-white);
-    transition: background 0.15s ease;
-  }
-  .search-result:hover, .search-result.active { background: rgba(245,245,240,0.06); }
-  .search-result-cat {
-    font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--tungsten-amber); margin-bottom: 3px;
-  }
-  .search-result-title { font-size: 14.5px; font-weight: 600; margin-bottom: 2px; }
-  .search-result-snippet { font-size: 12.5px; color: var(--graphite-light); line-height: 1.4; }
-  .search-empty { padding: 24px 16px; text-align: center; color: var(--graphite-light); font-size: 14px; }
-  .search-hint { padding: 24px 16px; text-align: center; color: var(--graphite-light); font-size: 13px; }
-
-  .search-highlight-flash {
-    animation: searchFlash 1.8s ease;
-  }
-  @keyframes searchFlash {
-    0%, 100% { box-shadow: none; }
-    15%, 55% { box-shadow: 0 0 0 3px var(--tungsten-amber); }
-  }
-  .nav-social a { display: flex; color: var(--graphite-light); transition: color 0.2s ease; }
-  .nav-social a:hover { color: var(--signal-white); }
-  .nav-social svg { width: 16px; height: 16px; fill: currentColor; }
-
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-    width: 22px; height: 22px;
-    background: none; border: none; cursor: pointer;
-    padding: 0;
-  }
-  .hamburger span {
-    display: block; width: 100%; height: 2px;
-    background: var(--signal-white);
-    transition: transform 0.25s ease, opacity 0.25s ease;
-  }
-  .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
-
-  .mobile-menu {
-    position: fixed; inset: 0; z-index: 49;
-    background: var(--stage-black);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 32px;
-    opacity: 0; visibility: hidden; transform: translateY(-8px);
-    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
-  }
-  .mobile-menu.open { opacity: 1; visibility: visible; transform: translateY(0); }
-  .mobile-menu a {
-    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em; font-size: 28px; text-decoration: none; color: var(--signal-white);
-  }
-
-  /* ---------- hero ---------- */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    text-align: left;
-    /* left edge of the 1440px content column (matches the sections below) */
-    --hero-left: calc(max(0px, (100% - 1440px) / 2) + 24px);
-    padding: 108px 0 80px;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: "";
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at 12% 15%, rgba(255,156,61,0.22), transparent 45%),
-      radial-gradient(ellipse at 88% 85%, rgba(42,217,236,0.20), transparent 50%);
-    pointer-events: none;
-  }
-  .bracket { position: absolute; width: 64px; height: 64px; border-color: var(--border-quiet); opacity: 0.8; }
-  .bracket.tl { top: 92px; width: 36px; height: 36px; left: max(8px, calc((100% - 1440px) / 2 + 8px)); border-top: 2px solid; border-left: 2px solid; }
-  .bracket.br { width: 36px; height: 36px; bottom: 20px; right: max(24px, calc((100% - 1440px) / 2 + 24px)); border-bottom: 2px solid; border-right: 2px solid; }
-
-  .hero-word {
-    font-size: clamp(80px, 16vw, 250px);
-    line-height: 0.9;
-    position: relative;
-    z-index: 1;
-  }
-  .hero-word { align-self: flex-start; margin-left: var(--hero-left); width: min(340px, calc(100% - var(--hero-left) - 24px)); }
-  .hero-word svg { width: 100%; height: auto; display: block; margin: 0; }
-
-  /* tagline + signal line sit in one block, so the line runs exactly as wide as the tagline */
-  .hero-lockup {
-    align-self: flex-start; margin-left: var(--hero-left);
-    width: fit-content; max-width: calc(100% - var(--hero-left) - 24px);
-    font-size: 14px;
-    --track: 0.35em;
-  }
-  .hero-tagline {
-    margin-top: 14px;
-    font-size: inherit;
-    letter-spacing: var(--track);
-    color: var(--graphite-light);
-    font-weight: 600;
-  }
-
-  .signal-line-css {
-    width: calc(100% - var(--track)); height: 3px; margin: 16px 0 24px; border-radius: 2px; /* minus the trailing letter-space so it ends at the "d" of Cloud */
-    background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
-    background-size: 220% 100%;
-    animation: heroSignalSweep 4s ease-in-out infinite;
-  }
-  @keyframes heroSignalSweep {
-    0%   { background-position: 100% 0; }
-    50%  { background-position: 0% 0; }
-    100% { background-position: 100% 0; }
-  }
-
-  .hero-hook {
-    align-self: flex-start;
-    width: calc(100% - var(--hero-left) - 24px);
-    max-width: 860px;
-    font-size: 17px;
-    line-height: 1.6;
-    color: #cfcfd4;
-    margin: 0 0 28px var(--hero-left);
-  }
-
-  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start; align-self: flex-start; margin-left: var(--hero-left); width: calc(100% - var(--hero-left) - 24px); }
-
-  .show-in-hero {
-    position: relative; z-index: 1;
-    width: 100%; max-width: 1440px;
-    margin: 112px auto 0;
-    padding: 0 24px;
-    text-align: left;
-  }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 14px 28px;
-    border-radius: 6px;
-    font-size: 14px; font-weight: 600; letter-spacing: 0.03em;
-    text-decoration: none;
-    border: 1px solid var(--border-quiet);
-    transition: transform 0.15s ease, border-color 0.15s ease;
-  }
-  .btn:hover { transform: translateY(-2px); }
-  .btn-primary {
-    background: var(--signal-white); color: var(--stage-black); border-color: var(--signal-white);
-  }
-  .btn-secondary { color: var(--signal-white); }
-  .btn-secondary:hover { border-color: var(--signal-white); }
-
-  /* ---------- section shell ---------- */
-  section { padding: 56px 24px; max-width: 1440px; margin: 0 auto; }
-  .section-eyebrow {
-    font-size: 13px; letter-spacing: 0.25em; color: var(--graphite-light);
-    font-weight: 600; margin-bottom: 14px;
-  }
-  .section-title {
-    font-size: clamp(32px, 5vw, 52px);
-    line-height: 1.05;
-    margin: 0 0 28px;
-    max-width: none;
-  }
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* ---------- the show / segment chips ---------- */
-  .show-copy { max-width: 1000px; font-size: 17px; line-height: 1.75; color: #d8d8dc; margin-bottom: 28px; }
-
-  .segments-wrap { position: relative; }
-  .segment-flow { position: relative; height: 22px; margin-bottom: 14px; }
-  .segment-flow .flow-line {
-    position: absolute; top: 50%; left: 0; right: 0; height: 2px;
-    transform: translateY(-50%);
-    background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
-    background-size: 220% 100%;
-    animation: flowSweep 5s ease-in-out infinite;
-    border-radius: 2px;
-  }
-  .segment-flow .flow-node {
-    position: absolute; top: 50%; width: 9px; height: 9px; margin-top: -4.5px; margin-left: -4.5px;
-    border-radius: 50%; background: var(--stage-black); border: 1.5px solid var(--border-quiet);
-  }
-  @keyframes flowSweep {
-    0%   { background-position: 100% 0; }
-    50%  { background-position: 0% 0; }
-    100% { background-position: 100% 0; }
-  }
-  .segments { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; }
-  .segment-card {
-    background: var(--stage-black-raised);
-    border: 1px solid var(--border-quiet);
-    border-radius: 10px;
-    padding: 26px 24px;
-  }
-  .segment-chip {
-    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
-    padding: 5px 10px; border-radius: 4px; margin-bottom: 16px;
-  }
-  .segment-chip.mainstage { background: rgba(255,156,61,0.15); color: var(--tungsten-amber); }
-  .segment-chip.backstage { background: rgba(138,138,146,0.18); color: var(--graphite-light); }
-  .segment-chip.cloud     { background: rgba(42,217,236,0.15); color: var(--data-cyan); }
-  .segment-card h3 { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 600; margin: 0 0 10px; }
-  .segment-card p { font-size: 14.5px; line-height: 1.6; color: var(--graphite-light); margin: 0; }
-
-  /* ---------- rundown ---------- */
-  .rundown { position: relative; padding-left: 32px; }
-  .rundown::before {
-    content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 2px;
-    background: linear-gradient(180deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
-    border-radius: 2px;
-  }
-  .rundown-pulse {
-    position: absolute; left: 5px; top: 6px; width: 12px; height: 12px; margin-left: -3px;
-    z-index: 2;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--signal-white) 0%, var(--data-cyan) 70%, transparent 100%);
-    box-shadow: 0 0 10px 2px rgba(42,217,236,0.55);
-    opacity: 0;
-    transition: top 1.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease;
-  }
-  .rundown-pulse.visible { opacity: 1; }
-  .cue { position: relative; padding: 0 0 34px; }
-  .cue:last-child { padding-bottom: 0; }
-  .cue::before {
-    content: ""; position: absolute; left: -32px; top: 4px; width: 12px; height: 12px;
-    border-radius: 50%; background: var(--stage-black); border: 2px solid var(--signal-white);
-  }
-  .cue-time { font-size: 13px; color: var(--graphite-light); margin-bottom: 4px; }
-  .rundown-note { margin-top: 20px; font-size: 13.5px; color: var(--graphite-light); }
-  .cue-label { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; margin-bottom: 6px; }
-  .cue-label.mainstage { color: var(--tungsten-amber); }
-  .cue-label.backstage { color: var(--data-cyan); }
-  .cue-label.neutral { color: var(--signal-white); }
-  .cue-desc { font-size: 15.5px; color: #d8d8dc; }
-
-  /* ---------- guests ---------- */
-  .guest-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; align-items: start; }
-  .guest-tag {
-    position: relative;
-    display: flex; flex-wrap: wrap; align-items: center; gap: 0 12px;
-    background: var(--stage-black-raised); border: 1px solid var(--border-quiet);
-    border-radius: 8px; padding: 14px 16px;
-    cursor: default;
-    transition: border-color 0.2s ease;
-  }
-  .guest-tag:hover, .guest-tag:focus-within { border-color: var(--signal-white); }
-  .guest-badge {
-    width: 38px; height: 38px; border-radius: 8px; background: var(--stage-black);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13.5px;
-    border: 1px solid var(--border-quiet); flex-shrink: 0;
-  }
-  .guest-tag span { font-size: 14px; font-weight: 500; color: #d8d8dc; }
-  .guest-tooltip {
-    flex: 0 0 100%;
-    font-size: 13px; line-height: 1.5; color: #d8d8dc;
-    max-height: 0; overflow: hidden; opacity: 0;
-    transition: max-height 0.25s ease, opacity 0.2s ease, margin-top 0.25s ease;
-  }
-  .guest-tag:hover .guest-tooltip,
-  .guest-tag:focus-within .guest-tooltip {
-    max-height: 140px; opacity: 1; margin-top: 12px;
-  }
-
-  /* ---------- watch / video embeds ---------- */
-  .video-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-  .video-card {
-    background: var(--stage-black-raised);
-    border: 1px solid var(--border-quiet);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .video-embed {
-    position: relative; width: 100%; padding-top: 56.25%; background: #000;
-    cursor: pointer; border: 0; padding-left: 0; padding-right: 0; display: block;
-  }
-  .video-embed img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .play-btn {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 62px; height: 62px; border-radius: 50%;
-    background: rgba(11,11,13,0.75); border: 1.5px solid var(--border-quiet);
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.2s ease, background 0.2s ease;
-  }
-  .video-embed:hover .play-btn { transform: translate(-50%, -50%) scale(1.08); background: rgba(11,11,13,0.9); }
-  .play-btn svg { width: 22px; height: 22px; fill: var(--signal-white); margin-left: 3px; }
-  .video-meta { padding: 16px 18px 18px; }
-
-  /* ---------- watch hero player ---------- */
-  /* tiles sit left-aligned in a grid: two or more across on desktop, more rows as videos are added */
-  .watch-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-  .watch-hero { margin: 0; }
-  .watch-hero .video-meta { padding: 14px 16px 18px; }
-  .watch-hero .video-title { font-size: 16px; }
-  .watch-hero .play-btn { width: 48px; height: 48px; }
-  .watch-hero .play-btn svg { width: 18px; height: 18px; }
-  .watch-segments {
-    display: flex; gap: 6px; flex-wrap: wrap;
-    padding: 14px 14px 12px;
-  }
-  .watch-seg-btn {
-    font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em;
-    padding: 7px 11px; border-radius: 999px; border: 1px solid var(--border-quiet);
-    background: transparent; color: var(--graphite-light); cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-  }
-  .watch-seg-btn:hover { border-color: var(--signal-white); color: var(--signal-white); }
-  .watch-seg-btn.active[data-seg="mainstage"] { background: rgba(255,156,61,0.15); border-color: var(--tungsten-amber); color: var(--tungsten-amber); }
-  .watch-seg-btn.active[data-seg="backstage"] { background: rgba(138,138,146,0.18); border-color: var(--graphite-light); color: var(--signal-white); }
-  .watch-seg-btn.active[data-seg="cloud"] { background: rgba(42,217,236,0.15); border-color: var(--data-cyan); color: var(--data-cyan); }
-
-  /* video modal */
-  .video-modal {
-    position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.85);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s;
-    padding: 24px;
-  }
-  .video-modal.open { opacity: 1; visibility: visible; }
-  .video-modal-inner { width: min(1280px, calc(100vw - 48px)); }
-  .video-modal-frame { position: relative; width: 100%; padding-top: 56.25%; background: #000; border-radius: 8px; overflow: hidden; }
-  .video-modal-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-  .video-modal-close {
-    display: block; margin: 0 0 12px auto;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(245,245,240,0.1); border: 1px solid var(--border-quiet);
-    color: var(--signal-white); font-size: 18px; cursor: pointer;
-  }
-  .video-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; margin-bottom: 6px; }
-  .video-eyebrow.mainstage { color: var(--tungsten-amber); }
-  .video-eyebrow.backstage { color: var(--graphite-light); }
-  .video-eyebrow.cloud { color: var(--data-cyan); }
-  .video-title { font-size: 15px; font-weight: 600; line-height: 1.4; color: var(--signal-white); }
-
-  /* ---------- merch ---------- */
-  .merch-color-note {
-    font-size: 11.5px; color: var(--graphite-light); line-height: 1.4;
-    margin: 2px 0 14px; font-style: italic;
-  }
-  .merch-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-  .merch-card {
-    background: var(--stage-black-raised);
-    border: 1px solid var(--border-quiet);
-    border-radius: 10px;
-    overflow: hidden;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-  .merch-card:hover { border-color: var(--signal-white); }
-  .merch-swatch-wrap {
-    position: relative;
-    width: 100%; aspect-ratio: 3 / 4;
-    background: var(--stage-black-raised);
-    cursor: pointer;
-    overflow: hidden;
-  }
-  .merch-swatch-wrap::before { content: none; }
-  .merch-swatch {
-    position: absolute; inset: 0; z-index: 1;
-    width: 100%; height: 100%;
-    object-fit: contain;
-    padding: 16px;
-    box-sizing: border-box;
-    transition: opacity 0.4s ease;
-  }
-  .merch-swatch.front { opacity: 1; }
-  .merch-swatch.back { opacity: 0; }
-  .merch-card:hover .merch-swatch.front { opacity: 0; }
-  .merch-card:hover .merch-swatch.back { opacity: 1; }
-
-  /* image lightbox modal */
-  .image-modal {
-    position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.9);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s;
-    padding: 24px;
-  }
-  .image-modal.open { opacity: 1; visibility: visible; }
-  .image-modal-inner {
-    width: min(560px, 100%);
-    background: var(--stage-black-raised);
-    border: 1px solid var(--border-quiet);
-    border-radius: 14px;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  .image-modal-stage { position: relative; touch-action: pan-y; }
-  .image-modal img {
-    width: 100%; border-radius: 8px; display: block;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    user-select: none; -webkit-user-drag: none;
-    background: var(--stage-black-raised);
-  }
-  .image-modal-arrow {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(11,11,13,0.6); border: 1px solid var(--border-quiet);
-    color: var(--signal-white); font-size: 24px; line-height: 1; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    z-index: 2; transition: background 0.2s;
-  }
-  .image-modal-arrow:hover { background: rgba(11,11,13,0.85); }
-  .image-modal-arrow.prev { left: 8px; }
-  .image-modal-arrow.next { right: 8px; }
-  .image-modal-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
-  .image-modal-dot {
-    width: 8px; height: 8px; border-radius: 50%; cursor: pointer;
-    background: rgba(245,245,240,0.25); transition: background 0.2s;
-  }
-  .image-modal-dot.active { background: var(--tungsten-amber); }
-  .image-modal-close {
-    display: block; margin: 0 0 12px auto;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(245,245,240,0.1); border: 1px solid var(--border-quiet);
-    color: var(--signal-white); font-size: 18px; cursor: pointer;
-  }
-  /* full-bleed, edge-to-edge modal on mobile so there's a full-width area
-     to swipe across, instead of a small centered card with padding */
-  @media (max-width: 640px) {
-    .image-modal { padding: 0; }
-    .image-modal-inner {
-      width: 100%; height: 100dvh;
-      display: flex; flex-direction: column; justify-content: center;
-      position: relative;
-      background: var(--stage-black-raised);
-      border: none; border-radius: 0; padding: 20px;
-    }
-    .image-modal-close {
-      position: absolute; top: 16px; right: 16px; margin: 0; z-index: 3;
-      background: rgba(11,11,13,0.6);
-    }
-    .image-modal-stage { display: flex; align-items: center; }
-    .image-modal img { max-height: 78dvh; object-fit: contain; border-radius: 8px; box-shadow: none; }
-    .image-modal-dots { position: absolute; bottom: 28px; left: 0; right: 0; }
-  }
-  .merch-meta { padding: 16px 18px 20px; }
-  .merch-name { font-size: 15px; font-weight: 600; color: var(--signal-white); margin-bottom: 4px; }
-  .merch-price { font-size: 13.5px; color: var(--graphite-light); margin-bottom: 14px; }
-  .merch-btn {
-    display: inline-block; width: 100%; text-align: center;
-    padding: 10px 0; border-radius: 6px;
-    border: 1px solid var(--border-quiet);
-    font-size: 13px; font-weight: 600; letter-spacing: 0.02em;
-    color: var(--signal-white); text-decoration: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
-  }
-  .merch-btn:hover { border-color: var(--signal-white); background: rgba(245,245,240,0.06); }
-
-  /* ---------- listen ---------- */
-  .listen-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-  .platform-btn {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 20px 22px; border-radius: 10px;
-    background: var(--stage-black-raised); border: 1px solid var(--border-quiet);
-    text-decoration: none; color: var(--signal-white);
-    font-size: 15px; font-weight: 600;
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-  .platform-btn:hover { border-color: var(--signal-white); transform: translateY(-2px); }
-  .platform-btn .arrow { color: var(--graphite-light); }
-
-  /* ---------- contact ---------- */
-  .contact-block {
-    background: var(--stage-black-raised);
-    border: 1px solid var(--border-quiet);
-    border-radius: 12px;
-    padding: 40px 36px;
-    max-width: 560px;
-  }
-  .contact-copy { font-size: 15.5px; line-height: 1.6; color: var(--graphite-light); margin: 0 0 24px; }
-
-  .contact-form { display: flex; flex-direction: column; gap: 14px; }
-  .contact-form input[type="text"],
-  .contact-form input[type="email"],
-  .contact-form textarea {
-    width: 100%;
-    background: var(--stage-black);
-    border: 1px solid var(--border-quiet);
-    border-radius: 8px;
-    padding: 13px 16px;
-    color: var(--signal-white);
-    font-family: 'Inter', sans-serif;
-    font-size: 14.5px;
-    resize: vertical;
-    transition: border-color 0.2s ease;
-  }
-  .contact-form input::placeholder,
-  .contact-form textarea::placeholder { color: var(--graphite-light); }
-  .contact-form input:focus,
-  .contact-form textarea:focus {
-    outline: none; border-color: var(--tungsten-amber);
-  }
-  .contact-honey { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-  .contact-submit {
-    align-self: flex-start;
-    padding: 12px 28px;
-    border-radius: 6px;
-    border: none;
-    background: var(--tungsten-amber);
-    color: var(--stage-black);
-    font-weight: 700; font-size: 14px; letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-  }
-  .contact-submit:hover { opacity: 0.85; }
-  .contact-submit:disabled { opacity: 0.6; cursor: default; }
-  .contact-status { font-size: 13.5px; min-height: 18px; }
-  .contact-status.success { color: var(--data-cyan); }
-  .contact-status.error { color: var(--tungsten-amber); }
-  .contact-fallback { margin-top: 20px; font-size: 13px; color: var(--graphite-light); }
-  .contact-fallback a { color: var(--signal-white); text-decoration: none; border-bottom: 1px solid var(--border-quiet); }
-  .contact-fallback a:hover { border-color: var(--tungsten-amber); }
-
-  /* ---------- footer ---------- */
-  footer {
-    border-top: 1px solid var(--border-quiet);
-    padding: 56px 24px 40px;
-    text-align: center;
-  }
-  .footer-word {
-    font-size: 22px; letter-spacing: 0.05em; margin-bottom: 10px;
-    display: inline-block; color: var(--signal-white); text-decoration: none;
-    cursor: pointer; transition: opacity 0.2s ease;
-  }
-  .footer-word:hover { opacity: 0.75; }
-  .footer-tagline { font-size: 12px; letter-spacing: 0.25em; color: var(--graphite-light); margin-bottom: 24px; }
-  .footer-social { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 28px; }
-  .footer-social a {
-    display: flex; align-items: center; justify-content: center;
-    width: 38px; height: 38px; border-radius: 50%;
-    border: 1px solid var(--border-quiet);
-    color: var(--graphite-light);
-    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-  }
-  .footer-social a:hover { color: var(--signal-white); border-color: var(--signal-white); transform: translateY(-2px); }
-  .footer-social svg { width: 18px; height: 18px; fill: currentColor; }
-  .footer-meta { font-size: 12.5px; color: #5c5c62; }
-  .footer-madein {
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    font-size: 12px; color: #5c5c62; margin-top: 10px;
-    letter-spacing: 0.03em;
-  }
-  .footer-madein svg { width: 20px; height: auto; border-radius: 2px; flex-shrink: 0; }
-
-  @media (max-width: 1024px) {
-    .nav-right { display: none; }
-    .hamburger { display: flex; }
-    .nav { padding: 18px 24px; }
-  }
-
-  @media (max-width: 720px) {
-    .hero { --hero-left: 20px; }
-    .bracket.br { right: 20px; }
-    .segment-flow { display: none; }
-    section { padding: 56px 20px; }
-    .show-in-hero { margin-top: 56px; padding: 0 20px; }
-    .hero-lockup { --track: 0.1em; font-size: clamp(11px, 3.4vw, 14px); }
-    .hero-tagline { white-space: nowrap; }
-    .nav { padding: 16px 18px; }
-    .video-modal { padding: 12px; }
-    .contact-block { padding: 28px 22px; }
-  }
-
-  @media (max-width: 1024px) and (min-width: 721px) {
-    section { padding: 56px 24px; }
-  }
-
-
-  /* ---------- 12-column grid: every grid above is 12 columns; children span the counts below ---------- */
-  .segments > *, .video-grid > * { grid-column: span 4; }
-  .guest-grid > *, .watch-grid > * { grid-column: span 3; }
-  .listen-grid > * { grid-column: span 4; }
-  .sf-items > * { grid-column: span 6; }
-  .merch-grid > * { grid-column: span 3; }
-  @media (max-width: 1024px) {
-    .segment-flow { display: none; }
-    .segments > *, .video-grid > *, .watch-grid > *, .guest-grid > * { grid-column: span 6; }
-    .listen-grid > *, .merch-grid > * { grid-column: span 6; }
-  }
-  @media (max-width: 720px) {
-    .segments > *, .video-grid > *, .watch-grid > *, .listen-grid > *, .sf-items > * { grid-column: span 12; }
-    .guest-grid > *, .merch-grid > * { grid-column: span 6; }
-    .merch-grid { gap: 14px; }
-    .merch-meta { padding: 12px 12px 16px; }
-  }
-
-  /* ---------- signal flow daily ---------- */
-  .sf-lede { max-width: 1000px; font-size: 17px; line-height: 1.75; color: #d8d8dc; margin: 0 0 28px; }
-  .sf-issue {
-    position: relative;
-    background: var(--stage-black-raised);
-    border: 1px solid var(--border-quiet);
-    border-radius: 10px;
-    padding: 28px 28px 24px;
-    overflow: hidden;
-  }
-  .sf-issue::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--tungsten-amber), var(--signal-white) 50%, var(--data-cyan));
-  }
-  .sf-bar {
-    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-    padding-bottom: 18px; margin-bottom: 22px; border-bottom: 1px solid var(--border-quiet);
-  }
-  .sf-kind { font-size: 11.5px; font-weight: 700; letter-spacing: 0.18em; color: var(--graphite-light); }
-  .sf-nav { display: flex; align-items: center; gap: 10px; }
-  .sf-date { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--signal-white); }
-  .sf-step {
-    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em;
-    padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border-quiet);
-    background: transparent; color: var(--graphite-light); cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-  .sf-step:hover:not(:disabled) { border-color: var(--signal-white); color: var(--signal-white); }
-  .sf-step:disabled { opacity: 0.35; cursor: default; }
-  .sf-jump { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px; margin: -6px 0 24px; }
-  .sf-jump-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--graphite-light); }
-  .sf-date-input {
-    font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 7px 14px; border-radius: 999px;
-    border: 1px solid var(--border-quiet); background: transparent; color: var(--signal-white);
-    color-scheme: dark; cursor: pointer; transition: border-color 0.2s ease;
-  }
-  .sf-date-input:hover, .sf-date-input:focus-visible { border-color: var(--signal-white); outline: none; }
-  .sf-note { font-size: 12.5px; color: var(--tungsten-amber); }
-  .sf-headline { font-size: clamp(26px, 3.6vw, 38px); line-height: 1.08; margin: 0 0 12px; }
-  .sf-topline { font-size: 17px; line-height: 1.75; color: #d8d8dc; margin: 0 0 28px; max-width: 1000px; }
-  .sf-items { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-  .sf-item {
-    background: var(--stage-black);
-    border: 1px solid var(--border-quiet);
-    border-radius: 10px;
-    padding: 22px 22px 20px;
-    transition: border-color 0.2s ease;
-  }
-  .sf-item:hover, .sf-item:focus-within { border-color: var(--signal-white); }
-  .sf-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-  .sf-item .segment-chip { margin-bottom: 0; }
-  .sf-status {
-    display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border-quiet); color: var(--graphite-light);
-  }
-  .sf-item h3 { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 600; margin: 0 0 4px; line-height: 1.35; }
-  .sf-vendor { font-size: 13px; color: var(--graphite-light); margin-bottom: 10px; }
-  .sf-brief { font-size: 14.5px; line-height: 1.6; color: #d8d8dc; margin: 0; }
-  .sf-spec { font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; color: var(--graphite-light); margin: 10px 0 0; }
-  .sf-item details { margin-top: 14px; border-top: 1px solid var(--border-quiet); padding-top: 12px; }
-  .sf-item summary {
-    cursor: pointer; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--signal-white);
-    list-style: none;
-  }
-  .sf-item summary::-webkit-details-marker { display: none; }
-  .sf-item summary::before { content: "+ "; color: var(--tungsten-amber); }
-  .sf-item details[open] summary::before { content: "– "; }
-  .sf-detail { margin: 12px 0 0; }
-  .sf-detail dt { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--graphite-light); margin-top: 10px; }
-  .sf-detail dd { margin: 4px 0 0; font-size: 14.5px; line-height: 1.6; color: #d8d8dc; }
-  .sf-sources { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 14px; font-size: 13px; }
-  .sf-sources a { color: var(--graphite-light); text-decoration: none; border-bottom: 1px solid var(--border-quiet); }
-  .sf-sources a:hover { color: var(--signal-white); border-color: var(--signal-white); }
-  .sf-coming { margin-top: 32px; }
-  .sf-coming-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.18em; color: var(--graphite-light); margin-bottom: 12px; }
-  .sf-coming ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border-quiet); }
-  .sf-coming li {
-    display: grid; grid-template-columns: 210px 1fr; gap: 6px 18px;
-    padding: 12px 0; border-bottom: 1px solid var(--border-quiet); font-size: 14.5px;
-  }
-  .sf-coming time { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--tungsten-amber); }
-  .sf-coming .place { color: var(--graphite-light); }
-  .sf-coming .sf-tag { font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--data-cyan); border: 1px solid var(--border-quiet); border-radius: 999px; padding: 1px 8px; margin-right: 6px; vertical-align: 1px; }
-  .sf-coming .sf-link { color: var(--signal-white); text-decoration: none; border-bottom: 1px solid var(--border-quiet); }
-  .sf-coming .sf-link:hover { color: var(--tungsten-amber); border-bottom-color: var(--tungsten-amber); }
-  .sf-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 18px; }
-  .sf-tab {
-    font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em;
-    padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border-quiet);
-    background: transparent; color: var(--graphite-light); cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-  }
-  .sf-tab:hover { border-color: var(--signal-white); color: var(--signal-white); }
-  .sf-tab.active { background: rgba(255,156,61,0.15); border-color: var(--tungsten-amber); color: var(--tungsten-amber); }
-  .sf-bm { margin-top: 56px; }
-  .sf-bm-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
-  .sf-bm h3.sf-bm-title { font-size: clamp(22px, 3vw, 30px); line-height: 1.1; margin: 0; }
-  .sf-bm-note { font-size: 12.5px; color: var(--graphite-light); }
-  .sf-when { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--tungsten-amber); letter-spacing: 0.04em; }
-  .sf-foot { margin-top: 22px; font-size: 12.5px; color: var(--graphite-light); }
-  .sf-empty { color: var(--graphite-light); font-size: 15px; }
-  @media (max-width: 720px) {
-    .sf-issue { padding: 22px 18px 20px; }
-    .sf-coming li { grid-template-columns: 1fr; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .signal-line-css { animation: none; background-position: 0 0; }
-    .rundown-pulse { transition: none; opacity: 0 !important; }
-    .flow-line { animation: none; background-position: 0 0; }
-    html { scroll-behavior: auto; }
-    .reveal { transition: none; opacity: 1; transform: none; }
-  }
-</style>
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/wall-card.css">
 </head>
 <body>
 
@@ -917,12 +75,11 @@
   <div class="nav-right">
     <div class="nav-links">
       <a href="#show">The Show</a>
-      <a href="#rundown">Inside an Episode</a>
       <a href="#guests">Who's On</a>
       <a href="#listen">Listen</a>
-      <a href="#watch">Watch</a>
-      <a href="#signal-flow">Signal Flow Daily</a>
+      <a href="#watch">Episodes</a>
       <a href="#merch">Merch</a>
+      <a href="/signal-flow-daily.html">Signal Flow Daily</a>
       <a href="/contact">Contact</a>
     </div>
     <div class="nav-social">
@@ -936,14 +93,8 @@
       <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8.3 18.5H5.6V9.7h2.7v8.8ZM7 8.6a1.6 1.6 0 1 1 0-3.1 1.6 1.6 0 0 1 0 3.1Zm11.5 9.9h-2.7v-4.3c0-1 0-2.3-1.4-2.3s-1.7 1.1-1.7 2.3v4.3h-2.7V9.7h2.6v1.2h.1a2.9 2.9 0 0 1 2.6-1.4c2.7 0 3.2 1.8 3.2 4.1v4.9Z"/></svg>
       </a>
-      <a href="#" aria-label="TikTok" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M16.6 2h-3.3v13.6a2.7 2.7 0 1 1-2-2.6V9.6a6 6 0 1 0 5.3 6V8.4a8.3 8.3 0 0 0 4.9 1.6V6.7a4.9 4.9 0 0 1-4.9-4.7Z"/></svg>
-      </a>
       <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.1 0 4.1.1 1.1 0 1.8.2 2.5.5.7.2 1.2.6 1.7 1.1.5.5.9 1 1.1 1.7.3.7.4 1.4.5 2.5 0 1 .1 1.4.1 4.1s0 3.1-.1 4.1c0 1.1-.2 1.8-.5 2.5-.2.7-.6 1.2-1.1 1.7-.5.5-1 .9-1.7 1.1-.7.3-1.4.4-2.5.5-1 0-1.4.1-4.1.1s-3.1 0-4.1-.1c-1.1 0-1.8-.2-2.5-.5a4.6 4.6 0 0 1-1.7-1.1 4.6 4.6 0 0 1-1.1-1.7c-.3-.7-.4-1.4-.5-2.5C2 15.1 2 14.7 2 12s0-3.1.1-4.1c0-1.1.2-1.8.5-2.5.2-.7.6-1.2 1.1-1.7.5-.5 1-.9 1.7-1.1.7-.3 1.4-.4 2.5-.5C8.9 2 9.3 2 12 2Zm0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.3.7.6 1 .3.3.6.5 1 .6.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.6-1a2.7 2.7 0 0 0-1-.6c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1Zm0 3.5a4.7 4.7 0 1 1 0 9.4 4.7 4.7 0 0 1 0-9.4Zm0 1.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Zm5.9-2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0Z"/></svg>
-      </a>
-      <a href="#" aria-label="Discord" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M20.3 5.4A19.3 19.3 0 0 0 15.4 4c-.2.4-.5.9-.6 1.3a17.9 17.9 0 0 0-5.5 0C9.1 4.9 8.9 4.4 8.6 4a19.2 19.2 0 0 0-4.9 1.5C1 9.5.4 13.4.7 17.2a19.4 19.4 0 0 0 5.9 3c.5-.6.9-1.3 1.2-2a12.6 12.6 0 0 1-1.9-.9l.5-.4c3.6 1.7 7.6 1.7 11.2 0l.5.4c-.6.4-1.2.7-1.9.9.3.7.7 1.4 1.2 2a19.3 19.3 0 0 0 5.9-3c.4-4.4-.7-8.3-3-11.8ZM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.9 2.2-1.9 2.2Zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2Z"/></svg>
       </a>
     </div>
   </div>
@@ -958,12 +109,11 @@
     Search
   </button>
   <a href="#show">The Show</a>
-  <a href="#rundown">Inside an Episode</a>
   <a href="#guests">Who's On</a>
   <a href="#listen">Listen</a>
-  <a href="#watch">Watch</a>
-      <a href="#signal-flow">Signal Flow Daily</a>
+  <a href="#watch">Episodes</a>
   <a href="#merch">Merch</a>
+  <a href="/signal-flow-daily.html">Signal Flow Daily</a>
   <a href="/contact">Contact</a>
   <div class="footer-social" style="margin-top: 32px;">
     <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
@@ -972,14 +122,8 @@
     <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8.3 18.5H5.6V9.7h2.7v8.8ZM7 8.6a1.6 1.6 0 1 1 0-3.1 1.6 1.6 0 0 1 0 3.1Zm11.5 9.9h-2.7v-4.3c0-1 0-2.3-1.4-2.3s-1.7 1.1-1.7 2.3v4.3h-2.7V9.7h2.6v1.2h.1a2.9 2.9 0 0 1 2.6-1.4c2.7 0 3.2 1.8 3.2 4.1v4.9Z"/></svg>
     </a>
-    <a href="#" aria-label="TikTok" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M16.6 2h-3.3v13.6a2.7 2.7 0 1 1-2-2.6V9.6a6 6 0 1 0 5.3 6V8.4a8.3 8.3 0 0 0 4.9 1.6V6.7a4.9 4.9 0 0 1-4.9-4.7Z"/></svg>
-    </a>
     <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.1 0 4.1.1 1.1 0 1.8.2 2.5.5.7.2 1.2.6 1.7 1.1.5.5.9 1 1.1 1.7.3.7.4 1.4.5 2.5 0 1 .1 1.4.1 4.1s0 3.1-.1 4.1c0 1.1-.2 1.8-.5 2.5-.2.7-.6 1.2-1.1 1.7-.5.5-1 .9-1.7 1.1-.7.3-1.4.4-2.5.5-1 0-1.4.1-4.1.1s-3.1 0-4.1-.1c-1.1 0-1.8-.2-2.5-.5a4.6 4.6 0 0 1-1.7-1.1 4.6 4.6 0 0 1-1.1-1.7c-.3-.7-.4-1.4-.5-2.5C2 15.1 2 14.7 2 12s0-3.1.1-4.1c0-1.1.2-1.8.5-2.5.2-.7.6-1.2 1.1-1.7.5-.5 1-.9 1.7-1.1.7-.3 1.4-.4 2.5-.5C8.9 2 9.3 2 12 2Zm0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.3.7.6 1 .3.3.6.5 1 .6.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.6-1a2.7 2.7 0 0 0-1-.6c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1Zm0 3.5a4.7 4.7 0 1 1 0 9.4 4.7 4.7 0 0 1 0-9.4Zm0 1.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Zm5.9-2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0Z"/></svg>
-    </a>
-    <a href="#" aria-label="Discord" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M20.3 5.4A19.3 19.3 0 0 0 15.4 4c-.2.4-.5.9-.6 1.3a17.9 17.9 0 0 0-5.5 0C9.1 4.9 8.9 4.4 8.6 4a19.2 19.2 0 0 0-4.9 1.5C1 9.5.4 13.4.7 17.2a19.4 19.4 0 0 0 5.9 3c.5-.6.9-1.3 1.2-2a12.6 12.6 0 0 1-1.9-.9l.5-.4c3.6 1.7 7.6 1.7 11.2 0l.5.4c-.6.4-1.2.7-1.9.9.3.7.7 1.4 1.2 2a19.3 19.3 0 0 0 5.9-3c.4-4.4-.7-8.3-3-11.8ZM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.9 2.2-1.9 2.2Zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2Z"/></svg>
     </a>
   </div>
 </div>
@@ -999,9 +143,89 @@
 
 <header class="hero" id="top">
   <h1 class="sr-only">ProAV Podcast — Mainstage, Backstage, Cloud</h1>
-  <div class="bracket tl"></div>
-  <div class="bracket br"></div>
+  <!-- LED wall: a content slot. Swap what is inside .screen-content and it is
+       clipped to the wall and takes the panel grid on top automatically. -->
+  <div class="hero-screen">
+    <div class="screen-content">
+      <!-- No `loop`: the playlist in the script below advances on `ended`. -->
+      <!-- No `autoplay`: the wall opens on its invitation and plays nothing until the show
+           whether that is a clip or a card. With autoplay here the tag's own src played first
+           and the card never got its turn at the top of the rotation. -->
+      <video id="wall-video" src="images/hero-artemis-v1.mp4" muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>
+      <!-- One shell; the script fills it from whichever card the wall is on, so a new class is
+           an entry in SLIDES below and needs no markup of its own. -->
+      <a class="wall-card" hidden target="_blank" rel="noopener">
+        <span class="wall-card-slate">
+          <span class="wall-card-kind">CLASS</span>
+          <span class="wall-card-dates"></span>
+        </span>
+        <span class="wall-card-title"></span>
+        <span class="wall-card-meta"></span>
+      </a>
+      <!-- The cue call, on the wall. Two beats — the standby, then the take — and on the take
+           the page's DIM cue actually fires. The wall is not illustrating a cue; it is calling
+           one the page obeys. Filled from the SHOW cue stack below, like the card above. -->
+      <!-- The house is dark and the show has not started. Nothing on this page makes a sound
+           or moves a level until this is pressed, which also makes it the gesture browsers
+           require before audio is allowed — so the cue is guaranteed to be heard rather than
+           hoped for. The whole wall is the button. -->
+      <button class="wall-invite" type="button">
+        <span class="wall-invite-icon" aria-hidden="true">
+          <!-- Play. It was a speaker, which is the wrong promise: the control starts the show,
+               and sound comes on with it rather than being the thing being switched. -->
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M9 6.5v11l9-5.5z" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="wall-invite-line">PLAY AND EXPERIENCE THE SHOW CALL CUES</span>
+      </button>
+      <!-- A call given while something else is still on the wall — over a running clip, or
+           over a slide being read. It does not replace what is up; it sits beside it on the
+           right, which is the whole point of a standby. -->
+      <div class="wall-ready" hidden aria-live="polite">
+        <span class="wall-ready-line"></span>
+      </div>
+      <div class="wall-cue" hidden aria-live="polite">
+        <!-- Builds are appended here, not swapped: build 2 arrives under build 1 with build 1
+             still on the wall, so the standby is still readable when the take lands. The cue
+             carries no slate — the standby is the first thing on the wall. -->
+        <span class="wall-cue-builds"></span>
+      </div>
+    </div>
+    <!-- Timecode burn-in. A sibling of .screen-content rather than a child, so the 46% opacity
+         the picture carries on phones does not dim it. Top-left: the one corner nothing masks,
+         and it balances the sound button opposite. -->
+    <!-- The sequence's own readout, on the wall's TOP edge — the mirror of the clip burn-in
+         below. Up while the show call is running, gone when it ends. -->
+    <div class="wall-seq" hidden aria-hidden="true">
+      <span class="wall-seq-name">SHOW CALL</span>
+      <span class="wall-seq-trt">TRT --:--:--</span>
+      <span class="wall-seq-code">00:00:00;00</span>
+    </div>
+    <div class="wall-tc" aria-hidden="true">
+      <span class="wall-tc-name">ARTEMIS I</span>
+      <span class="wall-tc-trt">TRT --:--:--</span>
+      <span class="wall-tc-code">00:00:00;00</span>
+    </div>
+    
+    
+    <!-- Jump between the wall's items. pointer-events:auto, since .hero-screen turns them off. -->
+    <div class="wall-dots" role="group" aria-label="Wall content"></div>
+    <svg class="screen-frame" viewBox="150 28 750 293" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMaxYMid meet">
+  <defs>
+    <clipPath id="wallClip"><path d="M150 58 L900 28 L900 321 L150 292 Z"/></clipPath>
+    <pattern id="panels" width="26" height="26" patternUnits="userSpaceOnUse">
+      <path d="M26 0V26M0 26H26" stroke="#0B0B0D" stroke-opacity=".55" stroke-width="1.5"/><path d="M24.5 0V26M0 24.5H26" stroke="#F5F5F0" stroke-opacity=".13" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <g clip-path="url(#wallClip)"><rect x="150" y="28" width="750" height="293" fill="url(#panels)"/></g>
+  <!-- The wall's outline is off. The panel seams already describe where the wall is, and the
+       drawn frame on top of them was the thing reading as a bevelled edge. The trapezoid
+       itself is untouched. -->
+</svg>
+  </div>
   <div class="hero-word display">
+    <div class="hero-word-video" aria-hidden="true"><video src="images/hero-logo-v132.mp4" muted playsinline preload="auto"></video></div>
     <svg viewBox="0 50 1200 200" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <mask id="stencilMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="300">
@@ -1012,46 +236,44 @@
         </mask>
       </defs>
       <text x="0" y="220" text-anchor="start" font-family="Impact, Haettenschweiler, sans-serif"
-            font-size="200" fill="#F5F5F0" mask="url(#stencilMask)">PROAV</text>
+            font-size="200" fill="currentColor" mask="url(#stencilMask)">PROAV</text>
     </svg>
   </div>
   <div class="hero-lockup">
+    <!-- PODCAST. Each letter is its own span in a space-between row, so the word spreads to
+         exactly the width of its box however the font measures — Arial here, something else on a
+         machine without it, same width either way. The box is a share of .hero-lockup, which is
+         sized by the tagline's text, so PODCAST, the tagline and the signal rule below all end on
+         the same edge at every screen size. Drawn as text rather than swapped in from the brand
+         pack's svg because the wordmark above carries the colour cycle and the masked clip. -->
+    <div class="hero-podcast" aria-hidden="true"><span>P</span><span>O</span><span>D</span><span>C</span><span>A</span><span>S</span><span>T</span></div>
     <div class="hero-tagline">Mainstage &middot; Backstage &middot; Cloud</div>
     <div class="signal-line-css" aria-hidden="true"></div>
   </div>
   <p class="hero-hook">
-    Real gear, real crews, real conversations — from the rig on stage to the
-    cloud infrastructure taking live production remote. Audio &amp; video,
+    Real Conversations, real crews, real gear — from the rig on stage to the
+    cloud<br class="hook-br"> infrastructure taking live production remote. Audio &amp; video,
     wherever you listen or watch.
   </p>
+  <!-- Listen Now / Watch Episodes buttons are hidden for now. To bring them back, uncomment this block and set .hero-hook's bottom margin back to 28px in css/home.css.
   <div class="hero-ctas">
     <a href="#listen" class="btn btn-primary">Listen Now</a>
     <a href="#watch" class="btn btn-secondary">Watch Episodes</a>
-    <a href="#rundown" class="btn btn-secondary">See How a Show Runs</a>
   </div>
+  -->
 
   <div class="show-in-hero" id="show">
     <div class="section-eyebrow reveal">THE SHOW</div>
     <h2 class="section-title display reveal">Where live production actually happens.</h2>
     <p class="show-copy reveal">
-      ProAV goes where the show actually happens — Mainstage, Backstage, and
-      increasingly, Cloud. Each episode pairs a hands-on look at the gear and
-      workflows driving live production with real conversations from the people
-      behind them: FOH engineers, LDs, video directors, production managers,
-      and the hardware companies building the tools that make it all work —
-      plus the teams rethinking what "live" means as more of it moves to
-      remote and cloud-based workflows. Some episodes run the full
+      Each episode pairs a hands-on look at the gear and workflows driving live
+      production with FOH engineers, LDs, video
+      directors, production managers, and the hardware companies building the
+      tools that make it all work. Some episodes run the full
       demo-plus-conversation format with a single guest; others go deep with
-      multiple guests for a full hour. Available as audio and video, wherever
-      you listen or watch.
+      multiple guests for a full hour.
     </p>
     <div class="segments-wrap">
-      <div class="segment-flow" aria-hidden="true">
-        <div class="flow-line"></div>
-        <span class="flow-node" style="left: 16.7%;"></span>
-        <span class="flow-node" style="left: 50%;"></span>
-        <span class="flow-node" style="left: 83.3%;"></span>
-      </div>
       <div class="segments">
         <div class="segment-card reveal">
           <span class="segment-chip mainstage">MAINSTAGE</span>
@@ -1074,152 +296,125 @@
 </header>
 
 
-<section id="rundown">
-  <div class="section-eyebrow reveal">INSIDE AN EPISODE</div>
-  <h2 class="section-title display reveal">A real rundown, not a highlight reel.</h2>
-  <div class="rundown reveal">
-    <div class="rundown-pulse" id="rundownPulse" aria-hidden="true"></div>
-    <div class="cue">
-      <div class="cue-time mono">0:00</div>
-      <div class="cue-label neutral">COLD OPEN</div>
-      <div class="cue-desc">The best moment of the conversation, no setup needed.</div>
-    </div>
-    <div class="cue">
-      <div class="cue-time mono">~3:00</div>
-      <div class="cue-label mainstage">MAINSTAGE</div>
-      <div class="cue-desc">A focused demo of the gear driving the show — not the full rig.</div>
-    </div>
-    <div class="cue">
-      <div class="cue-time mono">~31:00</div>
-      <div class="cue-label backstage">BACKSTAGE</div>
-      <div class="cue-desc">The real conversation — decisions, pressure, and what almost went wrong.</div>
-    </div>
-    <div class="cue">
-      <div class="cue-time mono">~58:00</div>
-      <div class="cue-label neutral">CLOSE</div>
-      <div class="cue-desc">One takeaway, and a look at what's next.</div>
-    </div>
-  </div>
-  <p class="rundown-note reveal">A typical rundown. Times change from episode to episode.</p>
-</section>
 
-<section id="guests">
-  <div class="section-eyebrow reveal">WHO'S ON THE SHOW</div>
+
+<section id="guests" class="band-plain">  <div class="section-eyebrow reveal">WHO'S ON THE SHOW</div>
   <h2 class="section-title display reveal">Built by the people who run it.</h2>
-  <div class="guest-grid reveal">
-    <div class="guest-tag" tabindex="0">
+  <div class="guest-grid reveal" id="guestGrid">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">AV</div><span>AV Companies</span>
       <div class="guest-tooltip">Supply and integrate the audiovisual gear the whole production runs on.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">PC</div><span>Production Companies</span>
       <div class="guest-tooltip">Produce and deliver the show end to end, from concept through load-out.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">HW</div><span>Hardware Companies</span>
       <div class="guest-tooltip">Build the gear the whole industry runs on.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">SW</div><span>Software Companies</span>
       <div class="guest-tooltip">Build the platforms and control systems running behind every show.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">RH</div><span>Rental Houses</span>
       <div class="guest-tooltip">Stock and prep the gear that ships out for every show.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">PM</div><span>Production Managers</span>
       <div class="guest-tooltip">Own the schedule, budget, and logistics that make the show possible.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">PD</div><span>Project Designers</span>
       <div class="guest-tooltip">Design the system architecture and technical plan before a single cable gets pulled.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">EIC</div><span>Engineers In Charge</span>
       <div class="guest-tooltip">Owns the technical plan for the show and calls the shots when something breaks live.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">VE</div><span>Video Engineers</span>
       <div class="guest-tooltip">Keep every camera, switcher, and feed color-matched and running clean.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">PROJ</div><span>Projectionist</span>
       <div class="guest-tooltip">Align, focus, and run the projectors so the image lands exactly where it should.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">MS</div><span>Media Server Operators</span>
       <div class="guest-tooltip">Run the playback and content engine driving screens, LED, and video cues live.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">GFX</div><span>Graphics Operators</span>
       <div class="guest-tooltip">Build and drive the on-screen graphics — lower thirds, stat boards, and show packages.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">AE</div><span>Audio Engineers</span>
       <div class="guest-tooltip">Build and run the mix — from console gain structure to the monitor world.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">FOH</div><span>FOH Engineers</span>
       <div class="guest-tooltip">Mix the room the audience actually hears — live, with no do-overs.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">LD</div><span>Lighting Designers</span>
       <div class="guest-tooltip">Program and run the look of the show, cue to cue.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">CL</div><span>Cloud &amp; REMI Engineers</span>
       <div class="guest-tooltip">Route production remote, moving signal from the stage into cloud infrastructure.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">CO</div><span>Camera Operators</span>
       <div class="guest-tooltip">Frame every shot the video director calls, live and on the fly.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">TD</div><span>Technical Directors</span>
       <div class="guest-tooltip">Call the show and switch the picture in real time.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">SC</div><span>Show Callers</span>
       <div class="guest-tooltip">Keep the whole production on cue and on time.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">LB</div><span>Labor Brokers</span>
       <div class="guest-tooltip">Staff the crews that make load-in, show, and strike happen.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">TC</div><span>Technicians</span>
       <div class="guest-tooltip">Keep the rig patched, powered, and running from load-in through strike.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">SH</div><span>Stage Hands</span>
       <div class="guest-tooltip">Build, move, and strike the physical show — the muscle behind every load-in.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">STG</div><span>Stage Managers</span>
       <div class="guest-tooltip">Call cues backstage and keep talent, crew, and schedule moving in sync.</div>
     </div>
-    <div class="guest-tag" tabindex="0">
+    <div class="guest-tag tile guest-reveal" tabindex="0">
       <div class="guest-badge">TAL</div><span>Talent</span>
       <div class="guest-tooltip">The hosts and performers the whole production is built to support.</div>
     </div>
   </div>
 </section>
 
-<section id="listen">
-  <div class="section-eyebrow reveal">LISTEN</div>
+<section id="listen" class="band-plain">  <div class="section-eyebrow reveal">LISTEN</div>
   <h2 class="section-title display reveal">Wherever you already are.</h2>
   <div class="listen-grid reveal">
     <a href="#" class="platform-btn"><span>Apple Podcasts</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>Spotify</span><span class="arrow">&rarr;</span></a>
     <a href="#" class="platform-btn"><span>YouTube Channel</span><span class="arrow">&rarr;</span></a>
+    <a href="#" class="platform-btn"><span>LinkedIn</span><span class="arrow">&rarr;</span></a>
   </div>
 </section>
 
-<section id="watch">
-  <div class="section-eyebrow reveal">WATCH</div>
-  <h2 class="section-title display reveal">The gear, on screen.</h2>
-  <!-- Each .video-card.watch-hero is one tile. Copy a whole tile to add a video; the grid fills across, then down. -->
+<section id="watch" class="band-plain">  <div class="section-eyebrow reveal">EPISODES</div>
+  <h2 class="section-title display reveal">ProAV Talk: Conversations, The People, The Gear, Demos</h2>
+  <p class="watch-note reveal">1-hour conversations with ProAV professionals, demos with hardware and software manufacturers.</p>
+  <!-- Video on the left, audio on the right. Each .video-card.watch-hero is one tile;
+       copy a whole tile to add a video and they stack down the left column. -->
+  <div class="watch-pair">
   <div class="watch-grid">
   <div class="video-card watch-hero reveal">
     <div class="watch-segments" role="tablist" aria-label="Jump to episode segment">
@@ -1242,9 +437,67 @@
       <div class="video-title">The Art of Cutting Live</div>
     </div>
   </div>
+
+  <!-- THE SHOW CALL, 4K. Same cue stack as the hero wall, laid out as a flat 3840x2160
+       broadcast frame. The poster is a still; the show itself runs in showcall.html, which
+       also stands on its own at /showcall. Clicking opens it full screen. -->
+  <div class="video-card showcall-card reveal">
+    <div class="watch-segments" aria-hidden="true">
+      <span class="watch-seg-tag active" data-seg="backstage">SHOW CALL</span>
+      <span class="watch-seg-tag">3840 &times; 2160</span>
+    </div>
+    <div class="showcall-poster" role="button" tabindex="0"
+         aria-label="Open the 4K show call full screen"
+         onclick="openShowCall()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openShowCall();}">
+      <div class="showcall-poster-tc"><span>SHOW CALL</span><span>TRT 00:04:31</span></div>
+      <div class="showcall-poster-line">PLAY AND EXPERIENCE<br>THE SHOW CALL CUES</div>
+      <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+    <div class="video-meta">
+      <div class="video-eyebrow backstage">SHOW CALL</div>
+      <div class="video-title">Demo, in 4K</div>
+    </div>
   </div>
+  </div>
+
+    <div class="audio-slot reveal">
+      <div class="watch-segments" aria-hidden="true">
+        <span class="watch-seg-tag" data-seg="mainstage">MAINSTAGE</span>
+        <span class="watch-seg-tag active" data-seg="backstage">BACKSTAGE</span>
+        <span class="watch-seg-tag" data-seg="cloud">CLOUD</span>
+      </div>
+      <div class="audio-embed"><svg class="slot-art" viewBox="0 0 600 175" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="6.0" y="65.7" width="10.2" height="43.7" fill="#FF9C3D" opacity="0.55"/><rect x="28.2" y="47.0" width="10.2" height="81.0" fill="#2AD9EC" opacity="0.9"/><rect x="50.4" y="34.2" width="10.2" height="106.7" fill="#FF9C3D" opacity="0.9"/><rect x="72.7" y="30.8" width="10.2" height="113.4" fill="#2AD9EC" opacity="0.55"/><rect x="94.9" y="37.9" width="10.2" height="99.2" fill="#FF9C3D" opacity="0.9"/><rect x="117.1" y="53.6" width="10.2" height="67.8" fill="#2AD9EC" opacity="0.9"/><rect x="139.3" y="63.1" width="10.2" height="48.9" fill="#FF9C3D" opacity="0.55"/><rect x="161.6" y="48.8" width="10.2" height="77.3" fill="#2AD9EC" opacity="0.9"/><rect x="183.8" y="41.4" width="10.2" height="92.1" fill="#FF9C3D" opacity="0.9"/><rect x="206.0" y="43.7" width="10.2" height="87.7" fill="#2AD9EC" opacity="0.55"/><rect x="228.2" y="54.0" width="10.2" height="67.1" fill="#FF9C3D" opacity="0.9"/><rect x="250.4" y="66.9" width="10.2" height="41.2" fill="#2AD9EC" opacity="0.9"/><rect x="272.7" y="61.4" width="10.2" height="52.2" fill="#FF9C3D" opacity="0.55"/><rect x="294.9" y="43.7" width="10.2" height="87.5" fill="#2AD9EC" opacity="0.9"/><rect x="317.1" y="34.0" width="10.2" height="106.9" fill="#FF9C3D" opacity="0.9"/><rect x="339.3" y="34.6" width="10.2" height="105.8" fill="#2AD9EC" opacity="0.55"/><rect x="361.6" y="44.9" width="10.2" height="85.2" fill="#FF9C3D" opacity="0.9"/><rect x="383.8" y="61.6" width="10.2" height="51.8" fill="#2AD9EC" opacity="0.9"/><rect x="406.0" y="48.9" width="10.2" height="77.1" fill="#FF9C3D" opacity="0.55"/><rect x="428.2" y="36.4" width="10.2" height="102.2" fill="#2AD9EC" opacity="0.9"/><rect x="450.4" y="32.9" width="10.2" height="109.2" fill="#FF9C3D" opacity="0.9"/><rect x="472.7" y="39.9" width="10.2" height="95.2" fill="#2AD9EC" opacity="0.55"/><rect x="494.9" y="55.7" width="10.2" height="63.6" fill="#FF9C3D" opacity="0.9"/><rect x="517.1" y="70.7" width="10.2" height="33.6" fill="#2AD9EC" opacity="0.9"/><rect x="539.3" y="56.6" width="10.2" height="61.9" fill="#FF9C3D" opacity="0.55"/><rect x="561.6" y="46.4" width="10.2" height="82.1" fill="#2AD9EC" opacity="0.9"/><rect x="583.8" y="41.4" width="10.2" height="92.2" fill="#FF9C3D" opacity="0.9"/></svg>
+        <!--
+          Apple Podcasts player. Put the show and episode IDs into the src below and
+          uncomment it; the block it sits in is already the right height.
+          The episode page URL ends .../podcast/<SHOW-SLUG>/id<SHOW_ID>?i=<EPISODE_ID>
+        <iframe src="https://embed.podcasts.apple.com/us/podcast/SHOW-SLUG/idSHOW_ID?i=EPISODE_ID"
+          height="175" frameborder="0" loading="lazy" title="Listen to this episode"
+          sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+          allow="autoplay *; encrypted-media *;"></iframe>
+        -->
+      </div>
+      <div class="video-meta">
+        <div class="video-eyebrow backstage">LISTEN</div>
+        <div class="video-title">Apple Podcasts player goes here</div>
+      </div>
+    </div>
+  </div>
+
 </section>
 
+<!-- The 4K show call, full screen. Built like the video modal beside it, but it frames
+     showcall.html rather than YouTube. The iframe is only given its src on open and has it
+     taken away on close, so the show never runs behind a closed overlay. -->
+<div class="video-modal showcall-modal" id="showCallModal" onclick="if(event.target===this) closeShowCall()">
+  <div class="video-modal-inner">
+    <button class="video-modal-close" onclick="closeShowCall()" aria-label="Close show call">&times;</button>
+    <div class="video-modal-frame showcall-modal-frame">
+      <iframe id="showCallIframe" src="" title="ProAV show call, 4K"
+        allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
 <div class="video-modal" id="videoModal" onclick="if(event.target===this) closeVideoModal()">
   <div class="video-modal-inner">
     <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">&times;</button>
@@ -1272,31 +525,11 @@
   </div>
 </div>
 
-<section id="signal-flow">
-  <div class="section-eyebrow reveal">SIGNAL FLOW DAILY</div>
-  <h2 class="section-title display reveal">What changed in live production.</h2>
-  <p class="sf-lede reveal">LED processing, switching, replay and venue-to-cloud news, sourced and checked every morning.</p>
-  <!-- Filled from the Signal Flow feed (falls back to /signal-flow/issues.json) by the Signal Flow script near the bottom of this file. -->
-  <div class="sf-issue" id="sfIssue" aria-live="polite">
-    <p class="sf-empty">Loading today's briefing…</p>
-  </div>
-  <div class="sf-bm" id="sfVendors" hidden>
-    <div class="sf-bm-head">
-      <h3 class="sf-bm-title display">Latest from the vendors.</h3>
-      <div class="sf-bm-note">Four newest per tab. Dates are as published by the source where known.</div>
-    </div>
-    <div class="sf-tabs" id="sfTabs" role="tablist" aria-label="Choose a vendor"></div>
-    <div class="sf-items" id="sfBmItems"></div>
-  </div>
-  <noscript><p class="sf-empty">Turn on JavaScript to read Signal Flow Daily.</p></noscript>
-</section>
-
-<section id="merch">
-  <div class="section-eyebrow reveal">MERCH</div>
+<section id="merch" class="band-plain">  <div class="section-eyebrow reveal">MERCH</div>
   <h2 class="section-title display reveal">Wear the signal.</h2>
   <div class="merch-grid reveal">
     <div class="merch-card">
-      <div class="merch-swatch-wrap" onclick="openImageModal(this, 'front')">
+      <div class="merch-swatch-wrap tile" onclick="openImageModal(this, 'front')">
         <img class="merch-swatch front" src="images/tee-front.webp" width="900" height="1200" loading="lazy" decoding="async" alt="PROAV Stencil Wordmark Tee — front">
         <img class="merch-swatch back" src="images/tee-back.webp" width="900" height="1200" loading="lazy" decoding="async" alt="PROAV Stencil Wordmark Tee — back">
       </div>
@@ -1308,7 +541,7 @@
       </div>
     </div>
     <div class="merch-card">
-      <div class="merch-swatch-wrap" onclick="openImageModal(this, 'front')">
+      <div class="merch-swatch-wrap tile" onclick="openImageModal(this, 'front')">
         <img class="merch-swatch front" src="images/hoodie-front.webp" width="900" height="1200" loading="lazy" decoding="async" alt="PROAV Signal Line Hoodie — front">
         <img class="merch-swatch back" src="images/hoodie-back.webp" width="900" height="1200" loading="lazy" decoding="async" alt="PROAV Signal Line Hoodie — back">
       </div>
@@ -1320,7 +553,7 @@
       </div>
     </div>
     <div class="merch-card">
-      <div class="merch-swatch-wrap" onclick="openImageModal(this, 'front')">
+      <div class="merch-swatch-wrap tile" onclick="openImageModal(this, 'front')">
         <img class="merch-swatch front" src="images/cap-front.webp" width="900" height="1200" loading="lazy" decoding="async" alt="PROAV Road Case Cap">
         <img class="merch-swatch back" src="images/cap-back.webp" width="900" height="1200" loading="lazy" decoding="async" alt="Road Case Cap back">
       </div>
@@ -1332,7 +565,7 @@
       </div>
     </div>
     <div class="merch-card">
-      <div class="merch-swatch-wrap" onclick="openImageModal(this, 'back')">
+      <div class="merch-swatch-wrap tile" onclick="openImageModal(this, 'back')">
         <img class="merch-swatch front" src="images/sticker-front.webp" width="900" height="1200" loading="lazy" decoding="async" alt="Mainstage/Backstage/Cloud Sticker">
         <img class="merch-swatch back" src="images/sticker-back.webp" width="900" height="1200" loading="lazy" decoding="async" alt="Mainstage/Backstage/Cloud Sticker back">
       </div>
@@ -1347,37 +580,9 @@
 </section>
 
 <footer>
-  <a href="#top" class="footer-word display" aria-label="Back to top">PROAV</a>
-  <div class="footer-tagline">MAINSTAGE &middot; BACKSTAGE &middot; CLOUD</div>
-  <div class="footer-social">
-    <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8ZM9.6 15.5v-7l6.3 3.5-6.3 3.5Z"/></svg>
-    </a>
-    <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8.3 18.5H5.6V9.7h2.7v8.8ZM7 8.6a1.6 1.6 0 1 1 0-3.1 1.6 1.6 0 0 1 0 3.1Zm11.5 9.9h-2.7v-4.3c0-1 0-2.3-1.4-2.3s-1.7 1.1-1.7 2.3v4.3h-2.7V9.7h2.6v1.2h.1a2.9 2.9 0 0 1 2.6-1.4c2.7 0 3.2 1.8 3.2 4.1v4.9Z"/></svg>
-    </a>
-    <a href="#" aria-label="TikTok" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M16.6 2h-3.3v13.6a2.7 2.7 0 1 1-2-2.6V9.6a6 6 0 1 0 5.3 6V8.4a8.3 8.3 0 0 0 4.9 1.6V6.7a4.9 4.9 0 0 1-4.9-4.7Z"/></svg>
-    </a>
-    <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.1 0 4.1.1 1.1 0 1.8.2 2.5.5.7.2 1.2.6 1.7 1.1.5.5.9 1 1.1 1.7.3.7.4 1.4.5 2.5 0 1 .1 1.4.1 4.1s0 3.1-.1 4.1c0 1.1-.2 1.8-.5 2.5-.2.7-.6 1.2-1.1 1.7-.5.5-1 .9-1.7 1.1-.7.3-1.4.4-2.5.5-1 0-1.4.1-4.1.1s-3.1 0-4.1-.1c-1.1 0-1.8-.2-2.5-.5a4.6 4.6 0 0 1-1.7-1.1 4.6 4.6 0 0 1-1.1-1.7c-.3-.7-.4-1.4-.5-2.5C2 15.1 2 14.7 2 12s0-3.1.1-4.1c0-1.1.2-1.8.5-2.5.2-.7.6-1.2 1.1-1.7.5-.5 1-.9 1.7-1.1.7-.3 1.4-.4 2.5-.5C8.9 2 9.3 2 12 2Zm0 1.8c-2.7 0-3 0-4 .1-.9 0-1.4.2-1.7.3-.4.2-.7.3-1 .6-.3.3-.5.6-.6 1-.1.3-.3.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c0 .9.2 1.4.3 1.7.2.4.3.7.6 1 .3.3.6.5 1 .6.3.1.8.3 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9 0 1.4-.2 1.7-.3.4-.2.7-.3 1-.6.3-.3.5-.6.6-1 .1-.3.3-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c0-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.6-1a2.7 2.7 0 0 0-1-.6c-.3-.1-.8-.3-1.7-.3-1-.1-1.3-.1-4-.1Zm0 3.5a4.7 4.7 0 1 1 0 9.4 4.7 4.7 0 0 1 0-9.4Zm0 1.8a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Zm5.9-2a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0Z"/></svg>
-    </a>
-    <a href="#" aria-label="Discord" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24"><path d="M20.3 5.4A19.3 19.3 0 0 0 15.4 4c-.2.4-.5.9-.6 1.3a17.9 17.9 0 0 0-5.5 0C9.1 4.9 8.9 4.4 8.6 4a19.2 19.2 0 0 0-4.9 1.5C1 9.5.4 13.4.7 17.2a19.4 19.4 0 0 0 5.9 3c.5-.6.9-1.3 1.2-2a12.6 12.6 0 0 1-1.9-.9l.5-.4c3.6 1.7 7.6 1.7 11.2 0l.5.4c-.6.4-1.2.7-1.9.9.3.7.7 1.4 1.2 2a19.3 19.3 0 0 0 5.9-3c.4-4.4-.7-8.3-3-11.8ZM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.9 2.2-1.9 2.2Zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2Z"/></svg>
-    </a>
-  </div>
   <div class="footer-meta">&copy; 2026 ProAV Podcast. All rights reserved.</div>
-  <div class="footer-madein">
-    <svg viewBox="0 0 40 27" aria-hidden="true">
-      <rect width="40" height="27" fill="#F5F5F0"/>
-      <polygon points="10.00,4.70 10.76,6.95 13.14,6.98 11.24,8.40 11.94,10.67 10.00,9.30 8.06,10.67 8.76,8.40 6.86,6.98 9.24,6.95" fill="#BF0A30"/>
-      <polygon points="20.00,4.70 20.76,6.95 23.14,6.98 21.24,8.40 21.94,10.67 20.00,9.30 18.06,10.67 18.76,8.40 16.86,6.98 19.24,6.95" fill="#BF0A30"/>
-      <polygon points="30.00,4.70 30.76,6.95 33.14,6.98 31.24,8.40 31.94,10.67 30.00,9.30 28.06,10.67 28.76,8.40 26.86,6.98 29.24,6.95" fill="#BF0A30"/>
-      <rect x="4" y="14" width="32" height="3.4" fill="#BF0A30"/>
-      <rect x="4" y="20" width="32" height="3.4" fill="#BF0A30"/>
-    </svg>
-    Made in DC
-  </div>
+  <a href="#top" class="footer-word display" aria-label="Back to top">PROAV</a>
+  <div class="footer-madein">Made in DC</div>
 </footer>
 
 <script>
@@ -1386,6 +591,83 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
+
+  // Who's On: the role tiles hinge down in a wave as the grid comes up the window, and fold back up in
+  // reverse when you scroll away from it. Two trigger lines rather than one — open at halfway up the
+  // window, close only once the grid has fallen back past 92% — so the gap between them stops a small
+  // thumb movement near a single line from flipping the whole grid open and shut.
+  const guestEls = document.querySelectorAll('.guest-reveal');
+  if (guestEls.length) {
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (calm.matches) {
+      guestEls.forEach(el => el.classList.add('settled'));
+    } else {
+      Array.prototype.forEach.call(guestEls, (el, i) => {
+        el.style.setProperty('--i', i);          // position in the wave, both opening and closing
+        // Each tile hands its animation off to a resting class as it finishes, so nothing is left
+        // holding a transform that would outrank the hover lift.
+        el.addEventListener('animationend', (e) => {
+          if (e.target !== el) return;
+          if (el.classList.contains('out')) { el.classList.remove('out', 'settled'); }
+          else if (el.classList.contains('in')) { el.classList.remove('in'); el.classList.add('settled'); }
+        });
+      });
+
+      // The grid is watched, not the 24 tiles: the container carries no 3D transform, so it can never
+      // be the flattened element a browser quietly stops reporting on.
+      const grid = guestEls[0].parentElement;
+
+      // The top row stays down once it has arrived. Without it, scrolling back up leaves the heading
+      // sitting over an empty black gap, which reads as a broken section rather than a closed one.
+      let firstRow = new Set();
+      const markFirstRow = () => {
+        const top0 = guestEls[0].offsetTop;
+        firstRow = new Set(Array.prototype.filter.call(guestEls, el => el.offsetTop === top0));
+      };
+      markFirstRow();
+
+      let open = false;
+      const setOpen = (want) => {
+        if (want === open) return;
+        open = want;
+        // opening skips whatever is already down; closing skips the top row
+        const moving = Array.prototype.filter.call(guestEls, el =>
+          want ? !el.classList.contains('settled') : !firstRow.has(el));
+        if (!moving.length) return;
+        moving.forEach(el => el.classList.remove('in', 'out'));
+        void grid.offsetWidth;                   // one reflow for the grid, so the animations restart
+        moving.forEach(el => {                   // rather than resume the one that was mid-flight
+          if (want) el.classList.remove('settled');
+          el.classList.add(want ? 'in' : 'out');
+        });
+      };
+
+      // Two lines plus a direction test. Open at 40% up the window, close at 55% — and only close
+      // while actually scrolling up. The 15%-of-a-window dead zone between the lines, together with
+      // the direction test, is what stops a small scroll chattering it open and shut; keeping the
+      // lines close together is what makes the fold-up happen while the grid is still in frame.
+      let lastY = window.scrollY;
+      const check = () => {
+        const r = grid.getBoundingClientRect();
+        const h = window.innerHeight;
+        const y = window.scrollY;
+        const goingUp = y < lastY - 1;
+        lastY = y;
+        if (!open && r.top < h * 0.40) setOpen(true);
+        else if (open && goingUp && r.top > h * 0.55) setOpen(false);
+      };
+      let pending = false;
+      const queue = () => { if (!pending) { pending = true; requestAnimationFrame(() => { pending = false; check(); }); } };
+      window.addEventListener('scroll', queue, { passive: true });
+      let rt;                                    // the row runs 4-up or 2-up, so recheck after a resize
+      window.addEventListener('resize', () => {
+        clearTimeout(rt);
+        rt = setTimeout(() => { markFirstRow(); check(); }, 150);
+      }, { passive: true });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(markFirstRow);
+      check();
+    }
+  }
 
   // scroll-spy: highlight the nav link for whichever section is currently
   // in view. Checks each section's position against a line just below the
@@ -1526,11 +808,6 @@
     }, { threshold: 0.3, rootMargin: '0px 0px -10% 0px' });
     startObserver.observe(rundown);
 
-    // restart the sequence from cue 1 whenever an "Inside an Episode" link
-    // is used to jump to the section (desktop nav, mobile nav, hero CTA).
-    document.querySelectorAll('a[href="#rundown"]').forEach(link => {
-      link.addEventListener('click', () => startSequence());
-    });
   })();
 
   // video modal: click a thumbnail to play, close via button, backdrop click, or Escape
@@ -1557,13 +834,40 @@
       label.className = 'video-eyebrow ' + seg;
     }
   }
+  // The 4K show call. The iframe gets its src here and loses it on close: the show is a live
+  // page with audio, and a page left loaded behind a closed overlay would keep running.
+  function openShowCall() {
+    document.getElementById('showCallIframe').src = 'showcall.html';
+    document.getElementById('showCallModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  // The 4K show calls its cues from inside the iframe, where data-cue can only dim the iframe.
+  // The house it means is THIS page, so the show posts each cue out and it is applied here —
+  // the same attribute, the same --cue1-level, the same 30%. Nothing else is accepted, and only
+  // from this origin.
+  window.addEventListener('message', function (e) {
+    if (e.origin !== location.origin) return;
+    var d = e.data;
+    if (!d || d.proavShowCall !== 'cue') return;
+    var f = document.getElementById('showCallIframe');
+    if (!f || !e.source || e.source !== f.contentWindow) return;   // only the show's own frame
+    if (d.cue) document.documentElement.setAttribute('data-cue', String(d.cue));
+    else document.documentElement.removeAttribute('data-cue');
+  });
+
+  function closeShowCall() {
+    document.getElementById('showCallModal').classList.remove('open');
+    document.getElementById('showCallIframe').src = '';   // stops the show and its audio
+    document.documentElement.removeAttribute('data-cue');  // house back to 100% on a mid-show close
+    document.body.style.overflow = '';
+  }
   function closeVideoModal() {
     document.getElementById('videoModal').classList.remove('open');
     document.getElementById('videoModalIframe').src = ''; // stop playback
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeVideoModal(); closeImageModal(); }
+    if (e.key === 'Escape') { closeVideoModal(); closeImageModal(); closeShowCall(); }
     if (document.getElementById('imageModal').classList.contains('open')) {
       if (e.key === 'ArrowRight') modalNext();
       if (e.key === 'ArrowLeft') modalPrev();
@@ -1671,11 +975,9 @@
 
       // section-level entries (nav destinations)
       index.push({ cat: 'Section', title: 'The Show', snippet: 'What ProAV covers, episode to episode.', el: document.getElementById('show') });
-      index.push({ cat: 'Section', title: 'Inside an Episode', snippet: 'A real rundown, cue by cue.', el: document.getElementById('rundown') });
       index.push({ cat: 'Section', title: "Who's On the Show", snippet: 'The roles behind every production.', el: document.getElementById('guests') });
       index.push({ cat: 'Section', title: 'Listen', snippet: 'Platforms carrying the show.', el: document.getElementById('listen') });
-      index.push({ cat: 'Section', title: 'Watch', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
-      index.push({ cat: 'Section', title: 'Signal Flow Daily', snippet: 'Daily live production and ProAV news.', el: document.getElementById('signal-flow') });
+      index.push({ cat: 'Section', title: 'Episodes', snippet: 'Episodes and video segments.', el: document.getElementById('watch') });
       index.push({ cat: 'Section', title: 'Merch', snippet: 'Wear the signal.', el: document.getElementById('merch') });
 
       // show segments (Mainstage / Backstage / Cloud cards)
@@ -1718,14 +1020,7 @@
       // watch videos
       document.querySelectorAll('.video-title').forEach(t => {
         const card = t.closest('.video-card');
-        if (card) index.push({ cat: 'Watch', title: t.textContent.trim(), snippet: 'Watch this episode segment.', el: card });
-      });
-
-      // signal flow items
-      document.querySelectorAll('.sf-item').forEach(item => {
-        const h3 = item.querySelector('h3');
-        const brief = item.querySelector('.sf-brief');
-        if (h3) index.push({ cat: 'Signal Flow', title: h3.textContent.trim(), snippet: brief ? brief.textContent.trim() : '', el: item });
+        if (card) index.push({ cat: 'Episodes', title: t.textContent.trim(), snippet: 'Watch this episode segment.', el: card });
       });
 
       // listen platforms
@@ -1749,6 +1044,7 @@
       });
 
       // static entry for the Contact page, since it's a separate document
+      index.push({ cat: 'Page', title: 'Signal Flow Daily', snippet: 'Daily live production and ProAV news.', href: '/signal-flow-daily.html' });
       index.push({ cat: 'Page', title: 'Contact', snippet: 'Guest pitches, sponsor inquiries, and general contact.', href: '/contact' });
 
       return index;
@@ -1886,162 +1182,1535 @@
   })();
 </script>
 <script>
-  /* ---------- Signal Flow Daily ----------
-     Reads the live feed (see FEED_URL below), falling back to /signal-flow/issues.json
-     ({ updated, issues: [...] }, newest first). */
+
+
+  // dim section headers as they scroll up toward the top of the screen
   (function () {
-    const box = document.getElementById('sfIssue');
-    if (!box) return;
-    const BEATS = {
-      led:       { label: 'LED / PROCESSING', seg: 'mainstage' },
-      switching: { label: 'SWITCHING',        seg: 'mainstage' },
-      replay:    { label: 'REPLAY / RECORD',  seg: 'mainstage' },
-      cloud:     { label: 'IP / CLOUD',       seg: 'cloud' },
-      field:     { label: 'FIELD',            seg: 'backstage' },
-      graphics:  { label: 'MOTION GRAPHICS',  seg: 'mainstage' }
-    };
-    // Blackmagic Fusion (and Fusion Studio) items are always tagged MOTION GRAPHICS
-    const beatOf = it => (/\bfusion\b/i.test(it.title || '') && /blackmagic/i.test((it.vendor || '') + ' ' + (it.title || ''))) ? 'graphics' : it.beat;
-    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const safeUrl = u => /^https?:\/\//i.test(u || '') ? u : '#';
-    const fmt = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
-    let issues = [], idx = 0, jumpNote = '';
-    const fmtShort = d => { try { return new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch (e) { return d; } };
-    // jump to a specific date; if there is no issue that day, show the newest one before it
-    function jumpTo(v) {
-      if (!v) return;
-      let i = issues.findIndex(it => it.date === v);
-      jumpNote = '';
-      if (i < 0) {
-        i = issues.findIndex(it => it.date < v);
-        if (i < 0) i = issues.length - 1;
-        jumpNote = 'No issue on ' + fmtShort(v) + ' — showing ' + fmtShort(issues[i].date);
-      }
-      idx = i; render();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const titles = Array.from(document.querySelectorAll('.section-title.display'));
+    if (!titles.length) return;
+    let ticking = false;
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight;
+      titles.forEach(t => {
+        const r = t.getBoundingClientRect();
+        // full brightness only while the title's bottom is in the lower quarter of the screen;
+        // fades to 15% as its bottom reaches the top edge
+        const start = vh * 0.75;
+        const p = Math.min(1, Math.max(0, r.bottom / start));
+        const v = (Math.round((0.15 + 0.85 * p) * 40) / 40).toFixed(3);
+        if (t._dim !== v) { t._dim = v; t.style.setProperty('--dim', v); }
+        // starts at the softened heading white, then shifts through amber to cyan as it rises
+        const h = Math.round((1 - p) * 40) / 40;
+        if (t._h !== h) {
+          t._h = h;
+          const W = [216, 216, 220], A = [255, 156, 61], C = [42, 217, 236];   // #d8d8dc; must match the --tc fallback in base.css. Amber and cyan unchanged.
+          const f = h < 0.5 ? h * 2 : (h - 0.5) * 2, a = h < 0.5 ? W : A, b = h < 0.5 ? A : C;
+          t.style.setProperty('--tc', a.map((x, i) => Math.round(x + (b[i] - x) * f)).join(','));
+        }
+      });
     }
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
 
-    function itemHtml(it, when) {
-      const b = BEATS[beatOf(it)] || BEATS.field;
-      let h = '<article class="sf-item"><div class="sf-chips"><span class="segment-chip ' + b.seg + '">' + b.label + '</span>' +
-        (when ? '<span class="sf-when">' + esc(when) + '</span>' : '') +
-        (it.status_label ? '<span class="sf-status">' + esc(it.status_label) + '</span>' : '') +
-        (it.price ? '<span class="sf-status">' + esc(it.price) + '</span>' : '') + '</div>' +
-        '<h3>' + esc(it.title) + '</h3><div class="sf-vendor">' + esc(it.vendor) + '</div>' +
-        '<p class="sf-brief">' + esc(it.brief) + '</p>' +
-        (it.spec ? '<p class="sf-spec">' + esc(it.spec) + '</p>' : '');
-      if (it.what || it.why || it.watch) {
-        h += '<details><summary>WHAT \u00b7 WHY \u00b7 WATCH</summary><dl class="sf-detail">' +
-          (it.what ? '<dt>WHAT</dt><dd>' + esc(it.what) + '</dd>' : '') +
-          (it.why ? '<dt>WHY</dt><dd>' + esc(it.why) + '</dd>' : '') +
-          (it.watch ? '<dt>WATCH</dt><dd>' + esc(it.watch) + '</dd>' : '') + '</dl></details>';
-      }
-      if (it.sources && it.sources.length) {
-        h += '<div class="sf-sources">' + it.sources.map(s => '<a href="' + esc(safeUrl(s.url)) + '" target="_blank" rel="noopener">' + esc(s.label || 'Source') + ' \u2197</a>').join('') + '</div>';
-      }
-      return h + '</article>';
+  // mark the page as scrolling so hover effects don't fire under a stationary cursor
+  (function () {
+    let t;
+    const root = document.documentElement;
+    window.addEventListener('scroll', () => {
+      root.classList.add('is-scrolling');
+      clearTimeout(t);
+      t = setTimeout(() => root.classList.remove('is-scrolling'), 200);
+    }, { passive: true });
+  })();
+
+  // play the clip through the PROAV letters; show the plain white wordmark until it is actually playing
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const word = document.querySelector('.hero-word');
+    const v = word && word.querySelector('video');
+    if (!v) return;
+    // fit the video to the actual ink of the letters (measured with the same font stack as the wordmark),
+    // so the whole picture shows through PROAV instead of only the part that happens to sit under the glyphs
+    const holder = word.querySelector('.hero-word-video');
+    function fitVideo() {
+      try {
+        const c = document.createElement('canvas').getContext('2d');
+        c.font = '200px Impact, Haettenschweiler, sans-serif';
+        const m = c.measureText('PROAV');
+        const x0 = -m.actualBoundingBoxLeft, x1 = m.actualBoundingBoxRight;
+        const y0 = 220 - m.actualBoundingBoxAscent, y1 = 220 + m.actualBoundingBoxDescent;
+        const sc = word.clientWidth / 1200;
+        if (!(x1 > x0) || !(y1 > y0) || !sc) return;
+        v.style.position = 'absolute';
+        v.style.left = (x0 * sc) + 'px';
+        v.style.top = ((y0 - 50) * sc) + 'px';
+        v.style.width = ((x1 - x0) * sc) + 'px';
+        v.style.height = ((y1 - y0) * sc) + 'px';
+      } catch (e) {}
     }
+    fitVideo();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitVideo);
+    let lastW = window.innerWidth;
+    window.addEventListener('resize', () => { if (window.innerWidth !== lastW) { lastW = window.innerWidth; fitVideo(); } });
+    const SPEED = 1;  // playback speed of the clip (1 = normal); lower is slower
+    v.defaultPlaybackRate = SPEED; v.playbackRate = SPEED;
+    v.addEventListener('loadedmetadata', () => { v.playbackRate = SPEED; });
 
-    /* Latest by vendor: tabs for Blackmagic, Barco, Analog Way, PixelHue (four cards each).
-       Items come from /signal-flow/vendors.json (curated, dated by the source) merged with any briefing item
-       whose lead vendor matches. Duplicates by title are dropped, curated items win. */
-    const VENDORS = [
-      { key: 'blackmagic', label: 'BLACKMAGIC', test: it => /^\s*blackmagic/i.test(it.vendor || '') || /blackmagic/i.test(it.title || '') },
-      { key: 'barco',      label: 'BARCO',      test: it => /^\s*barco/i.test(it.vendor || '') || /\bbarco\b/i.test(it.title || '') },
-      { key: 'analogway',  label: 'ANALOG WAY', test: it => /^\s*analog ?way/i.test(it.vendor || '') || /aquilon|analog ?way/i.test(it.title || '') },
-      { key: 'pixelhue',   label: 'PIXELHUE',   test: it => /^\s*pixel ?hue/i.test(it.vendor || '') || /pixelhue|\b(q8|p80|p20)\b/i.test(it.title || '') }
-    ];
-    const LIMIT = 4;
-    let vendorData = {}, activeVendor = null;
-    const keyOf = t => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-
-    function vendorItems(v) {
-      // order: pinned (owner-curated, always first) > dated items newest first > curated fillers (only until the tab holds LIMIT cards)
-      const seen = new Set(), pin = [], out = [], fill = [];
-      const add = (arr, it, date, when) => {
-        const k = keyOf(it.title); if (seen.has(k)) return;
-        seen.add(k); arr.push({ it: it, date: date || '', when: when || (date ? fmt(date) : '') });
-      };
-      const vd = vendorData[v.key] || {}, cur = vd.curated || [];
-      cur.filter(c => c.pinned).forEach(c => add(pin, c, c.date, c.when));
-      (vd.items || []).forEach(it => add(out, it, it.date, it.when));
-      // a vendor flagged "direct" in vendors.json shows only its own curated list, never briefing items from trade coverage
-      if (!vd.direct) issues.forEach(iss => (iss.items || []).forEach(it => { if (v.test(it)) add(out, it, iss.date); }));
-      out.sort((a, b) => a.date < b.date ? 1 : -1);
-      cur.filter(c => !c.pinned).forEach(c => add(fill, c, c.date, c.when));
-      return pin.concat(out, fill).slice(0, LIMIT);
-    }
-
-    function renderVendors() {
-      const wrap = document.getElementById('sfVendors'), grid = document.getElementById('sfBmItems'), tabs = document.getElementById('sfTabs');
-      if (!wrap || !grid || !tabs) return;
-      const have = VENDORS.map(v => ({ v: v, items: vendorItems(v) })).filter(x => x.items.length);
-      if (!have.length) { wrap.hidden = true; return; }
-      if (!activeVendor || !have.some(x => x.v.key === activeVendor)) activeVendor = have[0].v.key;
-      tabs.innerHTML = have.map(x => '<button type="button" role="tab" class="sf-tab' + (x.v.key === activeVendor ? ' active' : '') +
-        '" data-v="' + x.v.key + '" aria-selected="' + (x.v.key === activeVendor) + '">' + esc(x.v.label) + '</button>').join('');
-      const cur = have.find(x => x.v.key === activeVendor);
-      grid.innerHTML = cur.items.map(o => itemHtml(o.it, o.when)).join('');
-      tabs.querySelectorAll('.sf-tab').forEach(btn => btn.onclick = () => { activeVendor = btn.dataset.v; renderVendors(); });
-      wrap.hidden = false;
-    }
-
-    function render() {
-      const x = issues[idx];
-      if (!x) { box.innerHTML = '<p class="sf-empty">No briefing yet.</p>'; return; }
-      const when = x.kind === 'weekly' && x.week_start ? fmt(x.week_start) + ' – ' + fmt(x.week_end) : fmt(x.date);
-      let h = '<div class="sf-bar"><span class="sf-kind">' + (x.kind === 'weekly' ? 'WEEKLY ROUNDUP' : 'DAILY BRIEFING') + '</span>' +
-        '<div class="sf-nav">' +
-          '<button type="button" class="sf-step" id="sfOlder" ' + (idx >= issues.length - 1 ? 'disabled' : '') + ' aria-label="Previous issue">‹ PREV</button>' +
-          '<span class="sf-date">' + esc(when) + '</span>' +
-          '<button type="button" class="sf-step" id="sfNewer" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Next issue">NEXT ›</button>' +
-        '</div></div>' +
-        '<div class="sf-jump"><label class="sf-jump-label" for="sfDate">JUMP TO DATE</label>' +
-          '<input type="date" id="sfDate" class="sf-date-input" min="' + esc(issues[issues.length - 1].date) + '" max="' + esc(issues[0].date) + '" value="' + esc(x.date) + '">' +
-          '<button type="button" class="sf-step" id="sfLatest" ' + (idx === 0 ? 'disabled' : '') + ' aria-label="Jump to the latest issue">LATEST</button>' +
-          (jumpNote ? '<span class="sf-note" role="status">' + esc(jumpNote) + '</span>' : '') + '</div>' +
-        '<h3 class="sf-headline display">' + esc(x.headline) + '</h3>' +
-        '<p class="sf-topline">' + esc(x.topline) + '</p><div class="sf-items">';
-      (x.items || []).forEach(it => { h += itemHtml(it); });
-      h += '</div>';
-      if (x.watch && x.watch.length) {
-        h += '<div class="sf-coming"><div class="sf-coming-label">COMING UP</div><ul>' + x.watch.map(w =>
-          '<li><time>' + esc(w.date) + (w.end && w.end !== w.date ? ' → ' + esc(w.end) : '') + '</time>' +
-          '<div>' + (w.kind === 'class' ? '<span class="sf-tag">CLASS</span> ' : '') + '<strong>' + (w.kind === 'class' && safeUrl(w.url) !== '#' ? '<a class="sf-link" href="' + esc(safeUrl(w.url)) + '" target="_blank" rel="noopener">' + esc(String(w.name || '').replace(/^Class:\s*/, '')) + '</a>' : esc(w.name)) + '</strong>' + (w.place ? ' <span class="place">· ' + esc(w.place) + '</span>' : '') + '</div></li>').join('') + '</ul></div>';
-      }
-      h += '<div class="sf-foot">Researched and compiled daily with Claude. Check specs with the vendor before you buy.</div>';
-      box.innerHTML = h;
-      const o = document.getElementById('sfOlder'), n = document.getElementById('sfNewer');
-      if (o) o.onclick = () => { if (idx < issues.length - 1) { idx++; jumpNote = ''; render(); } };
-      if (n) n.onclick = () => { if (idx > 0) { idx--; jumpNote = ''; render(); } };
-      const l = document.getElementById('sfLatest'), dt = document.getElementById('sfDate');
-      if (l) l.onclick = () => { idx = 0; jumpNote = ''; render(); };
-      if (dt) dt.onchange = () => jumpTo(dt.value);
-    }
-
-    // Live feed (updated daily by the Signal Flow task); falls back to the
-    // copy bundled with the site if the feed can't be reached.
-    const FEED_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/issues.json';
-    const loadJson = u => fetch(u, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
-    // Curated vendor items (Barco, Analog Way, PixelHue): live copy from the feed, bundled copy as backup.
-    const VENDORS_URL = 'https://magekfilmworks.github.io/proav-signal-flow-feed/vendors.json';
-    const loadVendors = loadJson(VENDORS_URL)
-      .catch(() => loadJson('/signal-flow/vendors.json'))
-      .then(d => {
-        (d.vendors || []).forEach(v => {
-          vendorData[v.key] = v;
-          // A vendor that isn't built in gets its own tab: give it "label" (and optionally "match", a regex tested against item vendor/title) in vendors.json.
-          if (!VENDORS.some(x => x.key === v.key) && (v.items || []).length) {
-            let re = null; try { re = v.match ? new RegExp(v.match, 'i') : null; } catch (e) {}
-            VENDORS.push({ key: v.key, label: String(v.label || v.key).toUpperCase(), test: it => !!re && (re.test(it.vendor || '') || re.test(it.title || '')) });
+    // The wordmark cycles white, amber, cyan, then starts over. Order and pace are the two lines
+    // below — reorder or drop a colour in TINTS and nothing else needs touching. Each name is a
+    // .tint-* class in home.css; '' is the plain white wordmark, which has no class of its own.
+    // Adding a colour now needs its .tint-* rule written too: only amber and cyan still exist.
+    // Where PROAV's ink actually starts and ends, as a FRACTION of the wordmark's 1200-unit
+    // box. Impact's glyph bearings are not something a fixed percentage can predict, and a
+    // machine without Impact falls back to a face with different ones, so this is measured
+    // rather than assumed. A ratio rather than a pixel count on purpose: html carries
+    // zoom: 0.95, so pixels read back from getBoundingClientRect do not match the pixels a
+    // calc() works in, but a ratio is the same number either side of the zoom.
+    (() => {
+      const hero = document.querySelector('.hero');
+      const svg = document.querySelector('.hero-word svg');
+      const text = svg && svg.querySelector('text');
+      if (!hero || !text) return;
+      // Canvas first, SVG second, and NOT the other way round. The two engines disagree about
+      // what getBBox() on a <text> returns: Blink gives the tight ink box, WebKit gives the text
+      // layout box, which starts at the element's x attribute. On Safari that makes bb.x read 0,
+      // the bearing correction silently becomes a no-op, and PROAV's stem sits a few px right of
+      // the gutter every other element is lined up on. measureText's actualBoundingBox* are true
+      // ink extents in both engines, so they are the measurement and getBBox is only the
+      // fallback for anything that does not report them.
+      const FACE = 'Impact, Haettenschweiler, sans-serif';
+      // Rasterise the wordmark once and scan the pixels for its real ink edges.
+      //
+      // Three cheaper methods were tried first and all three were wrong on the page:
+      //   getBBox()        — returns the LAYOUT box in both engines, so the left bearing read 0
+      //                      and the correction silently did nothing;
+      //   measureText()'s  — closer, but its reported bounds sit ~3px off the rasterised glyph
+      //     actualBounding   edge once the SVG scales 1200 user units up to ~1400 CSS px.
+      //
+      // Scanning the bitmap has no such gap: it measures the glyphs that actually get drawn, in
+      // the font the page actually resolved. It runs once per font change, not per resize — the
+      // result is a ratio of the viewBox, so it is the same number at every screen size.
+      let cached = null;
+      const measureInk = () => {
+        if (cached) return cached;
+        if (!window.HTMLCanvasElement) return null;
+        const PAD = 200, FS = 200, W = 1600 + PAD * 2, H = 600;
+        const c = document.createElement('canvas');
+        c.width = W; c.height = H;
+        const ctx = c.getContext('2d', { willReadFrequently: true });
+        if (!ctx) return null;
+        // MEASURE WHAT WILL ACTUALLY BE DRAWN — the family is not enough on its own.
+        // .hero-word carries .display, which sets font-weight 800 and letter-spacing 0.02em,
+        // and SVG <text> inherits both. The canvas was measuring plain weight with no
+        // tracking, so it reported narrower ink than the page then rendered:
+        //   * Impact ships one weight, so 800 is SYNTHESISED — the engine smears the glyphs
+        //     wider, and how much it smears differs by engine. That is why Chrome and Safari
+        //     both measured --ink-r at 0.434 and only Safari's V ran into the wall: the
+        //     measurement agreed, the rendering did not.
+        //   * 0.02em at 200px is 4px per gap, four gaps, so 16 user units unaccounted for.
+        // Taking both from the element means each engine measures its own synthesis, which is
+        // correct by construction instead of by a number that happens to work here.
+        let fam = FACE, wt = '', ls = '';     // the SVG's own resolved values, not a copy
+        try {
+          const cs = getComputedStyle(text);
+          fam = cs.fontFamily || FACE;
+          wt  = cs.fontWeight || '';
+          ls  = cs.letterSpacing || '';
+        } catch (e) {}
+        ctx.font = (wt ? wt + ' ' : '') + FS + 'px ' + fam;
+        // letterSpacing is Chrome 99+ / Safari 17.4+; where it is absent the tracking is
+        // simply not measured, which is the behaviour this had before.
+        if ('letterSpacing' in ctx && ls && ls !== 'normal') {
+          try { ctx.letterSpacing = ls; } catch (e) {}
+        }
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = '#fff';
+        const BASE = 400;                     // baseline inside the scratch canvas
+        ctx.fillText(text.textContent || 'PROAV', PAD, BASE);
+        let d;
+        try { d = ctx.getImageData(0, 0, W, H).data; } catch (e) { return null; }
+        let minX = W, maxX = -1;
+        for (let y = 0; y < H; y++) {
+          const row = y * W * 4;
+          for (let x = 0; x < W; x++) {
+            if (d[row + x * 4 + 3] > 24) {    // 24: ignore the antialiased fringe
+              if (x < minX) minX = x;
+              if (x > maxX) maxX = x;
+            }
           }
+        }
+        if (maxX < 0) return null;
+        // Back into the SVG's own coordinates: x=0 at the text origin, baseline at y=220.
+        cached = { x: minX - PAD, width: maxX - minX + 1 };
+        return cached;
+      };
+      const sync = () => {
+        let bb = measureInk();
+        if (!bb) {
+          try { bb = text.getBBox(); } catch (e) { return; }   // throws if not yet rendered
+        }
+        if (!bb || !bb.width) return;
+        const vb = svg.viewBox.baseVal;
+        const inkL = (bb.x - vb.x) / vb.width;
+        const inkR = (bb.x + bb.width - vb.x) / vb.width;
+        hero.style.setProperty('--ink-l', inkL.toFixed(5));
+        hero.style.setProperty('--ink-r', inkR.toFixed(5));
+
+        // AND THE SAME THING AS A FINISHED LENGTH, because CSS cannot be trusted to do the
+        // multiplication. `var(--word-w) * var(--ink-r)` — a length times a var-substituted
+        // unitless number — breaks the calc it sits in on WebKit: measured on the page, nine
+        // different ways of writing the gap term all came out at zero while that product was
+        // present, and all nine worked without it. So the product is done here and CSS gets
+        // one plain px value to subtract.
+        //
+        // getComputedStyle().width, NOT getBoundingClientRect(): html carries zoom: 0.95, and
+        // the rect is post-zoom in Blink but pre-zoom in WebKit, while the computed width is
+        // the used value in CSS px in both. That is the space the calc works in.
+        const wordEl = document.querySelector('.hero-word');
+        if (wordEl) {
+          const w = parseFloat(getComputedStyle(wordEl).width);
+          if (isFinite(w) && w > 0) hero.style.setProperty('--ink-w', (w * inkR).toFixed(2) + 'px');
+        }
+      };
+      sync();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { cached = null; sync(); });
+      addEventListener('resize', sync, { passive: true });
+      addEventListener('load', sync);
+    })();
+
+    // The wall's playlist and its timecode burn-in.
+    //
+    // Both clips are 29.97 (30000/1001), so the readout is drop-frame and uses the ';' that
+    // broadcast convention reserves for it. Frames come from currentTime, which is real elapsed
+    // seconds, so the count tracks the wall clock the way drop-frame is meant to.
+    //
+    // The clock runs off requestAnimationFrame, not `timeupdate` — timeupdate fires about four
+    // times a second, which would make the frame digits stutter. The loop only runs while the
+    // video is actually playing AND the wall is on screen, so a scrolled-away hero costs
+    // nothing.
+    (() => {
+      const vid = document.getElementById('wall-video');
+      const tc = document.querySelector('.wall-tc-code');
+      const tcWrap = document.querySelector('.wall-tc');
+      const nameEl = document.querySelector('.wall-tc-name');
+      if (!vid) return;
+
+      // ═══ THE SHOW, AND THE LOOP ═══════════════════════════════════════════════════════
+      // Two different things, deliberately kept apart.
+      //
+      //   SHOW  a written cue stack, run ONCE when the visitor starts the show. It is a
+      //         sequence, not a rotation: every step runs in order and then it is over.
+      //   LOOP  what the wall does for the rest of the visit, rotating forever.
+      //
+      // When SHOW ends, the house comes back to 100% and LOOP takes over. Nothing in SHOW is
+      // ever returned to and none of it gets a dot — a standby is called once, not every four
+      // minutes.
+      //
+      // Both clips are 29.97, so one drop-frame convention covers them.
+      const VIDEOS = [
+        { src: 'images/hero-artemis-v1.mp4', name: 'ARTEMIS I',         fps: 30000 / 1001 },
+        { src: 'images/hero-sun-v1.mp4',     name: 'SDO / SOLAR CYCLE', fps: 30000 / 1001 }
+      ];
+
+      const SLIDES = [
+        { label: 'Aquilon Level 3 class',
+          dates: '2026-12-07 \u2192 2026-12-11',
+          title: 'Aquilon Certified Operator Training, Level\u00a03',
+          meta:  'Buford, GA \u00b7 Analog Way Academy',
+          href:  'https://academy.analogway.com/in-person-certifications/nala---2026-12-07---livepremier-tm-presentation-systems---certification---level-3---u-s-a' },
+        { label: 'Millumin workshop class',
+          dates: '2027-01-13',
+          title: 'Millumin Operator Fundamentals Workshop',
+          meta:  'Las Vegas \u00b7 Evolve Academy',
+          href:  'https://evolveacademy.live/product/millumin/' }
+      ];
+
+      // THE CUE STACK.
+      //   cue     a full card on the wall, built line by line. The house cue.
+      //   video   a clip. `ready` fires a call on the right of the wall with N seconds left
+      //           in the clip — the way a standby is given while something is still running.
+      //   slide   a GFX slide. `call` is spoken as it comes up; `ready` fires one later,
+      //           part-way through, while the slide is still being read.
+      // {lvl} is filled from --cue1-level in the cue sheet (css/base.css) and printed as a
+      // percentage, so the number called is the number taken. Change the level there and the
+      // whole stack says the new figure by itself.
+      //
+      // THE RHYTHM — every number is a beat in ms, and nothing else sets the pace.
+      //   lead      before the first line of a cue card appears. The wall is empty for it.
+      //   beat      on each line: how long after the PREVIOUS line this one appears.
+      //   hold      after the last line, before the stack moves on.
+      //   remaining seconds left in a clip when its standby is called.
+      //   after     how far into a slide its standby is called.
+      // Seven cues. A cue with a standby and a GO is one step with two builds; a cue that is
+      // only a standby, or only a GO, rides the step it is called over — which is why CUE 3,
+      // 5 and 7's standbys are `ready` entries on a clip or a slide rather than cards of
+      // their own. A standby does not take the wall away from what is on it.
+      const SHOW = [
+        // ── CUE 1 ── the house
+        { kind: 'cue', label: 'CUE 1', lead: 1200, hold: 1800, builds: [
+            { beat: 0,    line: 'Standby to Take LOGO, Titles, and Elements to {lvl}' },
+            // the standby sits longer than the other beats, the way a real one does: it is
+            // held while everyone gets ready, and the GO is what breaks it
+            { beat: 2400, line: 'LOGO, Titles, and Elements to {lvl}, GO', take: 'cue1' }
+          ] },
+
+        // ── CUE 2 ── the standby only. Its GO lives on the clip below, NOT as a second build
+        // here, and that is the whole point: a build on a card is followed by the card's hold,
+        // so calling the GO here left six seconds between the word and the picture. A GO is
+        // called OVER the thing it starts — the clip is up on the frame the word lands.
+        // Both of its lines live on the card, stacked under CUE 1's, on the left. `go` on the
+        // second one hands to the clip on the word GO — so the call stays whole and in one
+        // place, and the picture still lands on the word.
+        { kind: 'cue', label: 'CUE 2', lead: 600, hold: 0, builds: [
+            { beat: 0,    line: 'Standby for Mitti Playback-Video 1' },
+            { beat: 2200, line: 'Mitti Playback-Video 1, GO', go: true }
+          ] },
+
+        // ── VIDEO 1 ── the operator counts it out; the caller calls CUE 3 over the top.
+        //    CUE 3 sits at 13s, not 15s: the operator has the 15 mark ("Fifteen seconds,
+        //    standby for count out") and the two would otherwise queue on top of each other.
+        //    No `out` call here — the count IS the lead-in, and the take happens on zero, the
+        //    way it does in the room. The caller confirms it as the slide lands.
+        { kind: 'video', v: 0, count: true,
+          ready: { remaining: 13, line: 'READY GFX 1.' } },
+
+        // ── CUE 4 ── slide 1, up on the clip's last frame, called as it lands
+        // ── CUE 5 ── the standby to advance, called while it is being read
+        // Taken ON the word, like every other cue on this stack. It used to be called over a
+        // slide already up — the count-out had run to zero, so the picture went in on zero and
+        // the caller's GO arrived two seconds behind it, calling a GO for something already on
+        // the wall. The clip holds its last frame through the line instead, and the slide
+        // lands on GO.
+        { kind: 'slide', c: 0, hold: 9000, call: 'GFX 1, Slide 1, GO.',
+          ready: { after: 4000, line: 'Standby to advance on GFX 1.' } },
+
+        // ── CUE 6 ── slide 2 up ── CUE 7 ── the standby for playback 2, called while it is read
+        { kind: 'slide', c: 1, hold: 10500, call: 'Advance GFX1, SLIDE 2, GO.',
+          ready: { after: 4000, line: 'Standby for Mitti Playback-Video 2' } },
+
+        // ── CUE 7, GO ── playback 2
+        { kind: 'video', v: 1, count: true, call: 'Mitti Playback-Video 2, GO' },
+
+        // ── THE SIGN-OFF ── the last thing the show says. On the card, on the left, like the
+        // cues that opened it. When it clears, the house comes back to 100% and the wall goes
+        // back to rotating — with the sound OFF, because the show the visitor unmuted for is
+        // over and nothing should keep playing at them.
+        { kind: 'cue', label: 'SIGN-OFF', lead: 700, hold: 2600, builds: [
+            { beat: 0, line: 'THANKS FOR WATCHING' }
+          ] }
+      ];
+
+      // What the wall does once the show has finished. Rotates forever; every item gets a dot.
+      const LOOP = [
+        { kind: 'video', v: 0 },
+        { kind: 'slide', c: 0, hold: 9000 },
+        { kind: 'video', v: 1 },
+        { kind: 'slide', c: 1, hold: 9000 }
+      ];
+
+      let i = 0;              // index into LOOP, once the show is over
+      let showAt = -1;        // index into SHOW while it runs; -1 means the show is done
+      let cur = null;         // the step actually on the wall, from either list
+
+      const card = document.querySelector('.wall-card');
+      const cardDates = document.querySelector('.wall-card-dates');
+      const cardTitle = document.querySelector('.wall-card-title');
+      const cardMeta  = document.querySelector('.wall-card-meta');
+      const cue = document.querySelector('.wall-cue');
+      const cueBuilds = document.querySelector('.wall-cue-builds');
+      const dotsWrap = document.querySelector('.wall-dots');
+      const audioNote = document.querySelector('.wall-audio-note');
+      const invite = document.querySelector('.wall-invite');
+      const ready = document.querySelector('.wall-ready');
+      const readyLine = document.querySelector('.wall-ready-line');
+      const seqEl = document.querySelector('.wall-seq');
+      const seqTrtEl = document.querySelector('.wall-seq-trt');
+      const seqCodeEl = document.querySelector('.wall-seq-code');
+      const tcTrt = document.querySelector('.wall-tc-trt');
+      let holdTimer = 0;
+      // a cue schedules several timers at once, so leaving one behind would have an old
+      // cue still laying builds onto whatever the wall moved on to
+      let cueTimers = [];
+
+      // Take a cue. The levels live in the cue sheet at the top of css/base.css, not here —
+      // this only says WHICH look is up. take() with no argument restores HOUSE, so a level
+      // comes back up as easily as it went down:  take('cue1')  …  take()
+      const take = c => {
+        const root = document.documentElement;
+        if (c) root.setAttribute('data-cue', c); else root.removeAttribute('data-cue');
+      };
+
+
+      // The level CUE 1 takes, read from the cue sheet rather than written out here, so the
+      // figure on the wall and the figure in the CSS cannot drift apart. 0.55 -> "55%".
+      const cueLevel = () => {
+        // The SPOKEN figure, not the level. --cue1-say is what the recording says; it is
+        // deliberately allowed to differ from --cue1-level, which is what the cue actually
+        // does. Falls back to the level if --cue1-say is ever removed.
+        const say = getComputedStyle(document.documentElement)
+          .getPropertyValue('--cue1-say').trim();
+        if (say) return say;
+        const raw = parseFloat(getComputedStyle(document.documentElement)
+          .getPropertyValue('--cue1-level'));
+        return (isFinite(raw) ? Math.round(raw * 100) : 55) + '%';
+      };
+
+      // ── CUE VO — PROTOTYPE ───────────────────────────────────────────────────────────────
+      // Calls the cue aloud with the browser's own speech synthesis. This is for judging
+      // timing and picking a voice, NOT for shipping: the voice is whatever the visitor's OS
+      // has, so it varies by machine and sounds like a system voice rather than an announcer.
+      // Replace with real audio files when the voice is chosen — see say() below for where.
+      //
+      // Nothing here has to fight the browser's autoplay rule. The show does not begin until
+      // the visitor presses the wall, and that press is the gesture that makes audio legal —
+      // so the cue is heard rather than hoped for, and the same holds when these lines are
+      // swapped for real recordings.
+      // ── THE RECORDED VOICES ──────────────────────────────────────────────────────────────
+      // 25 files in images/vo/, cut from one continuous read. The show caller is the male
+      // voice, the playback operator the female one.
+      //
+      // GO_AT is where the word GO begins inside the file, in seconds — MEASURED off each
+      // recording, not estimated. The picture is taken at that mark, so the cut lands on the
+      // word exactly as it does when a real operator is listening for it.
+      //
+      // Matching is on the line itself, normalised: case, punctuation and spacing are ignored
+      // so 'GFX 1' and 'GFX1' both find their file. A percentage is reduced to a placeholder,
+      // which means the two level lines match whatever --cue1-level says — but the recording
+      // says "55%". Change the level and those two files have to be re-recorded.
+      const VO_DIR = 'images/vo/';
+      const VO_KEY = s => String(s).toLowerCase().replace(/\d+\s*%/g, '#')
+                                   .replace(/[^a-z0-9#]+/g, '');
+      const VO_LINES = [
+        // line as it is called                                  file                        GO at
+        ['Standby to Take LOGO, Titles, and Elements to 55%', 'caller-01-standby-levels',     0   ],
+        ['LOGO, Titles, and Elements to 55%, GO',             'caller-02-take-levels',     3.44  ],
+        ['Standby for Mitti Playback-Video 1',                'caller-03-standby-pb1',        0   ],
+        ['Mitti Playback-Video 1, GO',                        'caller-04-pb1',             1.91  ],
+        ['READY GFX 1.',                                      'caller-05-ready-gfx1',         0   ],
+        ['GFX 1, Slide 1, GO.',                               'caller-06-gfx1-slide1',     2.16  ],
+        ['Standby to advance on GFX 1.',                      'caller-07-standby-advance',    0   ],
+        ['Advance GFX1, SLIDE 2, GO.',                        'caller-08-advance-slide2',  2.61  ],
+        ['Standby for Mitti Playback-Video 2',                'caller-09-standby-pb2',        0   ],
+        ['Mitti Playback-Video 2, GO',                        'caller-10-pb2',             1.89  ],
+        ['THANKS FOR WATCHING',                               'caller-11-thanks',             0   ],
+        ['One minute remaining',                              'op-60',                        0   ],
+        ['Fifty seconds',                                     'op-50',                        0   ],
+        ['Thirty',                                            'op-30',                        0   ],
+        ['Fifteen seconds. Standby for count out.',            'op-15',                        0   ],
+        ['Ten',   'op-10', 0], ['Nine', 'op-09', 0], ['Eight', 'op-08', 0],
+        ['Seven', 'op-07', 0], ['Six',  'op-06', 0], ['Five',  'op-05', 0],
+        ['Four',  'op-04', 0], ['Three','op-03', 0], ['Two',   'op-02', 0],
+        ['One',   'op-01', 0]
+      ];
+      const VO_MAP = (() => {
+        const m = new Map();
+        VO_LINES.forEach(([line, file, goAt]) => m.set(VO_KEY(line), { file, goAt }));
+        return m;
+      })();
+
+      const VO = (() => {
+        const synth = window.speechSynthesis;
+        // The recorded files do not need a speech engine, so a browser without one is no
+        // longer mute — it just has no fallback for a line that has no file.
+        const hasTTS = !!(synth && window.SpeechSynthesisUtterance);
+
+        // A SpeechSynthesisVoice carries no gender flag, so these are the voice NAMES the
+        // common platforms ship. Anything unmatched is still selectable by its own name.
+        // macOS ships a different voice set per release and Chrome adds its own on top, so a
+        // short name list silently misses — and a miss used to fall back by index, which is
+        // how the operator ended up sounding like the caller. Both lists are wide, and the
+        // fallback below prefers a voice that is NOT a known female over a blind index pick.
+        const FEMALE = /\b(samantha|ava|allison|susan|vicki|victoria|kathy|princess|agnes|karen|moira|tessa|fiona|serena|zoe|nicky|flo|grandma|shelley|sandy|noelle|google us english|google uk english female|zira|aria|jenny|michelle|catherine|hazel|linda|heather)\b/i;
+        const MALE   = /\b(alex|fred|tom|bruce|ralph|daniel|oliver|rishi|lee|aaron|arthur|gordon|eddy|reed|rocko|david|mark|guy|christopher|george|james|ryan|google uk english male)\b/i;
+
+        // macOS ships a set of NOVELTY voices — they are deliberately distorted, robotic or
+        // sung, and several have male-sounding names. Widening the male list to improve the
+        // odds pulled these in, and on a Mac with no Alex or Tom installed the operator came
+        // out as Bad News or Zarvox. That is the "broken up" voice. They are filtered out of
+        // the voice list entirely: no role should ever be cast from this set.
+        const NOVELTY = /\b(albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|jester|organ|trinoids|whisper|wobble|zarvox|superstar|grandma|grandpa|junior|princess|pipe organ|hysterical|alice|bruce\s*\(novelty\))\b/i;
+
+        // off until the visitor starts the show; audioMode() owns this from then on
+        // TWO VOICES. The show caller and the playback operator are different people, so they
+        // are different voices — but one browser has ONE speech engine and one queue, so they
+        // physically cannot talk at the same time. That is not a limitation worth fighting:
+        // on a real comms channel they take turns too. Each queued line carries its own voice.
+        let on = false, voice = null, voiceOp = null, rate = 1.03;
+        const queue = [];
+
+        // ── THE RECORDED LINE ──────────────────────────────────────────────────────────────
+        // WEB AUDIO, not an <audio> element. This matters only on iOS, and it is the third
+        // thing tried there.
+        //
+        //   25 elements, one per file  — iOS unlocks ONE element per gesture, so the visitor's
+        //                                press freed whichever spoke first and refused the rest.
+        //   one element, src swapped   — unlocked fine and spoke the opening cues, then went
+        //                                permanently silent the instant the first clip rolled:
+        //                                iOS takes the permission back when another media
+        //                                element starts, and it does not come back. Measured
+        //                                on the phone: the voice never returned, not even over
+        //                                the slides, where nothing else is playing.
+        //   Web Audio (here)           — an AudioContext is not a media element. It is unlocked
+        //                                once, by the same press, and the video cannot take
+        //                                that away. It also mixes WITH the clip instead of
+        //                                fighting it, which is what a comms channel does.
+        //
+        // The clock is better too: a buffer's position comes from ctx.currentTime, which is a
+        // sample clock, so the GO still lands on the word.
+        const AC = window.AudioContext || window.webkitAudioContext;
+        let actx = null;
+        const decoded = new Map();     // file -> Promise<AudioBuffer>
+        let liveSrc = null;            // the one source playing, so disable() can stop it
+
+        const ctxOf = () => {
+          if (!AC) return null;
+          if (!actx) { try { actx = new AC(); } catch (e) { actx = null; } }
+          return actx;
+        };
+
+        // Called INSIDE the press — the only moment iOS accepts. resume() plus one silent
+        // sample is what spends the gesture on the context. Nothing is heard.
+        const unlock = () => {
+          const c = ctxOf();
+          if (!c) return;
+          try {
+            if (c.state === 'suspended' && c.resume) c.resume();
+            const src = c.createBufferSource();
+            src.buffer = c.createBuffer(1, 1, 22050);
+            src.connect(c.destination);
+            src.start(0);
+          } catch (e) {}
+        };
+
+        const load = file => {
+          let p = decoded.get(file);
+          if (p) return p;
+          const c = ctxOf();
+          if (!c) return null;
+          p = fetch(VO_DIR + file + '.mp3')
+            .then(r => r.arrayBuffer())
+            .then(ab => new Promise((res, rej) => {
+              // the callback form as well as the promise form — older WebKit only has callbacks
+              const d = c.decodeAudioData(ab, res, rej);
+              if (d && d.then) d.then(res, rej);
+            }));
+          decoded.set(file, p);
+          return p;
+        };
+        // Fetch and decode all 25 on the press, so a GO never waits on the network.
+        const warm = () => { unlock(); VO_LINES.forEach(([, f]) => { try { load(f); } catch (e) {} }); };
+
+        function speakFile(hit, text, then, onGo, who) {
+          const c = ctxOf();
+          let went = false, closed = false, raf = 0;
+          const go = () => { if (!went) { went = true; if (onGo) onGo(); } };
+          const done = () => {
+            if (closed) return;
+            closed = true;
+            cancelAnimationFrame(raf);
+            clearTimeout(bail);
+            live = Math.max(0, live - 1);
+            if (then) then();
+            const nextUp = queue.shift();
+            if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+          };
+          const fail = () => { go(); done(); };
+          live++;
+          // A line that never arrives must not hold the show behind it.
+          const bail = setTimeout(fail, 9000);
+          const p = c && load(hit.file);
+          if (!p) { fail(); return; }
+
+          p.then(buf => {
+            if (closed) return;
+            if (c.state === 'suspended' && c.resume) c.resume();
+            const src = c.createBufferSource();
+            src.buffer = buf;
+            src.connect(c.destination);          // straight out: no ducking, no gain stage
+            liveSrc = src;
+            src.onended = () => { if (liveSrc === src) liveSrc = null; go(); done(); };
+            const t0 = c.currentTime;
+            src.start();
+            spoke = true;
+            clearTimeout(bail);
+            // THE GO IS READ OFF THE AUDIO CLOCK. ctx.currentTime is a sample clock, so the
+            // picture lands on the word under load as well as idle. GO_AT was measured off
+            // the recording.
+            const watch = () => {
+              if (closed) return;
+              if (onGo && hit.goAt > 0 && (c.currentTime - t0) >= hit.goAt) { go(); return; }
+              raf = requestAnimationFrame(watch);
+            };
+            watch();
+          }).catch(fail);
+        }
+
+        // Which engine says this line. A recording if there is one for it, the browser's own
+        // voice if there is not — so a line added to the cue stack before it has been recorded
+        // is still called aloud rather than silently skipped.
+        function speak(text, then, onGo, who) {
+          const hit = VO_MAP.get(VO_KEY(text));
+          if (hit) return speakFile(hit, text, then, onGo, who);
+          return speakTTS(text, then, onGo, who);
+        }
+
+        // Say one line now. Nothing calls this while she is still talking — say() queues
+        // instead — so there is no cancel here at all; a cancel is what cut her off.
+        function speakTTS(text, then, onGo, who) {
+          if (!hasTTS) {
+            if (onGo) onGo();
+            if (then) then();
+            const nextUp = queue.shift();
+            if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+            return;
+          }
+          try {
+            const u = new SpeechSynthesisUtterance(text);
+            // Resolve the operator HERE, not once at startup. getVoices() is empty on the
+            // first call in Chrome and fills in asynchronously, so an operator picked too
+            // early stays null — and `voiceOp || voice` then quietly hands his lines to the
+            // caller. That is why the count-out was coming back in the caller's voice.
+            if (who === 'op' && (!voiceOp || (voice && voiceOp.name === voice.name))) pickOp('female');
+            const v = who === 'op' ? (voiceOp || voice) : voice;
+            if (v) { u.voice = v; u.lang = v.lang; }
+            // the operator counts a touch quicker and flatter — it is a count, not a call
+            u.rate = who === 'op' ? rate + 0.04 : rate;
+            u.pitch = 1; u.volume = 1;
+            let went = false;
+            const go = () => { if (!went) { went = true; if (onGo) onGo(); } };
+
+            // THE GO LANDS INSIDE THE LINE, not between two of them.
+            // This used to speak the phrase and the word GO as separate utterances so the
+            // content could be fired on the second one. It worked, but speech synthesis puts
+            // an audible gap between utterances — so every cue ending in GO was chopped at
+            // the comma. One utterance now, with a `boundary` event watching the characters
+            // go by, and the content fires as the engine reaches the word.
+            const goAt = onGo ? String(text).search(/\bGO\b[.!]?\s*$/i) : -1;
+            if (goAt > 0) {
+              u.addEventListener('boundary', e => {
+                if (typeof e.charIndex === 'number' && e.charIndex >= goAt) go();
+              });
+            }
+            // NO ESTIMATED FALLBACK. There was one here that guessed where GO sat from the
+            // word count. The guess ran short, so it beat the real boundary event and took
+            // the picture before the word was spoken — a guess racing a fact wins often
+            // enough to be a bug, and an early take is worse than a late one.
+            // Where boundary events are not supported, `end` fires it instead. GO is always
+            // the last word of a line, so that lands within a breath of it.
+            // The clip is ducked under her and brought back when she stops — the caller talks
+            // over the program, the program does not vanish. `done` is guarded so a browser
+            // that fires both end and error cannot run it twice.
+            let closed = false;
+            const done = () => {
+              if (closed) return;
+              closed = true;
+              live = Math.max(0, live - 1);
+              if (then) then();
+              const nextUp = queue.shift();
+              if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+            };
+            live++;                    // counted at speak(), not at start, so a line queued
+                                       // behind this one cannot jump in before it begins
+            // NOT go() here. 'start' is the start of the LINE. It used to also be the word,
+            // back when GO was spoken as its own utterance — leaving it here after the lines
+            // were joined took the picture on the first syllable of the phrase.
+            u.addEventListener('start', () => { spoke = true; });
+            u.addEventListener('end', () => { go(); done(); });
+            u.addEventListener('error', () => { go(); done(); });
+            // A line that is never spoken must not hang the show behind it. Browsers do
+            // occasionally drop an utterance without firing either event, so this is the
+            // backstop: a generous estimate of how long the line could possibly take.
+            setTimeout(() => { go(); done(); }, 2500 + text.length * 120);
+            synth.speak(u);
+          } catch (e) {
+            live = Math.max(0, live - 1);
+            go();
+            if (then) then();
+            const nextUp = queue.shift();
+            if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+          }
+        }
+        // How many utterances are in the air. A count, not a flag: say() cancels the previous
+        // one, whose `end` fires after the new one's `start`, and a flag would unduck the clip
+        // the instant the new line began talking over it.
+        let live = 0;
+        // did a browser ever actually let an utterance BEGIN? speak() resolving tells us
+        // nothing — a blocked utterance is queued silently and simply never starts.
+        let spoke = false;
+        // English, and never a novelty voice — those are not people, they are sound effects.
+        const list = () => !hasTTS ? [] : synth.getVoices()
+          .filter(v => /^en/i.test(v.lang) && !NOVELTY.test(v.name));
+        const byKind = kind => {
+          const vs = list();
+          const re = kind === 'male' ? MALE : FEMALE;
+          const other = kind === 'male' ? FEMALE : MALE;
+          return vs.find(v => re.test(v.name))          // a name we know is this kind
+              || vs.find(v => !other.test(v.name))      // failing that, one we know is NOT the other
+              || vs[kind === 'male' ? 1 : 0] || null;   // last resort
+        };
+        const pick = who => {
+          if (!who) return voice;
+          voice = (who === 'male' || who === 'female')
+            ? byKind(who)
+            : list().find(v => v.name === who) || voice;
+          return voice;
+        };
+        // The operator is the other person, and must SOUND like another person. If the name
+        // lists do not match anything this machine has, byKind falls back by index and both
+        // roles can land on the same voice — two people with one voice is worse than an
+        // imperfect match, so take any other English voice rather than double up.
+        const pickOp = who => {
+          voiceOp = (who === 'male' || who === 'female')
+            ? byKind(who)
+            : list().find(v => v.name === who) || voiceOp;
+          if (voiceOp && voice && voiceOp.name === voice.name) {
+            // never two people with one voice: take anything that is not the caller, and
+            // prefer something that at least is not a known female
+            const vs = list().filter(v => v.name !== voice.name);
+            voiceOp = vs.find(v => MALE.test(v.name)) || vs.find(v => !FEMALE.test(v.name))
+                   || vs[0] || voiceOp;
+          }
+          return voiceOp;
+        };
+        // THE SHOW CALLER IS MALE, THE PLAYBACK OPERATOR FEMALE — the same way round as the
+        // recordings. This is only the fallback for a line with no file.
+        // voices load async in Chrome; getVoices() is empty on the first call
+        if (hasTTS && !list().length) synth.addEventListener('voiceschanged', () => { if (!voice) { pick('male'); pickOp('female'); } }, { once: true });
+        else if (hasTTS) { pick('male'); pickOp('female'); }
+
+        return {
+          ok: true,
+          get on() { return on; },
+          get spoke() { return spoke; },     // has this browser ever let the VO be heard?
+          enable() { on = true; if (hasTTS && !voice) pick('male'); },
+          warm,                              // pull the files down before they are needed
+          disable() {
+            on = false;
+            queue.length = 0;        // nothing waiting may speak after she has been stopped
+            live = 0;
+            try { synth.cancel(); } catch (e) {}
+            // and stop the recording mid-line, for the same reason
+            try { if (liveSrc) { liveSrc.onended = null; liveSrc.stop(); liveSrc = null; } }
+            catch (e) {}
+          },
+          pick, pickOp, list, rate: r => (rate = r),
+          // what the matcher thinks each voice is, so the bench can show its working
+          kindOf: n => MALE.test(n) ? 'male' : FEMALE.test(n) ? 'female' : 'unknown',
+          current: () => voice,
+          currentOp: () => voiceOp,
+          // ↓ the one place to swap in a real recording: play an <audio> here instead.
+          //   A file is under the same gesture rule, so keep the `start`/`error` reporting.
+          // `then` runs when she has finished the line — or at once if she never started,
+          // so a browser with no voice at all can never stall the show waiting for one.
+          //
+          // Calls QUEUE, they do not interrupt. A caller finishes the line she is on before
+          // starting the next one, and this is where that is enforced — the cue cards wait for
+          // her as well, but the calls over clips and slides are fired by the clock, and
+          // without this a short gap would cut her off mid-sentence.
+          // The screen is not held back by any of this: the cue light appears on its own beat,
+          // the voice catches up. The two are allowed to be a moment apart; they are not
+          // allowed to talk over each other.
+          //
+          // A line ending in GO is spoken as TWO utterances — the phrase, then the word — and
+          // `onGo` fires as that last word begins. That is the whole point of a GO: the
+          // operator hits play ON the word, so the phrase leads and only GO is simultaneous
+          // with the picture. Firing the content at the START of the line instead put the
+          // entire call over the top of an already-running clip.
+          // Split rather than listening for a word boundary, because boundary events are not
+          // reliable across browsers and a missed one would leave the content never shown.
+          say(text, then, onGo, who) {
+            if (!on || !text) { if (onGo) onGo(); if (then) then(); return; }
+            if (live > 0) {
+              // never let it back up without limit — a queue longer than this means the show
+              // has got away from the voice, and the newest call is the one that matters
+              if (queue.length > 3) queue.shift();
+              queue.push([text, then, onGo, who]);
+              return;
+            }
+            speak(text, then, onGo, who);
+          },
+
+          // The playback operator. Same queue, different voice — so a count never lands on top
+          // of a call, and a call never lands on top of a number.
+          op(text) { this.say(text, null, null, 'op'); }
+        };
+      })();
+
+      // Fade an element in. Two frames, not one: the element has to be PAINTED at opacity 0
+      // before the class lands, or the browser coalesces both into one style resolution, sees
+      // no change to animate, and the thing simply appears.
+      const fadeIn = el => requestAnimationFrame(() =>
+        requestAnimationFrame(() => el.classList.add('is-in')));
+
+      // ── THE GO IS HELD BACK ──────────────────────────────────────────────────────────────
+      // A call goes on the wall as the caller starts speaking, but the GO at the end of it
+      // does not: it stays off until the word is actually said, then CUTS on with the picture.
+      // That is the whole point of a GO — it is not part of the standby, it is the moment.
+      //
+      // The word is in the DOM from the start and only made invisible, so the slate is already
+      // the width it will end up. Taking it out of the flow instead would make the box grow
+      // sideways at the exact moment the eye is on the cut.
+      const GO_RE = /^([\s\S]*?)(\bGO\b)([.!]?\s*)$/i;
+      function writeCall(el, text) {
+        el.textContent = '';
+        const m = GO_RE.exec(String(text == null ? '' : text));
+        if (!m) { el.textContent = text == null ? '' : text; return null; }
+        el.appendChild(document.createTextNode(m[1]));
+        const go = document.createElement('span');
+        go.className = 'wall-go';
+        // Set INLINE, not left to the stylesheet. None of the CSS carries a version string,
+        // so a browser can serve a cached wall-card.css next to freshly deployed HTML — and
+        // with no .wall-go rule the word simply renders, which is the GO being on screen
+        // before it is called. An inline style cannot be missing.
+        go.style.display = 'none';
+        go.textContent = m[2] + m[3];
+        el.appendChild(go);
+        return go;
+      }
+      // How long the finished call stays on the wall after its GO has popped in. The picture
+      // is never delayed by it — only the call lingers, the way a caller's last word hangs
+      // for a moment on comms.
+      const GO_READ = 700;
+      // A video take gets LONGER, not shorter. The slate is sitting over a clip that has just
+      // started, so it is the one place the GO has to fight for attention — cutting it with
+      // the picture, or at the end of the spoken line, went by before the word could be read.
+      const GO_READ_CLIP = 1500;
+      let goHold = 0, goTimer = 0, cueGen = 0;
+      const lightGo = (el, hold) => {
+        if (!el) return;
+        el.classList.add('is-lit');
+        el.style.display = 'inline';     // inline, for the same reason writeCall hid it inline
+
+        goHold = performance.now() + (hold || GO_READ);
+      };
+      // Take a called element off the wall. If a GO popped in moments ago it waits out the
+      // rest of that beat first, so the word is actually seen; otherwise it goes on this
+      // frame. Its own handle, NOT cueTimers: a GO usually hands straight on to the next
+      // step, and the next step empties cueTimers — which would cancel this very wait.
+      function dropAfterGo(fn) {
+        const left = goHold - performance.now();
+        clearTimeout(goTimer);
+        if (left > 0) goTimer = setTimeout(fn, left); else fn();
+      }
+
+      // NO DUCKING. The clip's level is left exactly where it is while anyone is speaking —
+      // the voices sit over the programme at full, nothing dips under anything. (There was a
+      // ramp here that pulled the clip to 14% under every call; it is gone, not disabled.)
+
+      // ── THE AUDIO ────────────────────────────────────────────────────────────────────────
+      // Once the show starts, sound is simply ON: the clips play with their own audio and the
+      // voice ducks them when she calls. There is no mode where a clip runs silently, which is
+      // what made the clips mute through the whole show in the last build.
+      //   'off' — before the press. Nothing makes a sound.
+      //   'on'  — from the press onward. Clips audible, voice calling over them.
+      //   'show'— the show is over: clips keep their audio, the voice has nothing left to say.
+      let audioOn = false;
+      let noteTimer = 0;
+      function audioMode(mode) {
+        clearTimeout(noteTimer);
+        audioOn = mode !== 'off';
+        if (mode === 'on') VO.enable(); else VO.disable();
+        vid.muted = !audioOn;
+        if (audioOn) { try { vid.volume = 1; } catch (e) {} }
+
+        // The note tracks what is actually audible, so the screen cannot claim sound that is
+        // not playing — or stay quiet about sound that is.
+        if (!audioNote) return;
+        const audible = audioOn;
+        if (audible) {
+          audioNote.hidden = false;
+          audioNote.classList.remove('is-in');
+          fadeIn(audioNote);
+        } else {
+          // a cut, like the slate: off on this frame, so the screen never claims sound that
+          // has already stopped
+          audioNote.classList.remove('is-in');
+          audioNote.hidden = true;
+        }
+        syncAudioBtn();
+      }
+
+      // the speaker icon is a readout of the real state, never a second source of truth
+      function syncAudioBtn() {
+        const btn = document.querySelector('.wall-audio');
+        if (!btn) return;
+        const on = !vid.muted || VO.on;
+        btn.setAttribute('aria-pressed', String(on));
+        btn.setAttribute('aria-label', on ? 'Mute the show' : 'Turn on sound');
+      }
+
+      // Run a cue. Each build fades up on its own beat; the one being called is white and the
+      // ones above it step back to the wall's quiet grey, the way a called cue recedes on a
+      // comms display.
+      //
+      // EVERY build is put in the DOM up front, at opacity 0. That is not tidiness — the card
+      // is a centred flex column, so appending the take while the standby was already up
+      // re-centred the column and shoved the standby half a line upward as it arrived. Laying
+      // them all in first makes the layout final before anything is visible, so a build fades
+      // in where it will stay and nothing moves.
+      //
+      // The schedule is worked out up front as absolute offsets, so a beat is the gap the
+      // playlist says it is and cannot drift with however long the previous step took.
+      function runCue(item, done) {
+        cueGen++;          // a deferred hide from the previous card must not take this one
+        cueBuilds.textContent = '';
+        cue.hidden = false;
+
+        // A cue step finishes exactly once. A build marked `go` ends it on the word GO, which
+        // leaves its own beat and hold timers still pending behind it — without this guard
+        // those would fire afterwards and advance the stack a second time, skipping a step.
+        let finished = false;
+        const finish = () => { if (finished) return; finished = true; done(); };
+
+        const builds = item.builds || [];
+        const goEls = [];
+        const els = builds.map(build => {
+          const line = document.createElement('span');
+          line.className = 'wall-cue-line';     // no .is-in yet: present, sized, invisible
+          goEls.push(writeCall(line, (build.line || '').replace('{lvl}', cueLevel())));
+          cueBuilds.appendChild(line);
+          return line;
         });
-      })
-      .catch(() => {});
-    loadJson(FEED_URL)
-      .catch(() => loadJson('/signal-flow/issues.json'))
-      .then(d => { issues = (d.issues || []).slice().sort((a, b) => a.date < b.date ? 1 : -1); render(); return loadVendors; })
-      .then(() => renderVendors())
-      .catch(() => { box.innerHTML = '<p class="sf-empty">Signal Flow Daily is unavailable right now.</p>'; });
+
+        // A line is laid in when BOTH its beat has passed and she has finished the line
+        // before it. The beat is a minimum, not a deadline.
+        //
+        // This is why: say() interrupts, so a beat shorter than the line it follows cut her
+        // off mid-sentence — CUE 1's first line is 49 characters and its beat was 4.2s.
+        // Lengthening the beat would have fixed that one line and broken again at the next
+        // rewrite, so the voice gates the stack instead. Reword anything, as long as you like,
+        // and the call still finishes before the next one starts.
+        const BREATH = 280;                     // a beat of air between calls, not a hard cut
+        let n = 0;
+
+        const lay = () => {
+          els.forEach(el => el.classList.remove('is-live'));
+          els[n].classList.add('is-live');
+          fadeIn(els[n]);
+          const build = builds[n];
+
+          let spoken = false, waited = false;
+          const next = () => {
+            if (finished || !spoken || !waited) return;
+            n++;
+            if (n < builds.length) cueTimers.push(setTimeout(lay, BREATH));
+            else cueTimers.push(setTimeout(finish, item.hold || 0));
+          };
+          // The levels move on the WORD "GO", not when the line starts — the call leads, the
+          // cue lands on the word. VO.say speaks the phrase and the word as two utterances and
+          // fires this as the word begins; with no voice available it fires at once, so the
+          // cue can never be left uncalled.
+          // On the word GO: the levels move, and a build marked `go` hands straight on to the
+          // step it is calling, so the picture lands on the word instead of after the card's
+          // hold. Both lines stay on the card; only the wall underneath changes.
+          // The GO on the card lights on the word too, whether or not this build takes
+          // anything — so a line that ends in GO always reads as a standby until it is called.
+          const act = (build.take || build.go)
+            ? () => { if (build.take) take(build.take); if (build.go) finish(); }
+            : null;
+          const lit = goEls[n];
+          const onGo = (act || lit) ? () => { lightGo(lit); if (act) act(); } : null;
+          VO.say(els[n].textContent, () => { spoken = true; next(); }, onGo, build.who);
+          cueTimers.push(setTimeout(() => { waited = true; next(); },
+            n + 1 < builds.length ? (builds[n + 1].beat || 0) : 0));
+        };
+
+        cueTimers.push(setTimeout(lay, item.lead || 0));
+      }
+
+      const pad = (n, w) => String(Math.floor(n)).padStart(w, '0');
+
+      // ── TRT and the sequence clock ───────────────────────────────────────────────────────
+      // hms   a running time, as a playback system shows it: 00:04:31
+      // code  a timecode with frames at 29.97: 00:00:12;04
+      const hms = s => !isFinite(s) ? '--:--:--'
+        : pad(s / 3600, 2) + ':' + pad((s / 60) % 60, 2) + ':' + pad(s % 60, 2);
+      const code = (s, fps) => pad(s / 3600, 2) + ':' + pad((s / 60) % 60, 2) + ':' +
+        pad(s % 60, 2) + ';' + pad((s % 1) * fps, 2);
+
+      // The show's total running time, worked out from the cue stack itself rather than typed
+      // in — change a beat and the TRT corrects itself. Every number the stack waits on is
+      // counted: a cue's lead, its beats and its hold; a slide's hold; a clip's real duration.
+      // Clip durations are only known once their metadata has loaded, so TRT reads --:--:--
+      // until both are in rather than showing a figure that is wrong.
+      const clipLen = [NaN, NaN];
+      function seqTRT() {
+        let ms = 0, known = true;
+        for (const step of SHOW) {
+          if (step.kind === 'cue') {
+            ms += (step.lead || 0) + (step.hold || 0);
+            (step.builds || []).forEach(b => { ms += b.beat || 0; });
+          } else if (step.kind === 'slide') {
+            ms += step.hold || 0;
+          } else {
+            const d = clipLen[step.v];
+            if (isFinite(d)) ms += d * 1000; else known = false;
+          }
+        }
+        return known ? ms / 1000 : NaN;
+      }
+
+      // Read each clip's length without waiting for it to be its turn. preload="metadata" is a
+      // small range request, not the whole file, so this costs almost nothing and lets the TRT
+      // be right from the first frame of the show.
+      VIDEOS.forEach((v, n) => {
+        const probe = document.createElement('video');
+        probe.preload = 'metadata';
+        probe.muted = true;
+        probe.addEventListener('loadedmetadata', () => {
+          clipLen[n] = probe.duration;
+          paintSeq();
+        }, { once: true });
+        probe.src = v.src;
+      });
+
+      // The sequence clock runs for the WHOLE show — across cues, clips and slides alike — so
+      // it cannot ride the clip's own frame loop the way the burn-in does. It gets its own.
+      let seqStart = 0, seqRaf = 0;
+      function paintSeq() {
+        if (seqTrtEl) seqTrtEl.textContent = 'TRT ' + hms(seqTRT());
+        if (seqCodeEl && seqStart) {
+          seqCodeEl.textContent = code((performance.now() - seqStart) / 1000, 30000 / 1001);
+        }
+      }
+      const seqTick = () => { paintSeq(); seqRaf = requestAnimationFrame(seqTick); };
+      function startSeqClock() {
+        seqStart = performance.now();
+        if (seqEl) { seqEl.hidden = false; }
+        if (!seqRaf) seqRaf = requestAnimationFrame(seqTick);
+      }
+      function stopSeqClock() {
+        if (seqRaf) { cancelAnimationFrame(seqRaf); seqRaf = 0; }
+        if (seqEl) seqEl.hidden = true;      // the readout belongs to the sequence, not the wall
+      }
+      const draw = () => {
+        if (!tc || !cur || cur.kind !== 'video') return;
+        const fps = VIDEOS[cur.v].fps;
+        // COUNTS DOWN: time remaining in the clip, the way a playback system shows it, so the
+        // number on the wall is the one a caller is actually working to. The sequence clock
+        // above still counts up — that is elapsed show, which only runs forwards.
+        const d = vid.duration;
+        const left = isFinite(d) ? Math.max(0, d - (vid.currentTime || 0)) : 0;
+        tc.textContent = code(left, fps);
+        // the clip's own TRT, beside its countdown, the way the sequence carries its own above
+        if (tcTrt) tcTrt.textContent = 'TRT ' + hms(vid.duration);
+      };
+
+      let raf = 0, onScreen = true;
+      const tick = () => { draw(); watchClip(); endWatch(); raf = requestAnimationFrame(tick); };
+      const start = () => {
+        if (!raf && onScreen && cur && cur.kind === 'video' && !vid.paused) raf = requestAnimationFrame(tick);
+      };
+      const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+
+      // ── The right-hand call ──────────────────────────────────────────────────────────────
+      // A standby given while something else is still on the wall — over a running clip, or
+      // over a slide being read. It does not replace what is up; it sits beside it, which is
+      // the whole point of a standby.
+      let readyTimer = 0;
+      // Clear the slate a beat from now, cancelling any clear already pending. It uses the
+      // same handle callReady and clearReady use, so a new call landing inside the beat
+      // cancels this rather than wiping the new slate a moment after it arrives.
+      function clearReadySoon(ms) {
+        clearTimeout(readyTimer);
+        readyTimer = setTimeout(() => clearReady(true), ms);
+      }
+      // WHO SAYS WHAT. The show caller calls the CUES — every one of them, playback included.
+      // The playback operator calls the TIME, and nothing else: the count-out and only the
+      // count-out. Two jobs, one each, and they do not borrow each other's lines.
+      // A call is a plain string (the caller) or { line, who } if it ever needs to be someone
+      // else; the counts go through VO.op directly.
+      const lineOf = c => (c && c.line !== undefined) ? c.line : c;
+      const whoOf  = c => (c && c.who !== undefined) ? c.who : undefined;
+
+      function callReady(call, ms, onGo, holdAfterGo) {
+        const line = lineOf(call), who = whoOf(call);
+        if (!ready) { if (onGo) onGo(); return; }
+        clearTimeout(readyTimer);
+        // The slate and the sequence readout share the top row, and on a phone the panel is
+        // only ~267px wide — measured, the longest call needs 197px and the gap left beside
+        // the readout is 3px. So the readout yields while a call is up. They are both operator
+        // data and a cue call outranks a running clock; the clock is back two seconds later.
+        if (seqEl && !seqEl.hidden) seqEl.classList.add('is-yielded');
+        const goEl = writeCall(readyLine, line);
+        ready.hidden = false;
+        ready.classList.remove('is-in');
+        fadeIn(ready);
+        // onGo lands on the word "GO" — see VO.say. The call is on the wall from the start of
+        // the line; the GO at the end of it, and the content it calls, arrive on the word.
+        const hold = holdAfterGo || GO_READ;
+        const fire = (onGo || goEl) ? () => {
+          lightGo(goEl, hold);
+          // The slate holds a beat PAST the GO so the word can actually be read. Without
+          // this the GO was popping in on the same frame the slate was taken away — the
+          // picture's cut did it on a clip, and on a slide the dwell could expire on, or
+          // even just before, the very word it was waiting for. The picture is not delayed
+          // by any of this; only the finished call lingers, the way a caller's last word
+          // hangs for a moment on comms.
+          if (goEl) clearReadySoon(hold);
+          if (onGo) onGo();
+        } : null;
+        VO.say(line, null, fire, who);
+        // A call that ends in GO is taken off by its own GO, never by this dwell. A fixed
+        // dwell cannot know how long the line runs, and on the longest call it expired 0.1s
+        // BEFORE the word it was waiting for — clearing the slate just as the GO popped in.
+        // onGo is guaranteed to fire (on the word, on the end of the line, or on VO's own
+        // backstop), so the GO always clears it.
+        if (ms && !goEl) readyTimer = setTimeout(clearReady, ms);
+      }
+      function clearReady(force) {
+        if (!ready) return;
+        // A GO that has just popped in holds the slate for the rest of its beat. An ordinary
+        // clear landing inside that beat is pushed to the end of it rather than wiping the
+        // word on the frame it arrived — leaveClip() does exactly that on a slide cue, and
+        // the clip's own cut did it on a video cue. A forced clear still goes through, so
+        // starting a new step or stopping the show still takes the slate at once.
+        if (!force && goHold > performance.now()) {
+          clearReadySoon(goHold - performance.now());
+          return;
+        }
+        if (seqEl) seqEl.classList.remove('is-yielded');
+        clearTimeout(readyTimer);
+        // A CUT, not a fade. Taken off on this frame — no transition to wait out, and no
+        // timer that could hide it part way through one.
+        ready.classList.remove('is-in');
+        ready.hidden = true;
+      }
+
+      // Fires a clip's standby once it has N seconds left to run. Checked on the same frame
+      // loop that draws the timecode, so it cannot drift: duration is only known after the
+      // clip has loaded, which is why this is a watcher and not a timer set up front.
+      // ── THE PLAYBACK OPERATOR'S COUNT-OUT ────────────────────────────────────────────────
+      // Marks are seconds remaining in the clip. Spelled for a voice rather than written as
+      // digits — a speech engine reads "50 sec" unevenly and "Fifty seconds" cleanly.
+      const COUNT = [
+        [60, 'One minute remaining'],
+        // fifty is deliberately not called — removed at George's ask. op-50 is still cut,
+        // levelled and on disk, so putting the mark back here is all it takes.
+        [30, 'Thirty'],
+        [15, 'Fifteen seconds. Standby for count out.'],
+        [10, 'Ten'], [9, 'Nine'], [8, 'Eight'], [7, 'Seven'], [6, 'Six'],
+        [5, 'Five'], [4, 'Four'], [3, 'Three'], [2, 'Two'], [1, 'One']
+      ];
+      // How far ahead of each mark the operator starts saying it. Tuned so the word itself
+      // lands on the number rather than after it.
+      const COUNT_LEAD = 0.45;
+      let counted = new Set();
+
+      let readyFired = false, outFired = false;
+      function watchClip() {
+        if (!cur || cur.kind !== 'video') return;
+        const d = vid.duration;
+        if (!isFinite(d) || !d) return;
+        const left = d - vid.currentTime;
+
+        // Each mark fires once, and only if the clip is actually past it — seeking or a short
+        // clip must not dump the whole count at once.
+        if (cur.count) {
+          for (const [at, line] of COUNT) {
+            // LEAD the mark. Fired exactly on it, the word is still being got out while the
+            // second ticks over, so "Ten" is heard against a readout already showing 9 — the
+            // count reads a second late. Speech has an onset, so the call has to start before
+            // the number it is calling, the way a person draws breath first.
+            if (left <= at + COUNT_LEAD && !counted.has(at)) {
+              counted.add(at);
+              // only the mark we have just reached; anything further down is still to come
+              if (left > at - 1.2) VO.op(line);
+            }
+          }
+        }
+        if (!readyFired && cur.ready && left <= cur.ready.remaining) {
+          readyFired = true;
+          callReady(cur.ready, 0);          // the standby stays up
+        }
+        // The call out of the clip starts while the clip is still running, so the word GO
+        // lands as it ends rather than after it. This is the difference between calling a
+        // transition and announcing one that already happened.
+        if (!outFired && cur.out && left <= cur.out.remaining) {
+          outFired = true;
+          callReady(cur.out, 2600, clipGo);
+        }
+      }
+
+      // Build the dots. Real buttons, so they are keyboard-reachable and screen-readable; the
+      // wall itself is pointer-events:none, so the strip turns pointers back on for itself.
+      // They are built from LOOP, not SHOW: a dot is an invitation to come back to something,
+      // and nothing in a cue stack is come back to.
+      const dots = LOOP.map((item, n) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'wall-dot';
+        b.setAttribute('aria-label', 'Show ' +
+          (item.kind === 'video' ? VIDEOS[item.v].name : SLIDES[item.c].label));
+        b.addEventListener('click', () => { endShow(); go(n); });
+        if (dotsWrap) dotsWrap.appendChild(b);
+        return b;
+      });
+      // The dots belong to the LOOP, not the show. They are an invitation to jump between
+      // items, and during a written cue stack there is nothing to jump to yet — so the strip
+      // is out of the way for the whole show, which also leaves the bottom-right corner free
+      // for the cue slate to sit hard right on the bottom edge.
+      const paintDots = () => {
+        if (dotsWrap) dotsWrap.hidden = showAt >= 0;
+        dots.forEach((d, n) => {
+          const on = showAt < 0 && n === i;
+          d.classList.toggle('is-on', on);
+          d.setAttribute('aria-current', on ? 'true' : 'false');
+        });
+      };
+
+      // ── Putting something on the wall ────────────────────────────────────────────────────
+      // One function for both lists, so a clip behaves identically whether the show is running
+      // it or the loop is. `done` is what to do when this step finishes.
+      // Take a running clip down gently. A clip that is cut away from mid-audio should fade,
+      // not stop dead on a frame — the only place a hard stop is right is when it has already
+      // played to its end, where there is nothing left to fade.
+      function leaveClip() { stop(); vid.pause(); }
+
+      function show(item, done) {
+        cur = item;
+        clearTimeout(holdTimer); holdTimer = 0;
+        cueTimers.forEach(clearTimeout); cueTimers = [];
+        readyFired = false;
+        outFired = false;
+        counted = new Set();
+        paintDots();
+
+        if (item.kind === 'invite') {
+          leaveClip();
+          if (card) card.hidden = true;
+          if (cue) cue.hidden = true;
+          if (tcWrap) tcWrap.hidden = true;
+          clearReady(true);
+          audioMode('off');
+          if (invite) { invite.hidden = false; fadeIn(invite); }
+          return;                       // no timer: the wall waits here for as long as it takes
+        }
+        if (invite) invite.hidden = true;
+
+        if (item.kind === 'cue') {
+          leaveClip();
+          // Get the clip this cue is calling ready NOW, while the card is up. A paused clip
+          // asked to play from a standing start has to seek and decode first, and that is the
+          // pause on GO. Priming it here — src set, seeked to 0, one frame decoded — leaves
+          // the GO with nothing to do but play().
+          primeNext();
+          if (card) card.hidden = true;
+          if (tcWrap) tcWrap.hidden = true;     // the burn-in names a clip, not a cue
+          clearReady(true);
+          if (cue) runCue(item, done);
+          else holdTimer = setTimeout(done, 1000);
+          return;
+        }
+        // NOTE: the cue card is NOT hidden here. Whatever is on the wall stays up until the
+        // content that replaces it actually arrives — on the word GO — or the wall goes black
+        // for the length of the call, which reads as a dropout rather than a standby being
+        // held. Each `put`/`roll` below clears it at the moment it puts something up.
+
+        // Content called by a GO does not appear until the word lands — `put` is what the
+        // call fires. Whatever was on the wall stays up until then, which is why an advance
+        // leaves the previous slide showing while "Advance GFX 1, SLIDE 2," is still being
+        // spoken, and only swaps on "GO".
+        if (item.kind === 'slide') {
+          const put = () => {
+            leaveClip();
+            const gen = cueGen;
+            // if a new cue card has gone up inside the beat, this deferred hide is stale
+            dropAfterGo(() => { if (cue && cueGen === gen) cue.hidden = true; });
+            const s = SLIDES[item.c];
+            if (card) {
+              card.href = s.href;
+              cardDates.textContent = s.dates;
+              cardTitle.textContent = s.title;
+              cardMeta.textContent = s.meta;
+              card.hidden = false;
+            }
+            if (tcWrap) tcWrap.hidden = true;   // the burn-in names a clip, not a slide
+            // the hold and the standby are both measured from when the slide is actually up,
+            // not from when the call for it began
+            if (item.ready) cueTimers.push(setTimeout(
+              () => callReady(item.ready, 0), item.ready.after));
+            holdTimer = setTimeout(done, item.hold);
+          };
+          if (item.call) {
+            callReady(item.call, 2600, put);       // content waits for the word GO
+          } else if (item.callOver) {
+            // Called OVER content that is already up. After a count-out the take happens on
+            // zero — the operator's count was the cue — so holding the slide back for the
+            // caller's GO would leave the wall empty through the whole line.
+            put();
+            callReady(item.callOver, 2600);
+          } else { clearReady(true); put(); }
+          return;
+        }
+
+        // video
+        const v = VIDEOS[item.v];
+        const roll = () => {
+          // Straight cut to picture: the slate and the slide are off on this frame. A clip
+          // starting is the hardest cut on the wall and nothing rides over the top of it —
+          // the GO pops in and goes with the same frame the picture arrives.
+          // The slate is not taken here any more: callReady cuts it when the caller stops
+          // speaking, a beat past the GO. Taken on this frame it was gone before the word
+          // it had just popped in could be read.
+          // The CARD is not part of that cut. It carries its own GO, it is not sitting over
+          // the picture, and it keeps the beat so the word can be read before it goes.
+          const gen = cueGen;
+          // if a new cue card has gone up inside the beat, this deferred hide is stale
+          dropAfterGo(() => { if (cue && cueGen === gen) cue.hidden = true; });
+          if (card) card.hidden = true;
+          if (tcWrap) tcWrap.hidden = false;
+          if (nameEl) nameEl.textContent = v.name;
+          startClip();
+        };
+        if (item.call) { callReady(item.call, 2600, roll, GO_READ_CLIP); return; }
+        clearReady(true);
+        roll();
+        return;
+
+        function startClip() {
+        if (vid.getAttribute('src') !== v.src) { vid.src = v.src; vid.currentTime = 0; }
+        else if (vid.currentTime > 0.05) vid.currentTime = 0;   // already primed at 0: don't re-seek
+        primed = '';
+        // iPhones take a play() that follows a tap as a request to go fullscreen unless the
+        // element is explicitly inline, and setting src re-reads these, so they are re-asserted
+        // on every switch rather than trusted to survive from the markup. The property is set
+        // alongside the attributes because older iOS reads one and not the other.
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('webkit-playsinline', '');
+        vid.playsInline = true;
+        const r = vid.play();
+        if (r && r.catch) r.catch(() => {});
+        draw();
+        start();
+        // The clip is finished by whichever comes first: the word GO of its out-call, or its
+        // own last frame. Guarded, because both can happen within a frame of each other and
+        // the step must only hand on once.
+        let spent = false, goGiven = false;
+        // THE CLIP IS NEVER CUT. The out-call's GO does not end it — it only says the
+        // transition is standing by. Whatever happens first:
+        //   GO lands while the clip is still running  -> remember it, and go on the last frame
+        //   the clip reaches its last frame first     -> go now if the GO has been given
+        // Either way every frame of the clip plays, and the transition is ON the end rather
+        // than before it. Cutting on the GO took the last second or so off both clips.
+        const fire = () => {
+          if (spent) return;
+          spent = true;
+          done();
+        };
+        finishClip = () => {                // the clip reached its end
+          if (goGiven || !cur || !cur.out) {
+            // Counted out: the take is ON zero, with no post-roll — ten seconds of numbers is
+            // all the warning anyone needs. Called out of by a GO: also immediate. Otherwise
+            // TAIL gives the next cue a breath so it does not step on the last frame.
+            if (cur && (cur.out || cur.count)) fire();
+            else cueTimers.push(setTimeout(fire, TAIL));
+          } else {
+            goGiven = true;                 // GO is still coming; it will fire on arrival
+          }
+        };
+        clipGo = () => {                    // the out-call's GO landed
+          if (vid.ended || vid.currentTime >= (vid.duration || Infinity) - 0.05) fire();
+          else goGiven = true;              // hold: the 'ended' handler will take it
+        };
+        onClipEnd = finishClip;
+        }
+      }
+
+      // Look ahead for the next clip in the stack and decode its first frame.
+      let primed = '';
+      function primeNext() {
+        if (showAt < 0) return;
+        const nextVid = SHOW.slice(showAt + 1).find(s => s.kind === 'video');
+        if (!nextVid) return;
+        const src = VIDEOS[nextVid.v].src;
+        if (primed === src) return;
+        primed = src;
+        try {
+          if (vid.getAttribute('src') !== src) vid.src = src;
+          vid.currentTime = 0;
+          // play/pause is what actually forces a frame to be decoded; load() alone does not
+          const r = vid.play();
+          if (r && r.then) r.then(() => vid.pause()).catch(() => {});
+          else vid.pause();
+        } catch (e) {}
+      }
+
+      // what to run when the current clip finishes, and the guarded finisher behind it
+      let onClipEnd = null;
+      let finishClip = () => {};
+      let clipGo = () => {};
+
+      // ── The show ─────────────────────────────────────────────────────────────────────────
+      function runShow(n) {
+        if (n >= SHOW.length) { endShow(); go(0); return; }   // show over, wall carries on
+        showAt = n;
+        show(SHOW[n], () => runShow(n + 1));
+      }
+
+      // The show is over: the house comes back to 100% and the wall starts rotating. Also
+      // called if a visitor presses a dot part-way through, because at that point they have
+      // taken over and the rest of the stack is no longer theirs to sit through.
+      function endShow() {
+        if (showAt < 0) return;
+        showAt = -1;
+        cueTimers.forEach(clearTimeout); cueTimers = [];
+        clearReady(true);
+        stopSeqClock();
+        take();                         // house back to 100%
+        // The show is over and the sign-off has been said, so the sound goes off with it: the
+        // visitor unmuted for the show, not for a wall that keeps playing at them afterwards.
+        // The sound button is still there if they want it back.
+        audioMode('off');
+      }
+
+      // ── The loop ─────────────────────────────────────────────────────────────────────────
+      function go(n) {
+        i = ((n % LOOP.length) + LOOP.length) % LOOP.length;
+        show(LOOP[i], () => go(i + 1));
+      }
+
+
+      vid.addEventListener('play', start);
+      vid.addEventListener('pause', stop);
+      vid.addEventListener('seeked', draw);
+      // A clip is left to finish. TAIL is the breath after its last frame before the next cue
+      // is called — without it the call began in the same instant the clip ended and stepped
+      // on the end of its audio, which is what "cut off at the end of the video" was.
+      const TAIL = 700;
+      vid.addEventListener('ended', () => {
+        const go = onClipEnd;
+        onClipEnd = null;
+        // The slate is only cleared here if nothing called us out of the clip — an out-call's
+        // own GO handles its own slate, and clearing it here would cut the call short.
+        // `go` must still be set, too: endWatch hands on a frame or two BEFORE 'ended'
+        // arrives, and by the time it does the next step has its own call on the wall.
+        // Clearing then wiped a slate that was not ours — which is how the whole of
+        // "GFX 1, Slide 1, GO." came to be called with nothing on screen.
+        if (go && !outFired) clearReady();
+        if (go) go();
+      });
+      // A clip that stalls on its final frame without firing 'ended' would hold the stack, so
+      // the frame loop watches for the playhead reaching the end as well.
+      const endWatch = () => {
+        if (cur && cur.kind === 'video' && vid.duration &&
+            vid.currentTime >= vid.duration - 0.04 && onClipEnd) {
+          const go = onClipEnd; onClipEnd = null; go();
+        }
+      };
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => {
+          onScreen = e.isIntersecting;
+          // off screen, a card's hold timer keeps running; only the rAF readout is parked
+          onScreen ? start() : stop();
+        }, { threshold: 0 }).observe(vid);
+      }
+
+      // The wall's controls, for the sound button below and for picking a VO voice while this
+      // is still a prototype. From the console:
+      //   proavCue.vo.list().map(v => v.name)   every voice this machine has
+      //   proavCue.vo.pick('male')              or 'female', or an exact voice name
+      //   proavCue.replay()                     put the levels back up and call CUE 1 again
+      window.proavCue = {
+        vo: VO,
+        take,
+        // back to the top: levels up, show unstarted, the wall holding its invitation
+        replay() { take(); showAt = 0; show({ kind: 'invite' }, () => {}); }
+      };
+
+      // Starting the show. This press is doing two jobs at once: it is the visitor asking for
+      // the show, and it is the user gesture that makes audio legal for the rest of the visit.
+      // Priming the video here — one muted play() while we still have the gesture — is what
+      // lets the first clip start with sound later without being refused.
+      if (invite) {
+        invite.addEventListener('click', () => {
+          try { vid.muted = true; const r = vid.play(); if (r && r.catch) r.catch(() => {}); } catch (e) {}
+          VO.pick(VO.current() ? VO.current().name : 'male');
+          VO.pickOp('female');   // by now the voice list has certainly loaded
+          VO.warm();            // start pulling the 25 recordings down on the same press
+          audioMode('on');      // sound is on from here: clips audible, voice ducking them
+          startSeqClock();      // the sequence clock runs from the press
+          runShow(0);           // the cue stack, from CUE 1
+        });
+      }
+
+      // Everything on the wall — the standby, the take, the dim it fires — waits for the site
+      // to finish loading, so the cue is called against a settled page rather than racing the
+      // fonts and the first clip. If load has already gone by, start now.
+      const roll = () => show({ kind: 'invite' }, () => {});
+      if (document.readyState === 'complete') roll();
+      else addEventListener('load', roll, { once: true });
+
+      // There is deliberately NO timer that takes the cue on its own. The take build is the
+      // only caller, so the levels cannot move before the wall has said they will.
+    })();
+
+    // The wall's sound. It stays muted on load because browsers will not autoplay audio — an
+    // unmuted video simply never starts. The button flips .muted and nothing else; aria-pressed
+    // is the state, and CSS reads it to swap the icon.
+    (() => {
+      const btn = document.querySelector('.wall-audio');
+      const vid = document.getElementById('wall-video');
+      if (!btn || !vid) return;
+      btn.addEventListener('click', () => {
+        const turningOn = vid.muted;
+        vid.muted = !turningOn;
+        // a tab that has never been interacted with can still have playback paused
+        if (turningOn) { const r = vid.play(); if (r && r.catch) r.catch(() => {}); }
+        btn.setAttribute('aria-pressed', String(turningOn));
+        btn.setAttribute('aria-label', turningOn ? 'Mute the video' : 'Turn on video sound');
+        // Muting has to take the voice with it: a speaker icon that silences a rocket launch
+        // but leaves someone talking is not a mute.
+        const c = window.proavCue;
+        if (c && c.vo && !turningOn) c.vo.disable();
+      });
+    })();
+
+    const TINTS = ['', 'tint-amber', 'tint-cyan'];   // '' is the logo's own white
+    // 20000, not 5200. The signal line sweeps on a 4s loop, and a 5.2s hold put the wordmark
+    // on almost the same beat — the wordmark is far the bigger shape, so it swallowed the line.
+    // At 20s the line sweeps five times per colour hold, so the line is what moves and the
+    // wordmark drifts underneath it. A full white → amber → cyan loop is 60s.
+    // The crossfade in home.css is stretched to match; a quick fade under a long hold reads as
+    // a flash rather than a drift.
+    // The DIM cue is NOT fired here. The LED wall calls it — it shows the standby, then the
+    // take, and fires the cue on the take. One caller, so the words on the wall and the levels
+    // on the page can never disagree. See the SHOW cue stack in the wall block above.
+    const PHASE_MS = 20000;  // how long each colour holds before the fade to the next
+    const SHOW_CLIP = false; // true plays the clip at the end of the cycle; false is colours only
+    const COLOURS = TINTS.filter(Boolean);
+    let timers = [];
+    const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+    const clearTints = () => COLOURS.forEach(c => word.classList.remove(c));
+
+    function startCycle() {
+      timers.forEach(clearTimeout); timers = [];
+      word.classList.remove('video-on');
+      clearTints();
+      v.pause();
+      try { v.currentTime = 0; } catch (e) {}
+      TINTS.forEach((cls, i) => {
+        if (!i) return;                            // phase one is the plain wordmark, already showing
+        later(() => { clearTints(); word.classList.add(cls); }, PHASE_MS * i);
+      });
+      later(() => {
+        clearTints();
+        if (!SHOW_CLIP) { startCycle(); return; }  // straight back to white
+        const p = v.play();
+        if (p && p.catch) p.catch(startCycle);     // autoplay refused: keep cycling the colours
+      }, PHASE_MS * TINTS.length);
+    }
+
+    v.addEventListener('playing', () => { v.playbackRate = SPEED; word.classList.add('video-on'); });
+    v.addEventListener('ended', startCycle);
+    v.addEventListener('error', startCycle);
+
+    startCycle();
   })();
 </script>
 </body>

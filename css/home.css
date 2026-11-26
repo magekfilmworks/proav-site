@@ -1,0 +1,1115 @@
+/* Homepage sections — hero, show, who's on, listen, watch. */
+
+/* hero */
+.hero {
+  background: var(--stage-black);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  --hero-left: calc(max(0px, (100% - var(--shell)) / 2) + var(--gutter));
+
+  /* How far the wordmark and the wall are held INSIDE the gutter to make room for the corner
+     corner brackets that used to sit on --hero-left. They have been removed; the inset stays so
+     the site keeps the position it was tuned to. Carries no percentage, so it is safe to read
+     from inside .hero-word, which --hero-left is not. */
+  --brk-clear: 14px;
+
+  /* THE COLUMN. Every piece of hero content starts here — the wordmark, PODCAST, the tagline,
+     the signal rule, the hook, the buttons, and the wall's left edge on phones. Nothing in the
+     hero should write its own left offset; use this. It exists because the pieces each carried
+     their own copy of the gutter, so moving the wordmark in by --brk-clear left PODCAST and the
+     body text 14px behind it. One token, one edge, nothing to keep in sync by hand.
+     --hero-left stays what the OUTER edge sits on: the wall's right edge.
+     Contains a percentage by way of --hero-left, so it resolves against .hero — read it from
+     .hero's own children only, never from inside .hero-word. */
+  --col-left: calc(var(--hero-left) + var(--brk-clear));
+
+  /* The column's other edge, mirroring --col-left. Same formula on purpose: the content column
+     is symmetric inside the outer edges, so hero content ends as far from the window's right as
+     it starts from its left. It is a separate token rather than a reuse of --col-left so the two
+     sides can be read — and if ever needed, moved — independently. Hero content widths are
+     `calc(100% - var(--col-left) - var(--col-right))`; the hardcoded 24px they used before was
+     the old gutter written out by hand and did not follow --hero-left out on wide screens. */
+  --col-right: calc(var(--hero-left) + var(--brk-clear));
+  /* The wordmark's own box, so the wall can be placed against where PROAV actually prints.
+     This repeats .hero-word's own width expression. It uses % rather than vw: html carries
+     zoom: 0.95, which vw arithmetic does not see but percentages of this element do. Only
+     `width` and `margin-left` consume it, and both resolve a percentage against this element's
+     width, so it means what it says. (It must never be consumed by `height` — a percentage
+     there resolves against the parent's height and collapses to zero.)
+
+     --ink-l and --ink-r are where PROAV's ink starts and ends as fractions of that box, set by
+     the script in index.html. The values here are what a machine without Impact measures, so
+     the layout still holds if the script never runs. */
+  --word-w: min(calc(var(--shell) - 48px), calc(100% - var(--hero-left) - 24px));
+  --ink-l: 0;
+  --ink-r: 0.79;
+  padding: 132px 0 56px;   /* 108 + 24: clearance under the nav */
+  overflow: hidden;
+  min-height: 100svh;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Both glows are pinned a fixed distance from the top, not a percentage of the hero. The hero
+     box is ~1430px tall because The Show sits inside it, so a percentage put the cyan 300px
+     below the fold and left the right-hand side of the visible header with no light at all. */
+  /* Three things set this wash, and they trade off against each other rather than one being
+     "brightness". The alpha is the colour in the core. The stop is how fast it falls to nothing.
+     The centre percentages are how far apart the two glows sit.
+
+     A low alpha with a long falloff (.14 to transparent at 70%) spreads thin colour over the
+     whole hero: the amber core only reached rgb(41,28,18) and the two glows met in the middle
+     with no black between them, so both read as grey rather than as amber and cyan. Raising the
+     alpha and pulling the stop in concentrates that same amount of light into a smaller core —
+     amber now reaches rgb(74,48,26), cyan rgb(18,61,67), with 424px of true black between them,
+     and the page's mean brightness is 18.2 against 18.8 before. Darker overall, far more colour.
+
+     Fade to rgba(hue,0), never `transparent`: `transparent` is rgba(0,0,0,0), so the ramp drags
+     the hue toward black and greys the mid-tones.
+
+     The SIZES are capped against the viewport, and that cap is load-bearing. The centres sit at
+     12% and 88% of the hero, so they converge as the window narrows: at 390px they are 296px
+     apart while a flat 1200px ellipse is 1200px wide, which puts the whole screen inside the
+     bright core of BOTH glows. Amber over cyan with no falloff left is a washed-out grey-green,
+     and the phone background measured mean 28.4 against the desktop's 18.8. The vw terms keep
+     the ellipse smaller than the gap it has to fade across. The px terms still win at 1440 and
+     1920, so desktop is unchanged. */
+  /* The noise layer on top is a dither, not a texture. A wide low-alpha gradient over near
+     black crosses only ~40 of the 256 levels across 1440px, so each step sits in a flat band
+     up to 28px wide and the eye reads those bands as contour rings. 1% noise scatters each
+     pixel by a level and the bands break up: widest flat run goes 587px -> 6px, while a black
+     pixel moves only from rgb(11,11,13) to rgb(12,12,14). No gradient curve fixes this; it is
+     8-bit quantisation, not the falloff. */
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.010'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse min(1200px,85vw) min(760px,54vw) at 6% 200px, rgba(255,156,61,0.34), rgba(255,156,61,0) 42%),
+    radial-gradient(ellipse min(1100px,78vw) min(700px,50vw) at 94% 330px, rgba(42,217,236,0.30), rgba(42,217,236,0) 42%);
+  pointer-events: none;
+}
+
+
+/* ---- the LED screen: a content slot, flown off two drops ---- */
+.hero-screen{
+  /* The hero has ~310px between the nav and the hook. A panel at the wall's own 2.56:1 cannot
+     be both full width and sit inside the logo's cap-to-baseline band — that band is only
+     ~160px, which makes it a letterbox strip. Height wins: the panel is sized from its own
+     aspect and tucked under the nav, so its bottom clears the hook. */
+  position:absolute;
+  top: 112px;   /* 88 + 24, matching the hero's top padding so the wall moves with it */
+  aspect-ratio: 750 / 293;
+  right:var(--hero-left);
+
+  /* Left edge starts where PROAV's ink ends, plus --wall-gap. The right edge is on the gutter,
+     so the wall simply fills whatever is left — it grows with the window instead of stopping
+     at a fixed cap. --ink-r is measured in the page (see index.html), so this lands in the same
+     place whether or not Impact is installed. */
+  /* A VIEWPORT LENGTH, with no percentage anywhere in its chain.
+     This was `2.3%`, which Safari resolved as 0.16% inside the `width: calc()` below — about
+     3px instead of about 40 — and the wall slid left into the V of PROAV. The first fix made
+     it `calc(var(--word-w) * 0.0238)`, which looked like a length but is not one: --word-w is
+     itself a min() of two percentage calcs, so Safari still resolved the whole thing to zero.
+     Measured on the page afterwards: 10px of clearance where 32px was intended, and the 10px
+     was entirely the --ink-l term, with --wall-gap contributing nothing at all.
+     vw is a real length. 2.3vw reproduces what Chrome and Firefox were already drawing to
+     within a pixel at every width measured (33.4 vs 33.5 at 1454, 58.7 vs 58.7 at 2554), and
+     no engine has to resolve a percentage against a containing block to get there. */
+  --wall-gap: 2.3vw;
+  /* Right edge on --hero-left, left edge on --col-left: the wordmark starts at the column, so
+     its ink ends that much further right, and the wall gives back the same amount. */
+  /* --ink-w is the ink's width as a FINISHED LENGTH, set in index.html. It used to be
+     `var(--word-w) * var(--ink-r)` computed here, and that product breaks this calc on WebKit:
+     with it present every way of writing --wall-gap resolved to zero, and the wall slid left
+     into the V of PROAV. Without it, all of them work. There is no multiplication left in this
+     rule — just four lengths — and --ink-w has a fallback so the wall is sane before the
+     measurement lands. */
+  width: calc(100% - var(--hero-left) - var(--col-left)
+              - var(--ink-w, 43vw) - var(--wall-gap));
+
+  z-index:1; pointer-events:none;
+}
+
+/* ---- the wall's timecode burn-in ---- */
+/* Burned in along the wall's bottom edge, lying on the wall's plane rather than on the screen's.
+   The clip path takes that edge from 0% 90.10% to 100% 100%, so it drops 9.90% of the panel's
+   height across its full width; at the fixed 750/293 aspect that is a constant 2.215deg, which
+   is why one rotation works at every size. `bottom` is measured from the same 9.90%, so the
+   badge keeps its distance from the edge as the wall grows, and the origin is the bottom-left
+   corner so the rotation pivots on the edge instead of swinging the badge off it. */
+/* The sequence's readout, mirrored onto the wall's TOP edge. Same construction as the burn-in
+   below, same distances, opposite plane: the clip path takes the top edge from 0% 10.24% to
+   100% 0%, so it RISES 10.24% of the panel's height across its width — 2.291deg at the fixed
+   750/293 aspect, and negative because it climbs to the right where the bottom edge falls.
+   (Worked out from the clip path, not eyeballed: atan(0.1024 x 293/750) = 2.2909.)
+   `top` is measured from the same 10.24%, so it keeps its distance from the edge as the wall
+   grows, and the origin is the top-left corner so the rotation pivots on the edge. */
+.wall-seq {
+  position: absolute;
+  top: calc(10.24% + 7px);
+  left: 10px;
+  transform: rotate(-2.291deg);
+  transform-origin: 0 0;
+  z-index: 3;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 4px 9px 4px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: rgba(11, 11, 13, 0.62);
+  backdrop-filter: blur(3px);
+  font-family: var(--font-mono, "SFMono-Regular", Menlo, Consolas, monospace);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.wall-seq[hidden] { display: none !important; }
+
+.wall-seq {
+  transition: opacity 0.3s ease;
+}
+
+/* Only a PHONE needs this. There the slate shares the top row with this readout and there is
+   not room for both, so the readout steps aside while a call is up. On a desktop the slate
+   sits on the bottom edge, nowhere near this, and the clock keeps running in view. */
+/* The slate no longer shares a row with this readout — it sits on the bottom edge — so the
+   readout has nothing to step aside for and the clock stays in view throughout. */
+
+.wall-seq-name {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--graphite-light);
+}
+
+.wall-seq-trt,
+.wall-tc-trt {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--graphite-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.wall-seq-code {
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--signal-white);
+  font-variant-numeric: tabular-nums;
+}
+
+.wall-tc {
+  position: absolute;
+  bottom: calc(9.9% + 7px);
+  left: 10px;
+  transform: rotate(2.215deg);
+  transform-origin: 0 100%;
+  z-index: 3;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  padding: 4px 9px 4px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: rgba(11, 11, 13, 0.62);
+  backdrop-filter: blur(3px);
+  font-family: var(--font-mono, "SFMono-Regular", Menlo, Consolas, monospace);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.wall-tc-name {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: var(--graphite-light);
+}
+
+.wall-tc-code {
+  /* tabular figures so the frame digits do not jitter the box 30 times a second */
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--signal-white);
+}
+
+@media (max-width: 720px) {
+  .wall-tc { bottom: calc(9.9% + 5px); left: 8px; gap: 7px; padding: 3px 7px 3px 6px; }
+
+  /* On a 320px phone the panel is only ~267px wide, and the burn-in plus the cue slate
+     measured 3px over that. The clip's TRT is the one piece that can go: its timecode and
+     name still read, and the sequence TRT above is unaffected. */
+  @media (max-width: 420px) {
+    .wall-tc-trt { display: none; }
+  }
+  .wall-tc-name { font-size: 8px; }
+  .wall-tc-code { font-size: 10.5px; }
+  .wall-seq { top: calc(10.24% + 5px); left: 8px; gap: 7px; padding: 3px 7px 3px 6px; }
+  .wall-seq-name { font-size: 8px; letter-spacing: 0.1em; }
+  .wall-seq-trt, .wall-tc-trt { font-size: 8px; }
+  .wall-seq-code { font-size: 10.5px; }
+}
+
+/* ---- the wall's sound button ---- */
+.wall-audio {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  pointer-events: auto;      /* .hero-screen sets none; the button is the one thing you can hit */
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: rgba(11, 11, 13, 0.62);
+  backdrop-filter: blur(3px);
+  color: var(--signal-white);
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+/* Sits under the sound button and says the audio is on, for as long as it is on. Fades with
+   the cue on the same curve as the cue's own builds, so it arrives as part of the cue rather
+   than as a notification bolted to it. */
+.wall-audio-note {
+  position: absolute;
+  top: 50px;
+  /* Aligned to the SPEAKER GLYPH, not to the button's box. The button is a 34px circle whose
+     border is all but invisible on the panel, so what the eye reads as the right edge up there
+     is the 19px glyph — which sits (34 - 19) / 2 inside the button. Matching the button's own
+     10px inset left this note overhanging the icon by about 7px.
+     Written as the arithmetic rather than 17.5px so it stays true if either size changes. */
+  right: calc(10px + (34px - 19px) / 2);
+  z-index: 3;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  color: var(--graphite-light);
+  background: rgba(11, 11, 13, 0.72);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  padding: 3px 6px;
+  white-space: nowrap;
+  opacity: 0;
+  /* Same rule as the cue slate: ON fades, OFF cuts. The transition is on .is-in only, so the
+     note clears on the frame the sound stops rather than lingering for a second and a half
+     claiming audio that is no longer playing. */
+  transition: none;
+}
+
+.wall-audio-note.is-in { opacity: 1; transition: opacity 320ms ease; }
+
+/* ON THE WALL on a phone too, under the speaker icon, the same as desktop. It used to be
+   parked below the panel because the wall was once only ~130px tall there and a note under
+   the icon landed on the cue's first line; the wall is taller now and the note belongs with
+   the button it is describing. Only the chrome is lightened here — the placement comes from
+   the desktop rule above. */
+@media (max-width: 1024px) {
+  .wall-audio-note {
+    background: none;
+    border-color: var(--border-quiet);
+  }
+}
+/* The phone's button is smaller — 30px circle at an 8px inset, 17px glyph — so the note
+   follows it down and keeps the same 6px below the button that desktop uses (8 + 30 + 6). */
+@media (max-width: 720px) {
+  .wall-audio-note {
+    top: 44px;
+    right: calc(8px + (30px - 17px) / 2);
+  }
+}
+/* [hidden] is a plain display:none and any later display declaration beats it; this one has
+   none, but the rule is kept explicit so adding one later cannot resurrect the note. */
+.wall-audio-note[hidden] { display: none !important; }
+
+.wall-audio:hover,
+.wall-audio:focus-visible {
+  opacity: 1;
+  background: rgba(11, 11, 13, 0.85);
+  border-color: var(--tungsten-amber);
+}
+
+.wall-audio:focus-visible {
+  outline: 2px solid var(--data-cyan);
+  outline-offset: 2px;
+}
+
+.wall-audio svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wall-audio .wa-speaker { fill: currentColor; stroke: none; }
+
+/* muted is the resting state: the cross shows, the waves do not. aria-pressed carries the
+   state for assistive tech and drives the icon, so there is one source of truth. */
+.wall-audio[aria-pressed="false"] .wa-on,
+.wall-audio[aria-pressed="true"] .wa-off { display: none; }
+
+/* Unmuted is the "nothing to do here" state, so the chrome goes away and only the white speaker
+   is left on the wall. Muted keeps its circle because that one is a call to action. The hover
+   rule above still repaints border and background, so both are cleared here too, not just the
+   border colour — and the rule sits after :hover so it wins on equal specificity. */
+.wall-audio[aria-pressed="true"] {
+  opacity: 1;
+  border-color: transparent;
+  background: none;
+  backdrop-filter: none;
+}
+
+@media (max-width: 720px) {
+  .wall-audio { top: 8px; right: 8px; width: 30px; height: 30px; }
+  .wall-audio svg { width: 17px; height: 17px; }
+}
+
+/* whatever goes in the slot is clipped to the wall and sits under the panel grid */
+.screen-content{
+  position:absolute; inset:0;
+  /* the trapezoid, in the cropped box's coordinates */
+  clip-path:polygon(0.00% 10.24%, 100.00% 0.00%, 100.00% 100.00%, 0.00% 90.10%);
+  background:#0B0B0D;
+  overflow:hidden;
+}
+/* contain, not cover: the wall is 2.56:1 and the clips are 16:9, so cover was cropping 31%
+   off the top and bottom — which sliced the SDO clip's title and its bottom captions. The
+   source now scales down whole and pillarboxes onto the grid, the way a real wall runs a
+   16:9 feed. */
+.screen-content video{width:100%;height:100%;object-fit:contain;display:block;opacity:.92}
+.screen-frame{position:absolute;inset:0;width:100%;height:100%}
+
+/* The wordmark must never sit on the panel. Below 1024px there is no room beside it, so the
+   screen moves above the wordmark as a band rather than shrinking into the corner — a shrunk
+   panel is unreadable anyway, and the overlap reads as a mistake. */
+/* No dimming at any width. The wall used to sit BEHIND the wordmark on small screens, so it was
+   knocked back to 0.38/0.46 to stop it competing. It is a band above the wordmark now, so that
+   dimming only made the mobile wall dark where desktop is full strength — and being 54%
+   transparent is what let the background glow show through the panel. Full strength everywhere,
+   same as desktop. */
+
+@media (max-width: 1024px) {
+  /* The wall sits 16.7% in from the element's own left edge, so a flush-left element leaves a
+     dead gutter and pushes the wall off the right. Overhanging to the left by 15% lands the
+     wall's left edge on the same gutter as the text below it, and keeps its right edge on
+     screen. */
+  .hero-screen {
+    position: relative;
+    top: 0;
+    right: auto;                 /* the desktop `right` would shift a relative box leftwards */
+    height: auto;          /* the logo-aligned height is a desktop idea; here it is a band */
+    aspect-ratio: 750 / 293;
+    align-self: flex-start;      /* .hero centres its children; this one is gutter-aligned */
+    /* Both edges on --hero-left, the outer edge. The P's stem sits --brk-clear further in, so
+       the wall is the wider of the two by design. */
+    width: calc(100% - var(--hero-left) * 2);
+    margin: 0 var(--hero-left) 26px;
+
+    /* Two masks, intersected: the wall dissolves downward toward the logo and fades in from the
+       left. The left ramp is the same `transparent 0% -> #000 36%` the desktop wall uses, so
+       both sizes soften on the same edge by the same amount. The right edge is NOT faded —
+       desktop does not fade its right, so neither does this.
+       The two composite keywords are the same operation: `intersect` is the standard, and
+       `source-in` is what the -webkit- prefixed property understands. */
+    /* No mask at any width. The bottom fade that used to live here dissolved the wall's lower
+       28%, which let the cyan background glow shine out through the panel. Desktop has no mask,
+       so neither does this: all four edges are hard, mobile and desktop alike. */
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-screen {
+    width: calc(100% - var(--hero-left) * 2);
+    /* 34, not 18: clearance between the wall's bottom edge and the top of the wordmark. Both
+       side margins are --hero-left, the outer edge, like the ≤1024 rule. */
+    margin: 0 var(--hero-left) 34px;
+  }
+
+  /* A phone is not a narrow desktop. The desktop glows sit at 6% and 94% and fall off by 42%,
+     which works across 1440px of width; on a 390px screen the cyan one lands so far off the
+     edge that it never arrives — measured rgb(11,11,13), i.e. nothing. So phones get their own
+     geometry: the glows sit at the two edges, run wider than the screen, and fall off later.
+     Amber reads rgb(77,50,26) and cyan rgb(19,63,70) at a mean of 16.4, against the 28.4 of the
+     old flat wash. Both colours present, and still darker than what it replaced. */
+  .hero::before {
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.010'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse 110vw 70vw at 0% 180px, rgba(255,156,61,0.34), rgba(255,156,61,0) 55%),
+      radial-gradient(ellipse 110vw 70vw at 100% 430px, rgba(42,217,236,0.30), rgba(42,217,236,0) 55%);
+  }
+}
+
+/* A still frame is enough when motion is unwelcome. */
+@media (prefers-reduced-motion: reduce) {
+  .wall-audio,
+  .wall-seq,
+  .wall-tc { display: none; }
+
+  .hero-screen video { display: none; }
+  .screen-content { background: #0B0B0D; }
+}
+
+
+.hero-word {
+  font-size: clamp(80px, 16vw, 250px);
+  line-height: 0.9;
+  position: relative;
+  z-index: 1;
+  /* Decorative. This is a 1322x220 box that paints over the wall, so without this it swallows
+     the clicks meant for the wall's sound button underneath it. Nothing in here is
+     interactive — no links, no hover state — so it takes no pointer events. */
+  pointer-events: none;
+  align-self: flex-start;
+  /* Pulled left by the wordmark's own left side bearing so PROAV's INK starts on the gutter,
+     not its box. The box edge is invisible; what a visitor measures the gutter against is the
+     stem of the P. Without this the left gutter reads 42px wider than the right at 1440 in
+     Impact, and the error grows with the window. --ink-l is measured in the page. */
+  margin-left: calc(var(--col-left) - var(--word-w) * var(--ink-l));
+  width: min(calc(var(--shell) - 48px), calc(100% - var(--hero-left) - 24px));
+  color: var(--signal-white);   /* the cycle tints the wordmark; the order lives in index.html */
+  /* 3.2s against the 20s hold. At 1.4s the change registered as an event in itself; long
+     enough and it reads as a drift you only catch if you are looking at it.
+     filter is the --ch-logo channel from the cue sheet in base.css, on the same curve, so a
+     cue and a colour change feel like one system. This list has to carry BOTH: `transition`
+     is a shorthand, so the cue sheet cannot add filter to it from its own rule without
+     replacing the colour fade. */
+  transition: color 3.2s ease-in-out, filter var(--cue-fade, 3.2s) ease-in-out;
+}
+
+/* The wordmark's cue level lives in the cue sheet in css/base.css as --ch-logo, wired there
+   like every other channel. Nothing for it here. */
+
+.hero-lockup {
+  align-self: flex-start;
+  /* --col-left, same as .hero-word: PODCAST, the tagline and the signal rule all hang off this
+     box. When this carried its own copy of the gutter instead, the P in PODCAST sat 14px left of
+     the P in PROAV. */
+  margin-left: var(--col-left);
+  width: fit-content;
+  max-width: calc(100% - var(--col-left) - var(--col-right));
+  font-size: clamp(15px, 1.2vw, 18px);
+  --track: 0.35em;
+}
+
+.hero-tagline {
+  margin-top: 14px;
+  font-size: inherit;
+  letter-spacing: var(--track);
+  color: var(--graphite-light);
+  font-weight: 600;
+}
+
+/* The hook's break after "cloud" is forced rather than left to the wrap, because where a line
+   lands depends on the font and Inter is not guaranteed to have loaded. Below 1025px the
+   paragraph is already several lines and breaks there on its own, so the rule is switched off
+   and the extra break does not leave a stub line. */
+.hook-br {
+  display: none;
+}
+
+@media (min-width: 1025px) {
+  .hook-br {
+    display: inline;
+  }
+}
+
+.hero-hook {
+  align-self: flex-start;
+  width: calc(100% - var(--col-left) - var(--col-right));
+  max-width: 860px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #cfcfd4;
+  margin: 0 0 0 var(--col-left);
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-self: flex-start;
+  margin-left: var(--col-left);
+  width: calc(100% - var(--col-left) - var(--col-right));
+}
+
+.hero-word-video {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%2050%201200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%221200%22%20height%3D%22300%22%3E%3Crect%20width%3D%221200%22%20height%3D%22300%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22135%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22180%22%20width%3D%221200%22%20height%3D%2212%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22224%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3C%2Fmask%3E%3C%2Fdefs%3E%3Ctext%20x%3D%220%22%20y%3D%22220%22%20font-family%3D%22Impact%2C%20Haettenschweiler%2C%20sans-serif%22%20font-size%3D%22200%22%20fill%3D%22black%22%20mask%3D%22url%28%23m%29%22%3EPROAV%3C%2Ftext%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%2050%201200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cmask%20id%3D%22m%22%20maskUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%221200%22%20height%3D%22300%22%3E%3Crect%20width%3D%221200%22%20height%3D%22300%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22135%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22180%22%20width%3D%221200%22%20height%3D%2212%22%20fill%3D%22black%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22224%22%20width%3D%221200%22%20height%3D%2213%22%20fill%3D%22black%22%2F%3E%3C%2Fmask%3E%3C%2Fdefs%3E%3Ctext%20x%3D%220%22%20y%3D%22220%22%20font-family%3D%22Impact%2C%20Haettenschweiler%2C%20sans-serif%22%20font-size%3D%22200%22%20fill%3D%22black%22%20mask%3D%22url%28%23m%29%22%3EPROAV%3C%2Ftext%3E%3C%2Fsvg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.4s ease-in-out;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.hero-word.video-on .hero-word-video {
+  opacity: 1;
+}
+
+/* svg */
+/* the wordmark cycle: white, amber, cyan. White is the logo's own colour, so it has no class —
+   the cycle returns to it by removing these. */
+.hero-word.tint-amber {
+  color: var(--tungsten-amber);
+}
+
+.hero-word.tint-cyan {
+  color: var(--data-cyan);
+}
+
+.hero-podcast {
+  /* The same width the signal rule takes, so the two edges agree. Both are a share of
+     .hero-lockup, whose width is set by the tagline's text, so this holds at every size.
+     space-between does the tracking: the letters are pushed apart to fill the line rather
+     than spaced by a fixed em value that would only land on one particular font. */
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - var(--track));
+  margin: 4px 0 2px;
+  font-family: Arial, Helvetica, var(--font-body), sans-serif;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--signal-white);
+  opacity: 0.75;
+}
+
+/* The size goes on the letters, not the row. --track is 0.35em and resolves against whatever
+   font-size the element using it has, so sizing the row itself made its width calc subtract a
+   45px em instead of the lockup's 18px one and the right edge landed 9px short of the rule. */
+.hero-podcast span {
+  font-size: 2.6em;
+}
+
+
+
+.hero-word svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0;
+  transition: opacity 1.4s ease-in-out;
+}
+
+.watch-hero .play-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* the clip replaces PROAV only; the PODCAST line is not part of it and stays put */
+.hero-word.video-on svg:not(.hero-podcast) {
+  opacity: 0;
+}
+
+/* signal */
+.signal-line-css {
+  width: calc(100% - var(--track));
+  height: 3px;
+  margin: 17px 0 25px;
+  border-radius: 2px;
+  background: var(--signal-gradient);
+  background-size: 220% 100%;
+  animation: heroSignalSweep 4s ease-in-out infinite;
+}
+
+/* show */
+.show-in-hero {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--shell);
+  margin: 112px auto 0;
+  padding: 0 var(--col-pad);
+  text-align: left;
+}
+
+.show-copy {
+  max-width: 1000px;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text-soft);
+  margin-bottom: 28px;
+}
+
+/* segments */
+.segments-wrap {
+  position: relative;
+}
+
+.segments {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+}
+
+.segment-card {
+  padding: 14px 4px 8px 0;
+}
+
+/* h3 */
+.segment-card h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 2.6vw, 38px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--signal-white);
+}
+
+/* p */
+.segment-card p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+/* guest */
+.guest-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 20px;
+  align-items: start;
+  perspective: 1200px;        /* gives the tiles their hinge depth */
+  perspective-origin: 50% 0;
+}
+
+/* the line that sits under a show heading */
+.watch-note {
+  max-width: 62ch;
+  margin: -16px 0 36px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-soft);
+}
+
+/* watch: one show's video slot and audio slot, side by side */
+.watch-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.watch-pair .watch-grid > * {
+  grid-column: span 12;   /* each video fills its half of the pair */
+}
+
+/* the audio slot is built like the video card beside it: tags, a solid media block, then the caption */
+.audio-slot {
+  min-width: 0;   /* a long title must wrap rather than stretch the grid column */
+}
+
+/* the holding graphic inside an empty audio or video block */
+.slot-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.audio-embed {
+  position: relative;
+  width: 100%;
+  min-height: 175px;        /* the height an Apple Podcasts player takes */
+  background: #000;
+  display: block;
+}
+
+.audio-embed iframe {
+  display: block;
+  width: 100%;
+  height: 175px;
+  border: 0;
+}
+
+/* the tags above an audio player are labels, not buttons */
+.watch-seg-tag {
+  cursor: default;
+}
+
+@media (max-width: 720px) {
+  .watch-pair {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+/* watch */
+.watch-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+}
+
+.watch-hero {
+  margin: 0;
+}
+
+.watch-segments {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 14px 14px 12px;
+}
+
+.watch-seg-btn,
+.watch-seg-tag {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 7px 11px;
+  border-radius: 0;              /* flat edges */
+  border: 1px solid var(--border-quiet);
+  background: transparent;
+  color: var(--graphite-light);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.watch-seg-btn:hover {
+  border-color: var(--signal-white);
+  color: var(--signal-white);
+}
+
+.watch-seg-btn.active[data-seg="mainstage"],
+.watch-seg-tag.active[data-seg="mainstage"] {
+  background: rgba(255,156,61,0.15);
+  border-color: var(--tungsten-amber);
+  color: var(--tungsten-amber);
+}
+
+.watch-seg-btn.active[data-seg="backstage"],
+.watch-seg-tag.active[data-seg="backstage"] {
+  background: rgba(138,138,146,0.18);
+  border-color: var(--graphite-light);
+  color: var(--signal-white);
+}
+
+.watch-seg-btn.active[data-seg="cloud"],
+.watch-seg-tag.active[data-seg="cloud"] {
+  background: rgba(42,217,236,0.15);
+  border-color: var(--data-cyan);
+  color: var(--data-cyan);
+}
+
+/* listen */
+.listen-grid {
+  display: block;
+}
+
+/* arrow */
+.platform-btn .arrow {
+  order: -1;
+  color: var(--graphite-light);
+  transition: color 0.2s ease;
+}
+
+.platform-btn:hover .arrow {
+  color: var(--tungsten-amber);
+}
+
+/* * */
+.segments > * {
+  grid-column: span 4;
+}
+
+.guest-grid > *,
+.watch-grid > * {
+  grid-column: span 3;
+}
+
+/* video */
+.hero-word-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+}
+
+@keyframes heroSignalSweep {
+  0% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+  100% { background-position: 100% 0; }
+}
+
+@media (max-width: 1024px) {
+  /* * */
+  .segments > *,
+  .watch-grid > *,
+  .guest-grid > * {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 720px) {
+  /* hero */
+  .hero {
+    /* inherits the ≤720 --gutter (28px) from tokens.css, same as every section */
+    /* The wordmark runs 1.65x the content width on phones, and --word-w has to carry that
+       factor too: it is what the bearing correction on .hero-word's margin is scaled against.
+       Left at the unmultiplied value the correction under-shoots and the gutters come out
+       7px apart. */
+    --word-w: calc((100% - var(--hero-left) - 24px) * 1.65);
+  }
+
+  .hero-lockup {
+    --track: 0.1em;
+    font-size: clamp(12px, 3.9vw, 16px);
+  }
+
+  .hero-tagline {
+    white-space: nowrap;
+  }
+
+  .hero-word {
+    width: calc((100% - var(--hero-left) - 24px) * 1.65);
+  }
+
+  /* show */
+  .show-in-hero {
+    margin-top: 40px;
+    padding: 0 var(--col-pad);
+  }
+
+  /* segments (Mainstage / Backstage / Cloud): one full-width column on phones, read like a stack of paragraphs */
+  .segments {
+    grid-template-columns: minmax(0, 1fr);
+    /* 44px here, on top of each card's own top and bottom padding, put ~66px of nothing between
+       one card's last line and the next card's chip. 22px reads as a paragraph break instead. */
+    gap: 22px;
+  }
+
+  .segments > * {
+    grid-column: auto;
+  }
+
+  /* * */
+  .guest-grid > *,
+  .merch-grid > * {
+    grid-column: span 6;
+  }
+
+  .guest-grid {
+    gap: 12px;
+  }
+
+  /* phones: fingers need a bigger target than a mouse pointer */
+  .watch-seg-btn,
+  .watch-seg-tag {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* phones: smaller role tiles so the section is not an endless scroll */
+  .guest-tag {
+    min-height: 0;
+    padding: 14px 14px 16px;
+  }
+
+  .guest-badge {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .guest-tag span {
+    font-size: 16px;
+  }
+
+  /* watch: the episode card fills the width on phones */
+  .watch-grid > * {
+    grid-column: span 12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* signal */
+  .signal-line-css {
+    animation: none;
+    background-position: 0 0;
+  }
+
+  /* hero */
+  .hero-word-video {
+    display: none;
+  }
+
+  /* svg */
+  .hero-word.video-on svg {
+    opacity: 1;
+  }
+}
+
+/* ── A PHONE HELD SIDEWAYS ─────────────────────────────────────────────────────
+   Landscape gives the wall its best shape — it is a 2.56:1 panel and a landscape phone is
+   about 2.2:1 — but the hero's top padding is sized for a tall screen, so measured at
+   844x390 the wall ran 47px past the bottom of the viewport and the visitor had to scroll to
+   see the bottom of it.
+   Here the hero tucks up under the nav, and the wall is sized by whichever runs out first:
+   the width available, or the HEIGHT available. The second term is the panel's own aspect
+   ratio solved for width, so the wall shrinks to fit the viewport instead of overflowing it
+   and keeps its 750/293 exactly.
+   svh, not vh: on a phone vh is the tallest the viewport ever gets, which is the one number
+   guaranteed to be too big while the browser chrome is showing. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .hero {
+    padding-top: 84px;
+    padding-bottom: 20px;
+  }
+
+  .hero-screen {
+    width: min(
+      calc(100% - var(--hero-left) * 2),
+      calc((100svh - 84px) * 750 / 293)
+    );
+    margin-bottom: 14px;
+  }
+}
+
+/* ═══ THE 4K SHOW CALL, IN THE EPISODES SECTION ═════════════════════════════════════════
+   A poster for showcall.html — the hero's cue stack laid out as a flat 3840x2160 broadcast
+   frame. The poster is a still; the show runs in the overlay, or at /showcall on its own.
+   It sits on its own row under the episode and the listen slot, full width, because a 4K
+   frame deserves the whole column rather than half of one. `order` rather than moved markup,
+   so the two existing cards are untouched. */
+.showcall-card { min-width: 0; }
+
+.showcall-poster {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 0;              /* flat edges */
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background:
+    radial-gradient(120% 90% at 18% 24%, rgba(255,156,61,.13), transparent 60%),
+    radial-gradient(110% 90% at 86% 88%, rgba(42,217,236,.13), transparent 62%),
+    var(--stage-black-raised, #131316);
+  border: 1px solid var(--border-quiet, rgba(245,245,240,0.12));
+}
+.showcall-poster:hover,
+.showcall-poster:focus-visible {
+  border-color: var(--signal-white, #F5F5F0);
+  outline: none;
+}
+
+/* The readout, in the same corner the real frame carries it. */
+.showcall-poster-tc {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 5px 11px;
+  border: 1px solid var(--border-quiet, rgba(245,245,240,0.12));
+  border-radius: 0;              /* flat edges */
+  background: rgba(11,11,13,0.6);
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--graphite-light, #8a8a92);
+  white-space: nowrap;
+}
+.showcall-poster-tc span:first-child { color: var(--signal-white, #F5F5F0); }
+
+.showcall-poster-line {
+  order: 2;
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: clamp(17px, 2.1vw, 29px);
+  font-weight: 700;
+  letter-spacing: 0.1em;         /* bold at this size wants less air, not more */
+  line-height: 1.3;
+  text-align: center;
+  color: var(--signal-white, #F5F5F0);
+  padding: 0 24px;
+}
+
+/* The play affordance sits in the middle of the player, like every other player on the site,
+   with the copy beneath it — the same stack the 4K frame's own invitation uses. It comes out
+   of absolute positioning and into the column so the two cannot overlap, which is what pinning
+   it to a corner was working around. */
+.showcall-poster .play-btn {
+  position: static;
+  transform: none;
+  order: 1;
+}
+.showcall-poster:hover .play-btn,
+.showcall-poster:focus-visible .play-btn { background: rgba(11,11,13,0.95); }
+
+@media (max-width: 720px) {
+  .showcall-poster-tc { top: 12px; left: 12px; font-size: 10px; padding: 4px 9px; }
+  .showcall-poster .play-btn { right: 12px; bottom: 12px; }
+}
+
+/* The show-call window has no scrim of its own. .video-modal lays 85% black over the page,
+   which would hide the very thing CUE 1 does — take the house to 30%. With the scrim gone the
+   site is simply there at full strength, and when the caller takes the level the whole page
+   dims behind the frame, exactly as it does in the hero. */
+.showcall-modal { background: transparent; }
+
+/* ═══ THE 4K WINDOW ON A PHONE ══════════════════════════════════════════════════════════ */
+/* .video-modal-inner is capped at 100vw - 48px and .video-modal-frame is a 56.25% padding
+   box, which on a 390px phone left the show a 341x192 stage: the audio button came out 10px
+   across and a call rendered at about 7px. A 3840x2160 frame cannot live inside a padded
+   card on a phone, so here the window is the screen. Scoped to .showcall-modal — the YouTube
+   modal keeps its card exactly as it was. */
+/* Keyed on orientation as well as width: a phone in landscape is 844px wide, so a plain
+   max-width phone query handed it the desktop card and pushed the close button off the top
+   of a 390px-tall viewport. */
+@media (max-width: 720px), (max-height: 520px) {
+  .showcall-modal { padding: 0; }
+
+  .showcall-modal .video-modal-inner {
+    width: 100vw;
+    height: 100dvh;                    /* dvh, so iOS browser chrome does not crop the frame */
+  }
+
+  .showcall-modal .showcall-modal-frame {
+    width: 100%;
+    height: 100%;
+    padding-top: 0;                    /* the 16:9 box goes; the stage letterboxes itself */
+    border-radius: 0;
+  }
+
+  /* With no card above it the close button floats over the frame, clear of the notch and of
+     the show's own controls in the opposite corner. */
+  .showcall-modal .video-modal-close {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
+    left: calc(env(safe-area-inset-left, 0px) + 10px);
+    margin: 0;
+    z-index: 2;
+    background: rgba(11,11,13,0.72);
+  }
+}

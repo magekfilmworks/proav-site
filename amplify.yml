@@ -1,0 +1,22 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands: []
+    build:
+      commands: []
+  artifacts:
+    baseDirectory: /
+    files:
+      - 'index.html'
+      - 'showcall.html'
+      - 'contact.html'
+      - 'signal-flow-daily.html'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - 'og-image.png'
+      - 'css/**/*'
+      - 'images/**/*'
+      - 'signal-flow/**/*'
+  cache:
+    paths: []
