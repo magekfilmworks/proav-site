@@ -1066,3 +1066,9 @@
   .showcall-poster-tc { top: 12px; left: 12px; font-size: 10px; padding: 4px 9px; }
   .showcall-poster .play-btn { right: 12px; bottom: 12px; }
 }
+
+/* The show-call window has no scrim of its own. .video-modal lays 85% black over the page,
+   which would hide the very thing CUE 1 does — take the house to 30%. With the scrim gone the
+   site is simply there at full strength, and when the caller takes the level the whole page
+   dims behind the frame, exactly as it does in the hero. */
+.showcall-modal { background: transparent; }

@@ -89,6 +89,8 @@ html, body {
   justify-content: center;
   align-items: flex-start;
   gap: calc(var(--u) * 48);
+  /* The slide's own copy, not a readout — it keeps a real margin. Only the corner readouts
+     were pulled to the frame edge. */
   padding: calc(var(--u) * 260) calc(var(--u) * 300);
   text-decoration: none;
   color: var(--signal-white, #F5F5F0);
@@ -145,7 +147,7 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: calc(var(--u) * 300);
+  padding: calc(var(--u) * 40);
   background: rgba(11, 11, 13, 0.82);
 }
 .wall-cue[hidden] { display: none !important; }
@@ -171,8 +173,8 @@ html, body {
    on the left. ON fades, OFF cuts — the rule the hero follows. */
 .wall-ready {
   position: absolute;
-  right: calc(var(--u) * 300);
-  bottom: calc(var(--u) * 190);
+  right: calc(var(--u) * 40);
+  bottom: calc(var(--u) * 40);
   max-width: 54%;
   padding: calc(var(--u) * 22) calc(var(--u) * 36);
   border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.30);
@@ -202,7 +204,7 @@ html, body {
 .wall-tc,
 .wall-seq {
   position: absolute;
-  left: calc(var(--u) * 300);
+  left: calc(var(--u) * 40);
   display: flex;
   align-items: baseline;
   gap: calc(var(--u) * 28);
@@ -216,8 +218,8 @@ html, body {
   color: var(--graphite-light, #8a8a92);
   white-space: nowrap;
 }
-.wall-tc  { bottom: calc(var(--u) * 190); }
-.wall-seq { top: calc(var(--u) * 190); }
+.wall-tc  { bottom: calc(var(--u) * 40); }
+.wall-seq { top: calc(var(--u) * 40); }
 .wall-tc[hidden], .wall-seq[hidden] { display: none !important; }
 
 .wall-tc-name, .wall-seq-name { color: var(--signal-white, #F5F5F0); }
@@ -270,8 +272,8 @@ html, body {
 /* ═══ SOUND ═════════════════════════════════════════════════════════════════════════════ */
 .wall-audio {
   position: absolute;
-  top: calc(var(--u) * 190);
-  right: calc(var(--u) * 300);
+  top: calc(var(--u) * 40);
+  right: calc(var(--u) * 40);           /* the corner; .wall-full sits immediately left of it */
   width: calc(var(--u) * 110);
   height: calc(var(--u) * 110);
   display: grid;
@@ -298,8 +300,8 @@ html, body {
    the thing people object to, not audio. Aligned under the button's glyph, not its box. */
 .wall-audio-note {
   position: absolute;
-  top: calc(var(--u) * 320);
-  right: calc(var(--u) * 300);
+  top: calc(var(--u) * 170);   /* clears the button row above it */
+  right: calc(var(--u) * 40);
   margin: 0;
   padding: calc(var(--u) * 14) calc(var(--u) * 26);
   border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.22);
@@ -319,8 +321,8 @@ html, body {
    because a standby is called once, not navigated to. */
 .wall-dots {
   position: absolute;
-  right: calc(var(--u) * 300);
-  bottom: calc(var(--u) * 110);
+  right: calc(var(--u) * 40);
+  bottom: calc(var(--u) * 40);
   display: flex;
   gap: calc(var(--u) * 20);
   z-index: 5;
@@ -345,3 +347,45 @@ html, body {
   .wall-ready.is-in,
   .wall-audio-note.is-in { transition: none; }
 }
+
+/* ═══ THE PANEL GRID ════════════════════════════════════════════════════════════════════ */
+/* Over the content, under the cue furniture. z-index 4 puts it below .wall-cue (6), the cue
+   slate (5) and the readouts (5), so a call is never printed through a seam. It is up from
+   the first frame, including behind the invite, so the frame reads as a wall before the show
+   is called. pointer-events:none or it would eat the press that starts the show. */
+.sc-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ═══ FULL SCREEN — the visitor's control, not the page's ═══════════════════════════════ */
+/* Sits beside the audio button, same size and same treatment: two controls, one pair. */
+.wall-full {
+  position: absolute;
+  top: calc(var(--u) * 40);
+  right: calc(var(--u) * 190);          /* one button-width plus a gap, left of the speaker */
+  width: calc(var(--u) * 110);
+  height: calc(var(--u) * 110);
+  display: grid;
+  place-items: center;
+  border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.30);
+  border-radius: 50%;
+  background: rgba(11, 11, 13, 0.62);
+  color: var(--signal-white, #F5F5F0);
+  cursor: pointer;
+  z-index: 7;                            /* above the invite, so it is reachable before the show */
+  pointer-events: auto;
+}
+.wall-full svg {
+  width: 56%; height: 56%;
+  fill: none; stroke: currentColor;
+  stroke-width: calc(var(--u) * 1.6);
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.wall-full .wf-out { display: none; }
+.wall-full[aria-pressed="true"] .wf-in  { display: none; }
+.wall-full[aria-pressed="true"] .wf-out { display: block; }
+.wall-full[hidden] { display: none !important; }

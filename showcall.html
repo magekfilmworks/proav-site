@@ -79,6 +79,27 @@
         <span class="wall-cue-builds"></span>
       </div>
     </div>
+      <!-- THE PANEL GRID. The same 26-unit pattern the hero wall carries (index.html's
+           .screen-frame) — a dark seam with a light highlight on its far side, which is what
+           reads as the gap between two LED panels. The hero runs 26 units across a 750-unit
+           viewBox, so 28.8 panels span the wall; this keeps that count across 3840, which puts
+           a panel at 133.3px. No trapezoid clip and no perspective: this wall is flat on. It
+           sits above the content and below the cue furniture, and it is on the first screen
+           too, so the frame reads as a wall before the show is called. -->
+      <svg class="sc-grid" viewBox="0 0 3840 2160" xmlns="http://www.w3.org/2000/svg"
+           aria-hidden="true" preserveAspectRatio="none">
+        <defs>
+          <pattern id="scPanels" width="133.333" height="133.333" patternUnits="userSpaceOnUse">
+            <path d="M133.333 0V133.333M0 133.333H133.333"
+                  stroke="#0B0B0D" stroke-opacity=".55" stroke-width="7.7"/>
+            <path d="M125.6 0V133.333M0 125.6H133.333"
+                  stroke="#F5F5F0" stroke-opacity=".13" stroke-width="5.1"/>
+          </pattern>
+        </defs>
+        <rect width="3840" height="2160" fill="url(#scPanels)"/>
+        <rect x="3.9" y="3.9" width="3832.2" height="2152.2"
+              fill="none" stroke="#F5F5F0" stroke-opacity=".30" stroke-width="7.7"/>
+      </svg>
     <!-- Timecode burn-in. A sibling of .screen-content rather than a child, so the 46% opacity
          the picture carries on phones does not dim it. Top-left: the one corner nothing masks,
          and it balances the sound button opposite. -->
@@ -107,9 +128,17 @@
     </button>
     <!-- Says so while the cue is being called aloud. It is up only for CUE 1 and goes with it,
          because audio that arrives unannounced is the thing people object to, not audio. -->
+    <button class="wall-full" id="scFull" type="button" aria-pressed="false"
+            aria-label="Full screen" title="Full screen">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <g class="wf-in"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g>
+        <g class="wf-out"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></g>
+      </svg>
+    </button>
     <p class="wall-audio-note" hidden>AUDIO UNMUTED</p>
     <!-- Jump between the wall's items. pointer-events:auto, since .hero-screen turns them off. -->
-    <div class="wall-dots" role="group" aria-label="Wall content"></div>    </div>
+    <div class="wall-dots" role="group" aria-label="Wall content"></div>
+    </div>
   </div>
 </div>
 
@@ -131,20 +160,32 @@
   document.addEventListener('webkitfullscreenchange', () => requestAnimationFrame(fit));
 })();
 
-// ── FULL SCREEN ON THE PRESS ─────────────────────────────────────────────────────────────
-// A separate listener, deliberately: the engine's own invite handler starts the show and
-// unlocks the audio on this same click, and leaving it untouched is what lets the engine stay
-// identical to the hero's. Both run on the one press.
-// Fullscreen has to be asked for inside the gesture or it is refused.
+// ── FULL SCREEN IS THE VISITOR'S CALL ──────────────────────────────────────────────────
+// The show plays in whatever window it is given. Nothing requests full screen on its own:
+// pressing the frame starts the show, and the control in the corner is the only thing that
+// goes full screen, because a page that seizes the display unasked is the complaint.
 (() => {
-  const invite = document.querySelector('.wall-invite');
   const frame = document.getElementById('scFrame');
-  if (!invite || !frame) return;
-  invite.addEventListener('click', () => {
-    const go = frame.requestFullscreen || frame.webkitRequestFullscreen;
-    if (!go) return;                       // iOS Safari on iPhone has no element fullscreen
-    try { const p = go.call(frame); if (p && p.catch) p.catch(() => {}); } catch (e) {}
+  const btn   = document.getElementById('scFull');
+  if (!btn || !frame) return;
+  const can = frame.requestFullscreen || frame.webkitRequestFullscreen;
+  if (!can) { btn.hidden = true; return; }       // iPhone Safari has no element fullscreen
+  const isFull = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+  const paint  = () => btn.setAttribute('aria-pressed', isFull() ? 'true' : 'false');
+  btn.addEventListener('click', () => {
+    try {
+      if (isFull()) {
+        const out = document.exitFullscreen || document.webkitExitFullscreen;
+        if (out) out.call(document);
+      } else {
+        const p = can.call(frame);
+        if (p && p.catch) p.catch(() => {});
+      }
+    } catch (e) {}
   });
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+  paint();
 })();
 </script>
 
@@ -299,6 +340,16 @@
       const take = c => {
         const root = document.documentElement;
         if (c) root.setAttribute('data-cue', c); else root.removeAttribute('data-cue');
+        // Inside the window on index.html this page is an iframe, and data-cue here only
+        // reaches this document — the house it is meant to dim is the PAGE BEHIND. So the cue
+        // is passed out to whatever embedded it, which sets the same attribute on itself and
+        // takes the site to --cue1-level. Harmless when this page stands on its own: the
+        // parent is this window and the message goes nowhere. Same origin only.
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ proavShowCall: 'cue', cue: c || null }, location.origin);
+          }
+        } catch (e) {}
       };
 
 

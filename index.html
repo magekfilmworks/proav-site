@@ -852,9 +852,24 @@
     document.getElementById('showCallModal').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
+  // The 4K show calls its cues from inside the iframe, where data-cue can only dim the iframe.
+  // The house it means is THIS page, so the show posts each cue out and it is applied here —
+  // the same attribute, the same --cue1-level, the same 30%. Nothing else is accepted, and only
+  // from this origin.
+  window.addEventListener('message', function (e) {
+    if (e.origin !== location.origin) return;
+    var d = e.data;
+    if (!d || d.proavShowCall !== 'cue') return;
+    var f = document.getElementById('showCallIframe');
+    if (!f || !e.source || e.source !== f.contentWindow) return;   // only the show's own frame
+    if (d.cue) document.documentElement.setAttribute('data-cue', String(d.cue));
+    else document.documentElement.removeAttribute('data-cue');
+  });
+
   function closeShowCall() {
     document.getElementById('showCallModal').classList.remove('open');
     document.getElementById('showCallIframe').src = '';   // stops the show and its audio
+    document.documentElement.removeAttribute('data-cue');  // house back to 100% on a mid-show close
     document.body.style.overflow = '';
   }
   function closeVideoModal() {
