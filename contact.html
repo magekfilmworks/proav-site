@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<!-- data-cue="cue1": CUE 1 (see the cue sheet at the top of css/base.css) carried in
-     the markup. Only the homepage plays the cue live; an interior page is already past the
-     arrival it plays on, so it opens with the cue already up. -->
-<html lang="en" data-cue="cue1">
+<!-- data-rest: this page's resting brightness, --page-rest in the cue sheet at the top of
+     css/base.css. It used to carry data-cue="cue1" so it would open looking like the homepage
+     does once the wall has called CUE 1 — but that tied it to --cue1-level, the LED WALL's dim
+     level, and taking the wall down to 20% took this page with it. They are separate now. -->
+<html lang="en" data-rest>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

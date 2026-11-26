@@ -118,19 +118,7 @@
          unmuted, it would not play at all. This button is the visitor's way to turn it on. It
          sits top-right, the one corner no mask fades, and carries pointer-events:auto to
          override the wall's pointer-events:none. -->
-    <!-- The two operator controls, in one row. They are the only things in the frame a
-         person has to hit, so they counter-scale against the stage (see css/showcall.css) and
-         stop shrinking at about 44px. Wrapped, because scaling them individually left the gap
-         between them at the stage's scale and the two buttons overlapped by 29px on a phone. -->
-    <div class="wall-ops">
-      <div class="wall-ops-row">
-      <button class="wall-audio" type="button" aria-pressed="false" aria-label="Turn on video sound">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path class="wa-speaker" d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z"/>
-        <g class="wa-off"><path d="M15 9.5l4.5 5M19.5 9.5L15 14.5"/></g>
-        <g class="wa-on"><path d="M14.8 9.4a3.6 3.6 0 0 1 0 5.2"/><path d="M17.2 7.2a7 7 0 0 1 0 9.6"/></g>
-      </svg>
-    </button>
+    
       <button class="wall-full" id="scFull" type="button" aria-pressed="false"
             aria-label="Full screen" title="Full screen">
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -139,9 +127,7 @@
       </svg>
     </button>
     </div>
-      <!-- Says so while the cue is being called aloud. It is up only for CUE 1 and goes with it,
-           because audio that arrives unannounced is the thing people object to, not audio. -->
-      <p class="wall-audio-note" hidden>AUDIO UNMUTED</p>
+      
     </div>
     
     <!-- Jump between the wall's items. pointer-events:auto, since .hero-screen turns them off. -->

@@ -171,14 +171,13 @@
            hoped for. The whole wall is the button. -->
       <button class="wall-invite" type="button">
         <span class="wall-invite-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
-               stroke-linecap="round" stroke-linejoin="round" focusable="false">
-            <path d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z" fill="currentColor" stroke="none"/>
-            <path d="M14.8 9.4a3.6 3.6 0 0 1 0 5.2"/>
-            <path d="M17.2 7.2a7 7 0 0 1 0 9.6"/>
+          <!-- Play. It was a speaker, which is the wrong promise: the control starts the show,
+               and sound comes on with it rather than being the thing being switched. -->
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M9 6.5v11l9-5.5z" fill="currentColor" stroke="none"/>
           </svg>
         </span>
-        <span class="wall-invite-line">CLICK, UNMUTE, AND EXPERIENCE THE SHOW CALLERS CUES</span>
+        <span class="wall-invite-line">PLAY AND EXPERIENCE THE SHOW CALL CUES</span>
       </button>
       <!-- A call given while something else is still on the wall — over a running clip, or
            over a slide being read. It does not replace what is up; it sits beside it on the
@@ -208,20 +207,8 @@
       <span class="wall-tc-trt">TRT --:--:--</span>
       <span class="wall-tc-code">00:00:00;00</span>
     </div>
-    <!-- The wall starts muted because every browser refuses to autoplay a video with sound;
-         unmuted, it would not play at all. This button is the visitor's way to turn it on. It
-         sits top-right, the one corner no mask fades, and carries pointer-events:auto to
-         override the wall's pointer-events:none. -->
-    <button class="wall-audio" type="button" aria-pressed="false" aria-label="Turn on video sound">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path class="wa-speaker" d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z"/>
-        <g class="wa-off"><path d="M15 9.5l4.5 5M19.5 9.5L15 14.5"/></g>
-        <g class="wa-on"><path d="M14.8 9.4a3.6 3.6 0 0 1 0 5.2"/><path d="M17.2 7.2a7 7 0 0 1 0 9.6"/></g>
-      </svg>
-    </button>
-    <!-- Says so while the cue is being called aloud. It is up only for CUE 1 and goes with it,
-         because audio that arrives unannounced is the thing people object to, not audio. -->
-    <p class="wall-audio-note" hidden>AUDIO UNMUTED</p>
+    
+    
     <!-- Jump between the wall's items. pointer-events:auto, since .hero-screen turns them off. -->
     <div class="wall-dots" role="group" aria-label="Wall content"></div>
     <svg class="screen-frame" viewBox="150 28 750 293" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMaxYMid meet">
@@ -1525,6 +1512,7 @@
 
       let i = 0;              // index into LOOP, once the show is over
       let showAt = -1;        // index into SHOW while it runs; -1 means the show is done
+      let showCalled = false; // the visitor has pressed play, so the invitation has done its job
       let cur = null;         // the step actually on the wall, from either list
 
       const card = document.querySelector('.wall-card');
@@ -2441,7 +2429,11 @@
           if (invite) { invite.hidden = false; fadeIn(invite); }
           return;                       // no timer: the wall waits here for as long as it takes
         }
-        if (invite) invite.hidden = true;
+        // The play control stays up over the rotating content. Before this it was hidden by
+        // the first item the wall showed, which was fine when the wall opened on it and
+        // nothing moved until it was pressed — now the rotation starts first and the control
+        // has to outlive it. The press is what takes it down.
+        if (invite && showCalled) invite.hidden = true;
 
         if (item.kind === 'cue') {
           leaveClip();
@@ -2660,15 +2652,14 @@
         const SLOPE = 1.2;         // and it must be this much more horizontal than vertical
         let x0 = 0, y0 = 0, down = false, swiped = false;
 
-        // While the invitation is up the wall is an invitation, not a slider. Swiping it away
-        // would move the wall into the rotation and take the show call with it — the one thing
-        // on the wall a visitor came for. The gesture starts working once the show has been
-        // called.
-        const atInvite = () => invite && !invite.hidden;
+        // The wall is a slider from the moment it loads now, so there is nothing to wait for:
+        // the rotation is already running behind the play control and swiping steers it. The
+        // control is a compact button rather than a cover, so a swipe across the wall does not
+        // land on it — and if one ends on it, the click suppression below stops it pressing.
 
         surface.addEventListener('pointerdown', e => {
           if (e.button !== undefined && e.button !== 0) return;
-          if (atInvite() || !startedOnWall(e)) { down = false; return; }
+          if (!startedOnWall(e)) { down = false; return; }
           down = true; swiped = false; x0 = e.clientX; y0 = e.clientY;
         });
 
@@ -2756,6 +2747,8 @@
       // lets the first clip start with sound later without being refused.
       if (invite) {
         invite.addEventListener('click', () => {
+          showCalled = true;
+          invite.hidden = true;
           try { vid.muted = true; const r = vid.play(); if (r && r.catch) r.catch(() => {}); } catch (e) {}
           VO.pick(VO.current() ? VO.current().name : 'male');
           VO.pickOp('female');   // by now the voice list has certainly loaded
@@ -2769,7 +2762,17 @@
       // Everything on the wall — the standby, the take, the dim it fires — waits for the site
       // to finish loading, so the cue is called against a settled page rather than racing the
       // fonts and the first clip. If load has already gone by, start now.
-      const roll = () => show({ kind: 'invite' }, () => {});
+      // The wall opens ON ITS CONTENT and slides on its own timer. It used to open on a
+      // full-frame invitation and wait there for as long as it took, which meant nothing ever
+      // rotated until a visitor pressed it and sat through the whole cue stack. The invitation
+      // is now the play control over the top instead of a cover: the rotation runs behind it,
+      // muted, and the press is still what calls the show and makes sound legal.
+      const roll = () => {
+        // The control is opacity:0 until .is-in — the invite branch of show() used to do that
+        // and the wall no longer opens on it, so it is faded in here instead.
+        if (invite) { invite.hidden = false; fadeIn(invite); }
+        go(0);
+      };
       if (document.readyState === 'complete') roll();
       else addEventListener('load', roll, { once: true });
 

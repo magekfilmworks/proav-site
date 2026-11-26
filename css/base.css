@@ -167,6 +167,7 @@ section {
      in the cue it calls — change 0.55 here and the wall says the new number by itself. Leave
      it as a 0-1 decimal; the wall does the x100. */
   --cue1-level: 0.20;
+  --page-rest:  0.55;   /* the interior pages at rest — NOT the wall's cue */
   /* WHAT THE CALL SAYS, kept separate from what the cue DOES. The level above is the real
      one. This is the figure the wall prints and the caller speaks, and it stays at 55%
      because that is what is on the recording (caller-01 and caller-02 say "fifty-five
@@ -182,8 +183,17 @@ section {
    The LED wall has no channel, so it cannot be dimmed. That is the point. */
 html[data-cue="cue1"] {
   /* The entire site, not a list of parts. */
-  --ch-site: var(--cue1-level);
+  --ch-site: var(--ch-site-cue1, var(--cue1-level));
 }
+
+/* THE INTERIOR PAGES ARE NOT A CUE.
+   signal-flow-daily.html and contact.html used to carry data-cue="cue1" so they would open
+   already looking like the homepage does after the wall has called CUE 1. That tied their
+   resting brightness to --cue1-level, which is the LED WALL's dim level — so taking the wall
+   from 55% to 30% to 20% dragged both pages down with it and left them nearly black. Two
+   different jobs, one token. They carry data-rest now and have a level of their own; 0.55 is
+   where they were authored, and the wordmark figure below is measured at it. */
+html[data-rest] { --ch-site: var(--page-rest); }
 
 /* the patch — each channel wired to its fixtures */
 /* ONE CHANNEL, ON THE CONTAINERS. This used to be five channels wired to individual
