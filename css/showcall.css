@@ -442,3 +442,15 @@ html, body {
   top: auto; right: auto;
   transform: none;                     /* the group above carries the scale */
 }
+
+/* ═══ A CALL OVER RUNNING PROGRAMME CARRIES NO SCRIM ════════════════════════════════════ */
+/* .wall-cue lays 82% black over the whole frame, which is right when the call is read against
+   the bare grid. Over a rolling clip it is not: the GO is held on screen for the rest of its
+   beat so the word can be read, and that left the first ~720ms of picture sitting behind
+   near-black with the standby still on it — the dirty start. The picture itself was always a
+   clean cut, arriving at t=0.03.
+   .is-clip is on the slot exactly while a clip is rolling, so this needs no JS: the moment the
+   picture is up the scrim goes and the call becomes what a call over programme actually is —
+   text over the picture. The GO stays readable for its full beat, and the clip is clean from
+   its first frame. */
+.screen-content.is-clip .wall-cue { background: transparent; }

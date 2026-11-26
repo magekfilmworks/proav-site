@@ -166,7 +166,7 @@ section {
      read whether or not the cue is up. The LED wall reads it and prints it as the percentage
      in the cue it calls — change 0.55 here and the wall says the new number by itself. Leave
      it as a 0-1 decimal; the wall does the x100. */
-  --cue1-level: 0.30;
+  --cue1-level: 0.20;
   /* WHAT THE CALL SAYS, kept separate from what the cue DOES. The level above is the real
      one. This is the figure the wall prints and the caller speaks, and it stays at 55%
      because that is what is on the recording (caller-01 and caller-02 say "fifty-five

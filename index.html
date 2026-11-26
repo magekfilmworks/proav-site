@@ -2382,6 +2382,46 @@
       // played to its end, where there is nothing left to fade.
       function leaveClip() { stop(); vid.pause(); }
 
+      // ── THE WALL AS A SLIDER ─────────────────────────────────────────────────────────────
+      // The LOOP strictly alternates clip and card, so every ±1 move is clip↔card — two
+      // different elements, both already in the DOM. That is what makes a real slide possible
+      // without a second pane or a snapshot: only the CARD moves. Going forward it enters from
+      // the right over the clip; leaving, it exits left and the clip is revealed behind it.
+      //
+      // This runs during the LOOP only. Through the cue stack a card lands ON the word GO, and
+      // sliding it would put the content a few hundred milliseconds behind the call — so while
+      // the show is running the card still cuts, exactly as before.
+      const SLIDE_MS = 420;
+      let slideBack = false;      // true when the move is backwards, so it slides the other way
+      let slideGen = 0;           // a fast swipe must not let an old exit hide the new card
+      const sliding = () => showAt < 0 && card
+        && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const cardIn = () => {
+        if (!card) return;
+        if (!sliding()) { card.hidden = false; return; }
+        slideGen++;
+        const from = slideBack ? 'is-enter-back' : 'is-enter';
+        card.classList.remove('is-exit', 'is-exit-back');
+        card.classList.add(from);
+        card.hidden = false;
+        void card.offsetWidth;    // commit the offset before releasing it, or there is no move
+        card.classList.remove(from);
+      };
+
+      const cardOut = () => {
+        if (!card) return;
+        if (!sliding() || card.hidden) { card.hidden = true; return; }
+        const cls = slideBack ? 'is-exit-back' : 'is-exit';
+        const gen = ++slideGen;
+        card.classList.add(cls);
+        setTimeout(() => {
+          if (slideGen !== gen) return;         // something else took the wall in the meantime
+          card.hidden = true;
+          card.classList.remove(cls);
+        }, SLIDE_MS);
+      };
+
       function show(item, done) {
         cur = item;
         clearTimeout(holdTimer); holdTimer = 0;
@@ -2438,7 +2478,7 @@
               cardDates.textContent = s.dates;
               cardTitle.textContent = s.title;
               cardMeta.textContent = s.meta;
-              card.hidden = false;
+              cardIn();                      // slides in during the LOOP, cuts during the show
             }
             if (tcWrap) tcWrap.hidden = true;   // the burn-in names a clip, not a slide
             // the hold and the standby are both measured from when the slide is actually up,
@@ -2473,7 +2513,7 @@
           const gen = cueGen;
           // if a new cue card has gone up inside the beat, this deferred hide is stale
           dropAfterGo(() => { if (cue && cueGen === gen) cue.hidden = true; });
-          if (card) card.hidden = true;
+          cardOut();                         // slides out during the LOOP, cuts during the show
           if (tcWrap) tcWrap.hidden = false;
           if (nameEl) nameEl.textContent = v.name;
           startClip();
@@ -2581,9 +2621,86 @@
 
       // ── The loop ─────────────────────────────────────────────────────────────────────────
       function go(n) {
-        i = ((n % LOOP.length) + LOOP.length) % LOOP.length;
+        const to = ((n % LOOP.length) + LOOP.length) % LOOP.length;
+        // Which way the wall is moving, so the card slides the way the hand went. A wrap from
+        // the last item to the first is still forward, and from the first back to the last is
+        // still backwards — otherwise the slider reverses direction once a lap.
+        const fwd = to === (i + 1) % LOOP.length;
+        const back = to === (i - 1 + LOOP.length) % LOOP.length;
+        if (fwd) slideBack = false;
+        else if (back) slideBack = true;
+        // Any other jump is not a neighbour, so it is not a slide: it cuts, as it always did.
+        i = to;
         show(LOOP[i], () => go(i + 1));
       }
+
+      // ── SWIPE ────────────────────────────────────────────────────────────────────────────
+      // A drag across the wall moves it one item, which in this LOOP is always clip↔card and
+      // so always slides. Pointer events cover mouse, pen and touch in one path.
+      //
+      // The whole wall is also the invitation button, so a gesture must not read as a press:
+      // nothing moves until the finger has travelled far enough to mean it, and once it has,
+      // the click that follows is swallowed. Vertical drags are left alone — on a phone the
+      // wall sits in a scrolling page and taking those would trap the scroll.
+      (() => {
+        const wall = document.querySelector('.hero-screen');
+        // The listeners go on the HERO, not on the wall. .hero-screen is pointer-events:none —
+        // the invitation is the one thing in it meant to be hit — so while a clip is up nothing
+        // inside the wall is a hit target and no pointer event ever reaches it. Listening a
+        // level up and checking that the gesture STARTED inside the wall's own box gets the
+        // clip and the card alike, with no extra markup and nothing else made clickable.
+        const surface = document.querySelector('.hero') || document.body;
+        if (!wall || !surface || !window.PointerEvent) return;
+        const startedOnWall = e => {
+          const r = wall.getBoundingClientRect();
+          return e.clientX >= r.left && e.clientX <= r.right
+              && e.clientY >= r.top  && e.clientY <= r.bottom;
+        };
+        const THRESHOLD = 44;      // px across before it counts as a swipe rather than a press
+        const SLOPE = 1.2;         // and it must be this much more horizontal than vertical
+        let x0 = 0, y0 = 0, down = false, swiped = false;
+
+        // While the invitation is up the wall is an invitation, not a slider. Swiping it away
+        // would move the wall into the rotation and take the show call with it — the one thing
+        // on the wall a visitor came for. The gesture starts working once the show has been
+        // called.
+        const atInvite = () => invite && !invite.hidden;
+
+        surface.addEventListener('pointerdown', e => {
+          if (e.button !== undefined && e.button !== 0) return;
+          if (atInvite() || !startedOnWall(e)) { down = false; return; }
+          down = true; swiped = false; x0 = e.clientX; y0 = e.clientY;
+        });
+
+        surface.addEventListener('pointermove', e => {
+          if (!down || swiped) return;
+          const dx = e.clientX - x0, dy = e.clientY - y0;
+          if (Math.abs(dx) < THRESHOLD || Math.abs(dx) < Math.abs(dy) * SLOPE) return;
+          swiped = true;
+          // Swiping takes the wall over, the same as pressing a dot: the rest of a cue stack
+          // is no longer theirs to sit through once they have started steering.
+          endShow();
+          go(i + (dx < 0 ? 1 : -1));        // drag left goes forward, as a carousel does
+        }, { passive: true });
+
+        // The card is an <a>, so the first drag over it starts the browser's own link-drag and
+        // the pointer stream stops dead — which is why a second swipe did nothing. Refusing
+        // dragstart inside the wall keeps the gesture ours.
+        surface.addEventListener('dragstart', e => {
+          if (startedOnWall(e)) e.preventDefault();
+        });
+
+        const release = () => { down = false; };
+        surface.addEventListener('pointerup', release);
+        surface.addEventListener('pointercancel', release);
+        // The invitation is the whole wall, so a completed swipe must not also press it.
+        surface.addEventListener('click', e => {
+          if (!swiped) return;
+          swiped = false;
+          e.stopPropagation();
+          e.preventDefault();
+        }, true);
+      })();
 
       vid.addEventListener('play', start);
       vid.addEventListener('pause', stop);
