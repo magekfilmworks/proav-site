@@ -300,17 +300,23 @@
 
 .wall-audio-note.is-in { opacity: 1; transition: opacity 320ms ease; }
 
-/* On a phone the wall is only ~130px tall, so 50px down from its top edge is the middle of
-   the panel — the note landed straight on the cue's first line. Below the wall instead, in
-   the margin that is already there under it. */
+/* ON THE WALL on a phone too, under the speaker icon, the same as desktop. It used to be
+   parked below the panel because the wall was once only ~130px tall there and a note under
+   the icon landed on the cue's first line; the wall is taller now and the note belongs with
+   the button it is describing. Only the chrome is lightened here — the placement comes from
+   the desktop rule above. */
 @media (max-width: 1024px) {
   .wall-audio-note {
-    top: 100%;
-    /* same line as the glyph above it, on the phone's smaller button: 30px circle, 17px glyph */
-    right: calc(8px + (30px - 17px) / 2);
-    margin-top: 7px;
     background: none;
     border-color: var(--border-quiet);
+  }
+}
+/* The phone's button is smaller — 30px circle at an 8px inset, 17px glyph — so the note
+   follows it down and keeps the same 6px below the button that desktop uses (8 + 30 + 6). */
+@media (max-width: 720px) {
+  .wall-audio-note {
+    top: 44px;
+    right: calc(8px + (30px - 17px) / 2);
   }
 }
 /* [hidden] is a plain display:none and any later display declaration beats it; this one has

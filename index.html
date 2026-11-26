@@ -2287,7 +2287,7 @@
 
         if (item.kind === 'invite') {
           leaveClip();
-          if (card) { card.hidden = true; card.classList.remove('is-in'); }
+          if (card) card.hidden = true;
           if (cue) cue.hidden = true;
           if (tcWrap) tcWrap.hidden = true;
           clearReady(true);
@@ -2304,7 +2304,7 @@
           // pause on GO. Priming it here — src set, seeked to 0, one frame decoded — leaves
           // the GO with nothing to do but play().
           primeNext();
-          if (card) { card.hidden = true; card.classList.remove('is-in'); }
+          if (card) card.hidden = true;
           if (tcWrap) tcWrap.hidden = true;     // the burn-in names a clip, not a cue
           clearReady(true);
           if (cue) runCue(item, done);
@@ -2333,8 +2333,6 @@
               cardTitle.textContent = s.title;
               cardMeta.textContent = s.meta;
               card.hidden = false;
-              card.classList.remove('is-in');
-              fadeIn(card);            // two frames at 0, then the class — see fadeIn
             }
             if (tcWrap) tcWrap.hidden = true;   // the burn-in names a clip, not a slide
             // the hold and the standby are both measured from when the slide is actually up,
@@ -2369,7 +2367,7 @@
           const gen = cueGen;
           // if a new cue card has gone up inside the beat, this deferred hide is stale
           dropAfterGo(() => { if (cue && cueGen === gen) cue.hidden = true; });
-          if (card) { card.hidden = true; card.classList.remove('is-in'); }
+          if (card) card.hidden = true;
           if (tcWrap) tcWrap.hidden = false;
           if (nameEl) nameEl.textContent = v.name;
           startClip();
