@@ -991,3 +991,78 @@
     margin-bottom: 14px;
   }
 }
+
+/* ═══ THE 4K SHOW CALL, IN THE EPISODES SECTION ═════════════════════════════════════════
+   A poster for showcall.html — the hero's cue stack laid out as a flat 3840x2160 broadcast
+   frame. The poster is a still; the show runs in the overlay, or at /showcall on its own.
+   It sits on its own row under the episode and the listen slot, full width, because a 4K
+   frame deserves the whole column rather than half of one. `order` rather than moved markup,
+   so the two existing cards are untouched. */
+.showcall-card { min-width: 0; }
+
+.showcall-poster {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 90% at 18% 24%, rgba(255,156,61,.13), transparent 60%),
+    radial-gradient(110% 90% at 86% 88%, rgba(42,217,236,.13), transparent 62%),
+    var(--stage-black-raised, #131316);
+  border: 1px solid var(--border-quiet, rgba(245,245,240,0.12));
+}
+.showcall-poster:hover,
+.showcall-poster:focus-visible {
+  border-color: var(--signal-white, #F5F5F0);
+  outline: none;
+}
+
+/* The readout, in the same corner the real frame carries it. */
+.showcall-poster-tc {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 5px 11px;
+  border: 1px solid var(--border-quiet, rgba(245,245,240,0.12));
+  border-radius: 4px;
+  background: rgba(11,11,13,0.6);
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--graphite-light, #8a8a92);
+  white-space: nowrap;
+}
+.showcall-poster-tc span:first-child { color: var(--signal-white, #F5F5F0); }
+
+.showcall-poster-line {
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: clamp(12px, 1.5vw, 19px);
+  letter-spacing: 0.2em;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--signal-white, #F5F5F0);
+  padding: 0 24px;
+}
+
+/* The play affordance, borrowed from the video card so the two read as a pair — moved out of
+   the middle so it doesn't sit on top of the copy. `.play-btn` centres itself with top/left
+   /transform, and those beat right/bottom, so all three have to be unset here. */
+.showcall-poster .play-btn {
+  top: auto;
+  left: auto;
+  transform: none;
+  right: 20px;
+  bottom: 20px;
+}
+.showcall-poster:hover .play-btn { background: rgba(11,11,13,0.95); }
+
+@media (max-width: 720px) {
+  .showcall-poster-tc { top: 12px; left: 12px; font-size: 10px; padding: 4px 9px; }
+  .showcall-poster .play-btn { right: 12px; bottom: 12px; }
+}

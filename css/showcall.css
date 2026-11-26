@@ -1,0 +1,347 @@
+/* ═══════════════════════════════════════════════════════════════════════════════════════
+   SHOW CALL — 3840 x 2160
+
+   The hero's LED wall restyled as a flat broadcast frame. The markup is identical — the same
+   .wall-* elements the cue engine drives — so everything here is layout, not behaviour.
+
+   EVERYTHING IS AUTHORED IN 4K PIXELS. The stage is exactly 3840x2160 and one transform in
+   showcall.html scales it to the screen, so a size written here is the size it is in the
+   finished frame. No clamp(), no vw, no breakpoints: this is a graphics project, not a page,
+   and it has one canvas.
+
+   Nothing from the hero's wall geometry survives: no clip-path, no perspective, no panel
+   grid, no masks. The trapezoid was the wall; this is the picture.
+   ═══════════════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* The cue sheet's own values, so the call reads the same figure it does on the hero.
+     --cue1-say is what the recording says; see the SHOW CALL BIBLE §4. */
+  --cue1-level: 0.30;
+  --cue1-say: 55%;
+  --cue-fade: 3.2s;
+  --cue-in: 1800ms;
+
+  /* One scale knob for the whole frame. Every size below is a multiple of it, so the type
+     can be taken up or down together without re-balancing by hand. */
+  --u: 1px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;            /* the stage is the only thing on the page */
+}
+
+/* ---- the letterbox ---- */
+.sc-frame {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  overflow: hidden;
+}
+
+/* ---- the 4K stage ---- */
+.sc-stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3840px;
+  height: 2160px;
+  transform-origin: 50% 50%;   /* the fit transform in showcall.html supplies the scale */
+  transform: translate(-50%, -50%);
+  background: var(--stage-black, #0B0B0D);
+}
+
+/* .hero-screen keeps its name so the engine's markup is untouched, but here it is simply the
+   full frame — no aspect-ratio, no clip-path, no absolute offsets. */
+.hero-screen,
+.screen-content {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ---- the picture ---- */
+#wall-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* both clips are 16:9, so this neither crops nor pillarboxes */
+  display: block;
+  background: #000;
+}
+
+/* ═══ SLIDES ════════════════════════════════════════════════════════════════════════════ */
+/* A GFX slide is the whole frame, not a card on a wall. Left-aligned on the same column the
+   readouts sit on, so every edge in the frame lines up. */
+.wall-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: calc(var(--u) * 48);
+  padding: calc(var(--u) * 260) calc(var(--u) * 300);
+  text-decoration: none;
+  color: var(--signal-white, #F5F5F0);
+  background:
+    radial-gradient(120% 90% at 18% 30%, rgba(255,156,61,.10), transparent 60%),
+    radial-gradient(110% 90% at 88% 88%, rgba(42,217,236,.10), transparent 62%),
+    var(--stage-black, #0B0B0D);
+}
+.wall-card[hidden] { display: none !important; }
+
+.wall-card-slate {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 28);
+}
+.wall-card-kind {
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: calc(var(--u) * 44);
+  letter-spacing: calc(var(--u) * 8);
+  color: var(--tungsten-amber, #FF9C3D);
+  border: calc(var(--u) * 3) solid currentColor;
+  border-radius: calc(var(--u) * 6);
+  padding: calc(var(--u) * 12) calc(var(--u) * 26);
+}
+.wall-card-dates {
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: calc(var(--u) * 42);
+  letter-spacing: calc(var(--u) * 5);
+  color: var(--graphite-light, #8a8a92);
+}
+.wall-card-title {
+  font-family: var(--font-display, "Barlow Condensed", sans-serif);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: calc(var(--u) * 210);
+  line-height: 0.96;
+  letter-spacing: calc(var(--u) * 2);
+  max-width: 22ch;
+}
+.wall-card-meta {
+  font-size: calc(var(--u) * 52);
+  line-height: 1.45;
+  color: var(--text-soft, #d8d8dc);
+  max-width: 46ch;
+}
+
+/* ═══ THE CUE CARD ══════════════════════════════════════════════════════════════════════ */
+/* The called cue, centre frame. Builds stack downward — the standby stays on screen when the
+   take lands under it, which is the whole point of a build. */
+.wall-cue {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: calc(var(--u) * 300);
+  background: rgba(11, 11, 13, 0.82);
+}
+.wall-cue[hidden] { display: none !important; }
+
+.wall-cue-builds {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--u) * 44);
+}
+.wall-cue-line {
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: calc(var(--u) * 76);
+  line-height: 1.3;
+  letter-spacing: calc(var(--u) * 3);
+  color: var(--signal-white, #F5F5F0);
+  opacity: 0;
+}
+.wall-cue-line.is-in { opacity: 1; transition: opacity var(--cue-in) ease; }
+
+/* ═══ THE STANDBY SLATE ═════════════════════════════════════════════════════════════════ */
+/* A call given over something already on the frame. Bottom right, clear of the clip burn-in
+   on the left. ON fades, OFF cuts — the rule the hero follows. */
+.wall-ready {
+  position: absolute;
+  right: calc(var(--u) * 300);
+  bottom: calc(var(--u) * 190);
+  max-width: 54%;
+  padding: calc(var(--u) * 22) calc(var(--u) * 36);
+  border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.30);
+  border-radius: calc(var(--u) * 8);
+  background: rgba(11, 11, 13, 0.72);
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: calc(var(--u) * 54);
+  letter-spacing: calc(var(--u) * 3);
+  color: var(--signal-white, #F5F5F0);
+  text-align: right;
+  opacity: 0;
+  transition: none;            /* OFF is a CUT */
+}
+.wall-ready[hidden] { display: none !important; }
+.wall-ready.is-in { opacity: 1; transition: opacity 200ms ease; }
+
+/* ═══ THE GO ════════════════════════════════════════════════════════════════════════════ */
+/* Absent from the frame until the caller says it, then it POPS IN with the picture. The
+   hidden state is also set inline by the engine, so a stale stylesheet cannot leave it
+   showing — see the SHOW CALL BIBLE §5. */
+.wall-go { display: none; }
+.wall-go.is-lit { display: inline; }
+
+/* ═══ READOUTS ══════════════════════════════════════════════════════════════════════════ */
+/* The clip's timecode bottom-left, the sequence's top-left: the same two readouts the hero
+   carries, on a frame that has real corners to put them in. */
+.wall-tc,
+.wall-seq {
+  position: absolute;
+  left: calc(var(--u) * 300);
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--u) * 28);
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: calc(var(--u) * 46);
+  letter-spacing: calc(var(--u) * 4);
+  padding: calc(var(--u) * 16) calc(var(--u) * 30);
+  border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.22);
+  border-radius: calc(var(--u) * 8);
+  background: rgba(11, 11, 13, 0.62);
+  color: var(--graphite-light, #8a8a92);
+  white-space: nowrap;
+}
+.wall-tc  { bottom: calc(var(--u) * 190); }
+.wall-seq { top: calc(var(--u) * 190); }
+.wall-tc[hidden], .wall-seq[hidden] { display: none !important; }
+
+.wall-tc-name, .wall-seq-name { color: var(--signal-white, #F5F5F0); }
+.wall-tc-code, .wall-seq-code {
+  color: var(--signal-white, #F5F5F0);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══ THE INVITE ════════════════════════════════════════════════════════════════════════ */
+/* The whole frame is the button. Nothing sounds and no level moves until it is pressed, and
+   that press is also the gesture the browser needs before audio is allowed — and the one that
+   takes the frame full screen. */
+.wall-invite {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: calc(var(--u) * 56);
+  border: 0;
+  background: rgba(11, 11, 13, 0.55);
+  color: var(--signal-white, #F5F5F0);
+  cursor: pointer;
+  font: inherit;
+  z-index: 6;
+}
+.wall-invite[hidden] { display: none !important; }
+
+.wall-invite-icon {
+  width: calc(var(--u) * 240);
+  height: calc(var(--u) * 240);
+  display: grid;
+  place-items: center;
+  border: calc(var(--u) * 4) solid rgba(245, 245, 240, 0.45);
+  border-radius: 50%;
+}
+.wall-invite-icon svg { width: 54%; height: 54%; }
+
+.wall-invite-line {
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: calc(var(--u) * 157);
+  letter-spacing: calc(var(--u) * 33);
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+  max-width: 30ch;
+}
+
+/* ═══ SOUND ═════════════════════════════════════════════════════════════════════════════ */
+.wall-audio {
+  position: absolute;
+  top: calc(var(--u) * 190);
+  right: calc(var(--u) * 300);
+  width: calc(var(--u) * 110);
+  height: calc(var(--u) * 110);
+  display: grid;
+  place-items: center;
+  border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.30);
+  border-radius: 50%;
+  background: rgba(11, 11, 13, 0.62);
+  color: var(--signal-white, #F5F5F0);
+  cursor: pointer;
+  z-index: 5;
+}
+.wall-audio svg {
+  width: 56%; height: 56%;
+  fill: none; stroke: currentColor;
+  stroke-width: calc(var(--u) * 1.6);
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.wall-audio .wa-speaker { fill: currentColor; stroke: none; }
+.wall-audio .wa-on { display: none; }
+.wall-audio[aria-pressed="true"] .wa-off { display: none; }
+.wall-audio[aria-pressed="true"] .wa-on { display: block; }
+
+/* Up only while CUE 1 is being called aloud, then gone — audio that arrives unannounced is
+   the thing people object to, not audio. Aligned under the button's glyph, not its box. */
+.wall-audio-note {
+  position: absolute;
+  top: calc(var(--u) * 320);
+  right: calc(var(--u) * 300);
+  margin: 0;
+  padding: calc(var(--u) * 14) calc(var(--u) * 26);
+  border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.22);
+  border-radius: calc(var(--u) * 6);
+  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
+  font-size: calc(var(--u) * 40);
+  letter-spacing: calc(var(--u) * 6);
+  color: var(--graphite-light, #8a8a92);
+  opacity: 0;
+  transition: none;            /* OFF is a CUT, as everywhere else */
+}
+.wall-audio-note[hidden] { display: none !important; }
+.wall-audio-note.is-in { opacity: 1; transition: opacity 320ms ease; }
+
+/* ═══ THE IDLE ROTATION'S DOTS ══════════════════════════════════════════════════════════ */
+/* They belong to LOOP, not to the show: the engine hides them while the show call is running,
+   because a standby is called once, not navigated to. */
+.wall-dots {
+  position: absolute;
+  right: calc(var(--u) * 300);
+  bottom: calc(var(--u) * 110);
+  display: flex;
+  gap: calc(var(--u) * 20);
+  z-index: 5;
+}
+.wall-dots[hidden] { display: none !important; }
+.wall-dots button {
+  width: calc(var(--u) * 22);
+  height: calc(var(--u) * 22);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(245, 245, 240, 0.30);
+  cursor: pointer;
+}
+.wall-dots button[aria-current="true"] { background: var(--signal-white, #F5F5F0); }
+
+/* ═══ REDUCED MOTION ════════════════════════════════════════════════════════════════════ */
+/* Zeroing the two fade tokens is enough: every fade on this page runs off one of them. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --cue-in: 0ms; --cue-fade: 0s; }
+  .wall-cue-line.is-in,
+  .wall-ready.is-in,
+  .wall-audio-note.is-in { transition: none; }
+}

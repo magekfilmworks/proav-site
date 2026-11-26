@@ -448,6 +448,27 @@
       <div class="video-title">The Art of Cutting Live</div>
     </div>
   </div>
+
+  <!-- THE SHOW CALL, 4K. Same cue stack as the hero wall, laid out as a flat 3840x2160
+       broadcast frame. The poster is a still; the show itself runs in showcall.html, which
+       also stands on its own at /showcall. Clicking opens it full screen. -->
+  <div class="video-card showcall-card reveal">
+    <div class="watch-segments" aria-hidden="true">
+      <span class="watch-seg-tag active" data-seg="backstage">SHOW CALL</span>
+      <span class="watch-seg-tag">3840 &times; 2160</span>
+    </div>
+    <div class="showcall-poster" role="button" tabindex="0"
+         aria-label="Open the 4K show call full screen"
+         onclick="openShowCall()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openShowCall();}">
+      <div class="showcall-poster-tc"><span>SHOW CALL</span><span>TRT 00:04:31</span></div>
+      <div class="showcall-poster-line">CLICK, UNMUTE, AND EXPERIENCE<br>THE SHOW CALLERS CUES</div>
+      <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    </div>
+    <div class="video-meta">
+      <div class="video-eyebrow backstage">SHOW CALL</div>
+      <div class="video-title">Called live, in 4K</div>
+    </div>
+  </div>
   </div>
 
     <div class="audio-slot reveal">
@@ -476,6 +497,18 @@
 
 </section>
 
+<!-- The 4K show call, full screen. Built like the video modal beside it, but it frames
+     showcall.html rather than YouTube. The iframe is only given its src on open and has it
+     taken away on close, so the show never runs behind a closed overlay. -->
+<div class="video-modal showcall-modal" id="showCallModal" onclick="if(event.target===this) closeShowCall()">
+  <div class="video-modal-inner">
+    <button class="video-modal-close" onclick="closeShowCall()" aria-label="Close show call">&times;</button>
+    <div class="video-modal-frame showcall-modal-frame">
+      <iframe id="showCallIframe" src="" title="ProAV show call, 4K"
+        allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
 <div class="video-modal" id="videoModal" onclick="if(event.target===this) closeVideoModal()">
   <div class="video-modal-inner">
     <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">&times;</button>
@@ -812,13 +845,25 @@
       label.className = 'video-eyebrow ' + seg;
     }
   }
+  // The 4K show call. The iframe gets its src here and loses it on close: the show is a live
+  // page with audio, and a page left loaded behind a closed overlay would keep running.
+  function openShowCall() {
+    document.getElementById('showCallIframe').src = 'showcall.html';
+    document.getElementById('showCallModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeShowCall() {
+    document.getElementById('showCallModal').classList.remove('open');
+    document.getElementById('showCallIframe').src = '';   // stops the show and its audio
+    document.body.style.overflow = '';
+  }
   function closeVideoModal() {
     document.getElementById('videoModal').classList.remove('open');
     document.getElementById('videoModalIframe').src = ''; // stop playback
     document.body.style.overflow = '';
   }
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeVideoModal(); closeImageModal(); }
+    if (e.key === 'Escape') { closeVideoModal(); closeImageModal(); closeShowCall(); }
     if (document.getElementById('imageModal').classList.contains('open')) {
       if (e.key === 'ArrowRight') modalNext();
       if (e.key === 'ArrowLeft') modalPrev();
