@@ -303,9 +303,8 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
   padding: 14px 16px 18px;
 }
 
-.watch-hero .video-title {
-  font-size: 16px;
-}
+/* The hero tile used to size its title down; large and bold is the rule for every player
+   title now, so there is nothing to override. */
 
 .video-modal {
   position: fixed;
@@ -372,9 +371,10 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
 }
 
 .video-title {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.4;
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.015em;      /* bold at this size tightens up */
+  line-height: 1.18;
   color: var(--signal-white);
 }
 
