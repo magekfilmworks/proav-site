@@ -399,3 +399,46 @@ html, body {
    engine's to run. */
 .screen-content > video { visibility: hidden; }
 .screen-content.is-clip > video { visibility: visible; }
+
+/* ═══ THE OPERATOR CONTROLS KEEP A USABLE SIZE ══════════════════════════════════════════ */
+/* Everything in this frame is authored in 4K pixels and scales with the stage, which is right
+   for the wall and wrong for the two things a person has to hit. At 390px wide the stage runs
+   at about 0.10, which rendered both buttons at 11px. --fit is the live stage scale, published
+   by the fit function in showcall.html, so these counter-scale against it and stop shrinking
+   once they reach roughly 44px on screen: 44 / 110 authored = 0.4. The max() keeps them at
+   their authored size on any screen big enough, so nothing changes on a desktop. Each grows
+   toward the inside of the frame rather than off its edge. */
+.wall-ops {
+  position: absolute;
+  top: calc(var(--u) * 40);
+  right: calc(var(--u) * 40);
+  display: flex;
+  flex-direction: column;              /* the button row, then the note under it */
+  align-items: flex-end;
+  gap: calc(var(--u) * 30);
+  z-index: 7;                          /* above the invitation, so both are reachable at rest */
+  transform: scale(max(1, 0.4 / var(--fit, 1)));
+  transform-origin: top right;
+}
+/* The whole corner counter-scales as one group, so the gaps inside it scale with the buttons.
+   Scaling the buttons on their own left the note sitting on top of them on a phone. */
+.wall-ops-row {
+  display: flex;
+  flex-direction: row-reverse;         /* DOM is audio then full; on screen full sits left */
+  align-items: flex-start;
+  gap: calc(var(--u) * 40);
+}
+/* Inside the row the buttons are flow items, so the gap between them scales with them. */
+.wall-ops .wall-audio,
+.wall-ops .wall-full {
+  position: static;
+  top: auto; right: auto;
+  flex: 0 0 auto;
+}
+/* The note under them is positioned off the stage, so it is counter-scaled from the same
+   corner to stay with the buttons it belongs to. */
+.wall-ops .wall-audio-note {
+  position: static;
+  top: auto; right: auto;
+  transform: none;                     /* the group above carries the scale */
+}

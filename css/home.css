@@ -1006,8 +1006,11 @@
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
   background:
     radial-gradient(120% 90% at 18% 24%, rgba(255,156,61,.13), transparent 60%),
     radial-gradient(110% 90% at 86% 88%, rgba(42,217,236,.13), transparent 62%),
@@ -1041,6 +1044,7 @@
 .showcall-poster-tc span:first-child { color: var(--signal-white, #F5F5F0); }
 
 .showcall-poster-line {
+  order: 2;
   font-family: var(--font-mono, ui-monospace, Menlo, monospace);
   font-size: clamp(12px, 1.5vw, 19px);
   letter-spacing: 0.2em;
@@ -1050,17 +1054,17 @@
   padding: 0 24px;
 }
 
-/* The play affordance, borrowed from the video card so the two read as a pair — moved out of
-   the middle so it doesn't sit on top of the copy. `.play-btn` centres itself with top/left
-   /transform, and those beat right/bottom, so all three have to be unset here. */
+/* The play affordance sits in the middle of the player, like every other player on the site,
+   with the copy beneath it — the same stack the 4K frame's own invitation uses. It comes out
+   of absolute positioning and into the column so the two cannot overlap, which is what pinning
+   it to a corner was working around. */
 .showcall-poster .play-btn {
-  top: auto;
-  left: auto;
+  position: static;
   transform: none;
-  right: 20px;
-  bottom: 20px;
+  order: 1;
 }
-.showcall-poster:hover .play-btn { background: rgba(11,11,13,0.95); }
+.showcall-poster:hover .play-btn,
+.showcall-poster:focus-visible .play-btn { background: rgba(11,11,13,0.95); }
 
 @media (max-width: 720px) {
   .showcall-poster-tc { top: 12px; left: 12px; font-size: 10px; padding: 4px 9px; }
@@ -1072,3 +1076,39 @@
    site is simply there at full strength, and when the caller takes the level the whole page
    dims behind the frame, exactly as it does in the hero. */
 .showcall-modal { background: transparent; }
+
+/* ═══ THE 4K WINDOW ON A PHONE ══════════════════════════════════════════════════════════ */
+/* .video-modal-inner is capped at 100vw - 48px and .video-modal-frame is a 56.25% padding
+   box, which on a 390px phone left the show a 341x192 stage: the audio button came out 10px
+   across and a call rendered at about 7px. A 3840x2160 frame cannot live inside a padded
+   card on a phone, so here the window is the screen. Scoped to .showcall-modal — the YouTube
+   modal keeps its card exactly as it was. */
+/* Keyed on orientation as well as width: a phone in landscape is 844px wide, so a plain
+   max-width phone query handed it the desktop card and pushed the close button off the top
+   of a 390px-tall viewport. */
+@media (max-width: 720px), (max-height: 520px) {
+  .showcall-modal { padding: 0; }
+
+  .showcall-modal .video-modal-inner {
+    width: 100vw;
+    height: 100dvh;                    /* dvh, so iOS browser chrome does not crop the frame */
+  }
+
+  .showcall-modal .showcall-modal-frame {
+    width: 100%;
+    height: 100%;
+    padding-top: 0;                    /* the 16:9 box goes; the stage letterboxes itself */
+    border-radius: 0;
+  }
+
+  /* With no card above it the close button floats over the frame, clear of the notch and of
+     the show's own controls in the opposite corner. */
+  .showcall-modal .video-modal-close {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
+    left: calc(env(safe-area-inset-left, 0px) + 10px);
+    margin: 0;
+    z-index: 2;
+    background: rgba(11,11,13,0.72);
+  }
+}

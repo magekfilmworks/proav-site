@@ -119,23 +119,32 @@
          unmuted, it would not play at all. This button is the visitor's way to turn it on. It
          sits top-right, the one corner no mask fades, and carries pointer-events:auto to
          override the wall's pointer-events:none. -->
-    <button class="wall-audio" type="button" aria-pressed="false" aria-label="Turn on video sound">
+    <!-- The two operator controls, in one row. They are the only things in the frame a
+         person has to hit, so they counter-scale against the stage (see css/showcall.css) and
+         stop shrinking at about 44px. Wrapped, because scaling them individually left the gap
+         between them at the stage's scale and the two buttons overlapped by 29px on a phone. -->
+    <div class="wall-ops">
+      <div class="wall-ops-row">
+      <button class="wall-audio" type="button" aria-pressed="false" aria-label="Turn on video sound">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path class="wa-speaker" d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z"/>
         <g class="wa-off"><path d="M15 9.5l4.5 5M19.5 9.5L15 14.5"/></g>
         <g class="wa-on"><path d="M14.8 9.4a3.6 3.6 0 0 1 0 5.2"/><path d="M17.2 7.2a7 7 0 0 1 0 9.6"/></g>
       </svg>
     </button>
-    <!-- Says so while the cue is being called aloud. It is up only for CUE 1 and goes with it,
-         because audio that arrives unannounced is the thing people object to, not audio. -->
-    <button class="wall-full" id="scFull" type="button" aria-pressed="false"
+      <button class="wall-full" id="scFull" type="button" aria-pressed="false"
             aria-label="Full screen" title="Full screen">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <g class="wf-in"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g>
         <g class="wf-out"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></g>
       </svg>
     </button>
-    <p class="wall-audio-note" hidden>AUDIO UNMUTED</p>
+    </div>
+      <!-- Says so while the cue is being called aloud. It is up only for CUE 1 and goes with it,
+           because audio that arrives unannounced is the thing people object to, not audio. -->
+      <p class="wall-audio-note" hidden>AUDIO UNMUTED</p>
+    </div>
+    
     <!-- Jump between the wall's items. pointer-events:auto, since .hero-screen turns them off. -->
     <div class="wall-dots" role="group" aria-label="Wall content"></div>
     </div>
@@ -151,6 +160,10 @@
   const fit = () => {
     const s = Math.min(innerWidth / 3840, innerHeight / 2160);
     stage.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+    // The scale is published so the two operator controls can hold a usable physical size on
+    // a small screen. Everything else in the frame is meant to shrink with the wall; a button
+    // you cannot hit is not a smaller button, it is a broken one.
+    stage.style.setProperty('--fit', s);
   };
   fit();
   addEventListener('resize', fit);
@@ -1163,7 +1176,10 @@
       // is out of the way for the whole show, which also leaves the bottom-right corner free
       // for the cue slate to sit hard right on the bottom edge.
       const paintDots = () => {
-        if (dotsWrap) dotsWrap.hidden = showAt >= 0;
+        // No loop here, so there is never anything to jump between: the strip stays down for
+        // the life of the page rather than coming back when the show ends.
+        if (dotsWrap) dotsWrap.hidden = true;
+        if (dotsWrap) return;
         dots.forEach((d, n) => {
           const on = showAt < 0 && n === i;
           d.classList.toggle('is-on', on);
@@ -1364,7 +1380,12 @@
 
       // ── The show ─────────────────────────────────────────────────────────────────────────
       function runShow(n) {
-        if (n >= SHOW.length) { endShow(); go(0); return; }   // show over, wall carries on
+        // THE 4K WINDOW DOES NOT LOOP. On the hero the wall is part of the page and has to
+        // carry on after the show, so there it rotates — that is index.html's and is left
+        // alone. This is a window a visitor opened to watch one show call, so when the stack
+        // runs out the show ends and the wall returns to its invitation. Nothing rotates, and
+        // the only thing that plays again is a show the visitor calls themselves.
+        if (n >= SHOW.length) { endShow(); show({ kind: 'invite' }, () => {}); return; }
         showAt = n;
         show(SHOW[n], () => runShow(n + 1));
       }
