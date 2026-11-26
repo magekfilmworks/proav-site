@@ -17,6 +17,11 @@
 .wall-tc[hidden] { display: none !important; }
 
 .wall-card {
+  /* A GFX slide FADES IN rather than cutting. The transition lives on .is-in only, so the
+     slide fades up and snaps away — the same ON-fades/OFF-cuts rule the slate follows, and
+     the same --cue-in the cue card already uses, so every piece of wall content arrives at
+     one speed. Reduced motion zeroes --cue-in at :root, so this follows it for free. */
+  opacity: 0;
   /* pointer-events:auto, because .hero-screen turns them off so the wordmark painted over the
      wall does not swallow clicks */
   pointer-events: auto;
@@ -242,6 +247,8 @@
   :root { --cue-in: 0ms; }
   .wall-cue-line { transition: none; }
 }
+
+.wall-card.is-in { opacity: 1; transition: opacity var(--cue-in) ease; }
 
 /* ── Micro dots ───────────────────────────────────────────────────────────────
    One per item on the wall; press to jump. Bottom-right, opposite the timecode burn-in and
