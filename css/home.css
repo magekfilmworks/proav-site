@@ -1132,8 +1132,8 @@ iframe { background: #000; }
      Kept for the overlay markup that no longer ships. The root no longer carries a zoom, so
      these are plain viewport units. */
   .showcall-modal .video-modal-inner {
-    width: 100vw;
-    height: 100dvh;                    /* dvh, so iOS browser chrome does not crop the frame */
+    width: calc(100vw / 0.95);         /* html carries zoom: 0.95 — pay it back here */
+    height: calc(100dvh / 0.95);       /* dvh, so iOS browser chrome does not crop the frame */
   }
 
   .showcall-modal .showcall-modal-frame {

@@ -9,18 +9,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
-
-  /* NO `zoom` HERE, AND NOTHING SHOULD PUT IT BACK.
-     This carried `zoom: 0.95` — a blanket 5% shrink of the whole site — until 26 Nov 2026.
-     `zoom` is non-standard and Blink and WebKit disagree about it, and that disagreement cost
-     a whole evening: a document framed inside a zoomed document renders 5% short of its own
-     frame in WebKit, and the uncovered strip is the browser's default white. On an iPhone it
-     was exactly rgb(255,255,255) at exactly 5% of the frame every time — 22px when the frame
-     filled the 440px screen, 18px when the frame sat in a 357px card. Nothing applied to
-     html, body or the iframe reached it, because the gap is outside every box the page owns.
-     Nine versions went at the symptom. Removing the cause took one line.
-     Everything renders 5% larger than it used to. That is the trade and it was taken
-     knowingly — see PROAV-SITE-BIBLE-v3 §4. */
+  zoom: 0.95;
 }
 
 /* body */
