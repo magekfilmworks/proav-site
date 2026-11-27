@@ -812,7 +812,8 @@
   function openShowCall() {
     document.getElementById('showCallIframe').src = 'showcall.html';
     document.getElementById('showCallModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
+    // The lock goes on the ROOT, not on body — see .scroll-lock in css/base.css.
+    document.documentElement.classList.add('scroll-lock');
   }
   // The 4K show calls its cues from inside the iframe, where data-cue can only dim the iframe.
   // The house it means is THIS page, so the show posts each cue out and it is applied here —
@@ -832,7 +833,7 @@
     document.getElementById('showCallModal').classList.remove('open');
     document.getElementById('showCallIframe').src = '';   // stops the show and its audio
     document.documentElement.removeAttribute('data-cue');  // house back to 100% on a mid-show close
-    document.body.style.overflow = '';
+    document.documentElement.classList.remove('scroll-lock');
   }
   function closeVideoModal() {
     document.getElementById('videoModal').classList.remove('open');
@@ -2920,6 +2921,67 @@
 
     startCycle();
   })();
+</script>
+
+<!-- ═══ WHITE-EDGE READOUT — add ?wb=1 to the URL ════════════════════════════════════════
+     Nothing renders without that query string. It exists because the white band down the
+     right of the 4K window on iOS cannot be reproduced on any bench available here: there is
+     no WebKit to test against, so the page has to report its own numbers from the phone.
+     The buttons turn one suspect off at a time. Whichever one makes the white disappear is
+     the cause. Delete this block once it has answered. -->
+<script>
+(function () {
+  if (!/[?&]wb=1\b/.test(location.search)) return;
+  var R = document.documentElement, B = document.body;
+  var box = document.createElement('div');
+  box.setAttribute('style', [
+    'position:fixed', 'left:6px', 'top:6px', 'z-index:2147483647',
+    'max-width:70vw', 'padding:8px 10px', 'border:1px solid #0f0',
+    'background:rgba(0,0,0,.88)', 'color:#0f0',
+    'font:11px/1.45 ui-monospace,Menlo,monospace', 'white-space:pre', 'pointer-events:auto'
+  ].join(';'));
+  var out = document.createElement('div');
+  var bar = document.createElement('div');
+  bar.setAttribute('style', 'margin-top:6px;display:flex;flex-wrap:wrap;gap:4px');
+  box.appendChild(out); box.appendChild(bar);
+
+  function btn(label, fn) {
+    var b = document.createElement('button');
+    b.textContent = label;
+    b.setAttribute('style', 'font:11px/1 ui-monospace,monospace;padding:5px 7px;' +
+      'background:#111;color:#0f0;border:1px solid #0f0;border-radius:3px');
+    b.onclick = function (e) { e.preventDefault(); fn(); setTimeout(read, 60); };
+    bar.appendChild(b);
+  }
+  // one suspect each. Whichever kills the white names the cause.
+  btn('zoom off',   function () { R.style.zoom = R.style.zoom ? '' : '1'; });
+  btn('html bg',    function () { R.style.background = R.style.background ? '' : '#0B0B0D'; });
+  btn('body ovf',   function () { B.style.overflow = B.style.overflow ? '' : 'hidden'; });
+  btn('html ovf',   function () { R.style.overflow = R.style.overflow ? '' : 'hidden'; });
+  btn('open 4K',    function () { if (window.openShowCall) openShowCall(); });
+  btn('close 4K',   function () { if (window.closeShowCall) closeShowCall(); });
+
+  function rect(el) { var r = el.getBoundingClientRect();
+    return Math.round(r.width) + 'x' + Math.round(r.height) + ' @' + Math.round(r.x) + ',' + Math.round(r.y); }
+  function read() {
+    var cs = getComputedStyle(R), bs = getComputedStyle(B);
+    var vv = window.visualViewport;
+    out.textContent = [
+      'win    ' + innerWidth + 'x' + innerHeight,
+      'visual ' + (vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) : 'n/a'),
+      'root   ' + rect(R) + '  zoom ' + cs.zoom,
+      'body   ' + rect(B),
+      'rootbg ' + cs.backgroundColor,
+      'bodybg ' + bs.backgroundColor,
+      'ovf    root ' + cs.overflow + ' / body ' + bs.overflow,
+      'lock   ' + R.classList.contains('scroll-lock'),
+      '4K     ' + !!document.querySelector('.showcall-modal.open')
+    ].join('\n');
+  }
+  addEventListener('resize', read);
+  B.appendChild(box);
+  read();
+})();
 </script>
 </body>
 </html>
