@@ -1108,6 +1108,11 @@
   .showcall-poster .play-btn { right: 12px; bottom: 12px; }
 }
 
+/* Every iframe on the page has the same white backdrop behind it — see the note on
+   .showcall-inline iframe below. The Apple embed and the YouTube modal are framed the same
+   way and get the same 5% strip, so the floor is set once, here, for all of them. */
+iframe { background: #000; }
+
 /* `display: flex` on .showcall-poster below outranks the [hidden] attribute's UA rule, so
    hiding the poster in script does nothing without this. Same trap as .wall-card. */
 .showcall-poster[hidden],
@@ -1132,6 +1137,15 @@
   height: 100%;
   border: 0;
   display: block;
+  /* THE WHITE STRIP. An iframe element paints its OWN backdrop behind the document it
+     frames, and that backdrop is white by default. This page carries zoom: 0.95, and WebKit
+     scales the framed document without scaling the frame's inner viewport to match — so
+     showcall.html renders 5% short of the box and the uncovered 18px shows that white
+     backdrop. Measured on an iPhone, 26 Nov: player 357px wide, document 339px, strip 18px,
+     5.0% exactly, and the same 5% when the frame filled the screen.
+     It is the FRAME's background, not the page's, which is why nothing done to html or body
+     ever touched it. */
+  background: #000;
 }
 
 /* Stop, top-right, clear of the show's own controls in the opposite corner. */
