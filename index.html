@@ -2400,6 +2400,7 @@
       // href stays real, so a middle-click or "open in new tab" still works.
       if (card) {
         card.addEventListener('click', e => {
+          if (swipedJustNow) { e.preventDefault(); return; }   // that was a swipe, not a press
           if (!card.dataset.overlay) return;
           if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
           e.preventDefault();
@@ -2442,6 +2443,52 @@
           runShow(0);                        // the cue stack, from CUE 1
         }, FADE + BREATH_TO_CUE);
       }
+
+      // ── SWIPE, ON A TOUCH SCREEN ────────────────────────────────────────────────────────
+      // The dots are how you move between items with a mouse; a thumb expects to swipe.
+      // Only touch events are bound, so this is a phone and tablet affordance by nature and
+      // nothing is added for a mouse.
+      //
+      // Bound to .hero, NOT to the wall: .hero-screen is pointer-events:none so the wordmark
+      // painted over it stays clickable, which means the wall never receives a touch. The
+      // start point is tested against the wall's own rect instead.
+      //
+      // Horizontal only. Anything steeper is the page being scrolled and is left alone, and
+      // the listeners are passive so a scroll is never held up waiting on this.
+      let swipedJustNow = false;
+      (function swipe() {
+        const heroEl = document.querySelector('.hero');   // own lookup: the hero const above
+        const stage  = document.querySelector('.hero-screen');  // lives in a different IIFE
+        if (!heroEl || !stage) return;
+        const MIN = 40;        // px of travel before it counts as a swipe at all
+        const SLOPE = 1.4;     // how much more horizontal than vertical it has to be
+        let x0 = 0, y0 = 0, live = false;
+
+        heroEl.addEventListener('touchstart', e => {
+          if (e.touches.length !== 1) { live = false; return; }
+          const t = e.touches[0], r = stage.getBoundingClientRect();
+          live = t.clientX >= r.left && t.clientX <= r.right &&
+                 t.clientY >= r.top  && t.clientY <= r.bottom;
+          x0 = t.clientX; y0 = t.clientY;
+        }, { passive: true });
+
+        heroEl.addEventListener('touchend', e => {
+          if (!live) return;
+          live = false;
+          const t = e.changedTouches[0];
+          const dx = t.clientX - x0, dy = t.clientY - y0;
+          if (Math.abs(dx) < MIN || Math.abs(dx) < Math.abs(dy) * SLOPE) return;
+          // The show is a written cue stack: there is nothing to swipe between while it runs,
+          // which is the same reason the dots are hidden for its whole length. A swipe during
+          // the show does nothing rather than throwing the visitor out of it.
+          if (showAt >= 0) return;
+          // suppress the click the browser fires after the touch, or a swipe that started on
+          // the show-call slate would also open the show
+          swipedJustNow = true;
+          setTimeout(() => { swipedJustNow = false; }, 400);
+          go(dx < 0 ? i + 1 : i - 1);          // swipe left for the next item, right for the last
+        }, { passive: true });
+      })();
 
       const dots = LOOP.map((item, n) => {
         const b = document.createElement('button');
