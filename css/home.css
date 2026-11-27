@@ -1126,9 +1126,18 @@
 @media (max-width: 720px), (max-height: 520px) {
   .showcall-modal { padding: 0; }
 
+  /* THE ZOOM HAS TO BE PAID BACK HERE.
+     `html` carries zoom: 0.95 (css/base.css). A fixed box written as 100vw x 100dvh is sized
+     in the viewport's own pixels and THEN scaled by that zoom, so it came out 373x627 inside
+     a 393x660 phone — a 10px gutter down each side and 17px top and bottom. On iOS that
+     gutter is the canvas outside the scaled root, which WebKit paints WHITE, which is the
+     white band down the right of the 4K window.
+     Dividing by the zoom makes the box the real screen again. A single-term division by a
+     literal, deliberately: a calc() here that multiplies a var() by a var() hits the WebKit
+     defect that zeroes a sibling term. If the zoom in base.css ever changes, change it here. */
   .showcall-modal .video-modal-inner {
-    width: 100vw;
-    height: 100dvh;                    /* dvh, so iOS browser chrome does not crop the frame */
+    width: calc(100vw / 0.95);
+    height: calc(100dvh / 0.95);       /* dvh, so iOS browser chrome does not crop the frame */
   }
 
   .showcall-modal .showcall-modal-frame {
