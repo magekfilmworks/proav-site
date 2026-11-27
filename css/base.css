@@ -9,7 +9,18 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
-  zoom: 0.95;
+
+  /* NO `zoom` HERE, AND NOTHING SHOULD PUT IT BACK.
+     This carried `zoom: 0.95` — a blanket 5% shrink of the whole site — until 26 Nov 2026.
+     `zoom` is non-standard and Blink and WebKit disagree about it, and that disagreement cost
+     a whole evening: a document framed inside a zoomed document renders 5% short of its own
+     frame in WebKit, and the uncovered strip is the browser's default white. On an iPhone it
+     was exactly rgb(255,255,255) at exactly 5% of the frame every time — 22px when the frame
+     filled the 440px screen, 18px when the frame sat in a 357px card. Nothing applied to
+     html, body or the iframe reached it, because the gap is outside every box the page owns.
+     Nine versions went at the symptom. Removing the cause took one line.
+     Everything renders 5% larger than it used to. That is the trade and it was taken
+     knowingly — see PROAV-SITE-BIBLE-v3 §4. */
 }
 
 /* body */
@@ -97,13 +108,16 @@ section {
   text-wrap: initial;
   /* Two values multiply into this colour and each has its own owner — do not collapse them.
        --tc   the hue. The scroll script ramps it white -> amber -> cyan as a title rises.
-              Its own white constant must match the 245,245,240 fallback here, or the first
+              Its own white constant must match the 216,216,220 fallback here, or the first
               scroll tick repaints a different white than the stylesheet painted.
+              216,216,220 is #d8d8dc, the palette's secondary white — the titles used to
+              rest on #F5F5F0 and read too hot. ONLY the white end moved; the amber and
+              cyan the ramp runs to are untouched.
        --dim  the scroll ramp's own level, 1 down to 0.15 as the title leaves the screen.
               Set on the element, many times a second while scrolling.
      The cue sheet below does NOT touch this colour. It rides a filter instead, so a cue can
      move while the scroll ramp is mid-ramp and neither one drags the other. */
-  color: rgba(var(--tc, 245,245,240), var(--dim, 1));
+  color: rgba(var(--tc, 216,216,220), var(--dim, 1));
   overflow-wrap: anywhere;   /* a long word never pushes the page sideways, even before the web font loads */
 }
 
@@ -142,6 +156,8 @@ section {
    0.55 renders the wordmark rgb(140,140,138) — 5.8:1 against the page, and about 2.4x below
    the LED wall's brightest decile (0.619 luminance, measured at 1440 with a clip running). */
 :root {
+  /* The house channel: every part of the page except the LED wall. */
+  --ch-site: 1;
   --ch-logo: 1;
   --ch-lockup: 1;
   --ch-title: 1;
@@ -161,7 +177,13 @@ section {
      read whether or not the cue is up. The LED wall reads it and prints it as the percentage
      in the cue it calls — change 0.55 here and the wall says the new number by itself. Leave
      it as a 0-1 decimal; the wall does the x100. */
-  --cue1-level: 0.55;
+  --cue1-level: 0.20;
+  --logo-cue1:  0.55;   /* the wordmark on CUE 1 — it crossfades colour on the same curve */
+  /* WHAT THE CALL SAYS, kept separate from what the cue DOES. The level above is the real
+     one. This is the figure the wall prints and the caller speaks, and it stays at 55%
+     because that is what is on the recording (caller-01 and caller-02 say "fifty-five
+     percent"). When those two lines are re-cut, change this to match --cue1-level. */
+  --cue1-say: 55%;
 }
 
 /* CUE 1 takes the WHOLE page down, not just the wordmark and the headings: the PODCAST
@@ -171,33 +193,58 @@ section {
    headings were outshining the 104px display headings beneath them.
    The LED wall has no channel, so it cannot be dimmed. That is the point. */
 html[data-cue="cue1"] {
-  --ch-logo:   var(--cue1-level);
-  --ch-lockup: var(--cue1-level);
-  --ch-title:  var(--cue1-level);
-  --ch-card:   var(--cue1-level);
-  --ch-body:   var(--cue1-level);
+  /* The entire site, not a list of parts. */
+  --ch-site: var(--cue1-level);
 }
 
-/* the patch — each channel wired to its fixtures */
-.hero-word             { filter: brightness(var(--ch-logo)); }
-.hero-lockup           { filter: brightness(var(--ch-lockup)); }
-.section-title.display { filter: brightness(var(--ch-title)); }
-.segment-card h3       { filter: brightness(var(--ch-card)); }
-.show-copy,
-.hero-hook,
-.segment-card p,
-.watch-note            { filter: brightness(var(--ch-body)); }
+/* THE WORDMARK KEEPS ITS OWN DEPTH.
+   .hero-word crossfades colour on a 20s cycle and takes the cue's filter on the same 3.2s
+   curve, so a cue and a colour change read as one movement. That held while the cue was
+   0.55. Taking the house to 20% tripled the distance the wordmark travels on the same curve
+   and the change started reading as a jump rather than a drift. The transition was never
+   touched — only how far it goes. 0.55 is where it was authored and what the contrast figure
+   below is measured at, so the house dims to --cue1-level and the wordmark to its own.
+   Set --logo-cue1 to var(--cue1-level) if the logo should follow the house all the way. */
+html[data-cue="cue1"] .hero-word { --ch-site: var(--logo-cue1); }
 
-/* Fade times. .hero-word is absent on purpose: it also crossfades colour, so its whole
-   transition list lives with the rest of its rule in home.css and already carries filter.
-   Declaring `transition` for it here too would replace that list and kill the colour fade. */
+/* THE INTERIOR PAGES ARE OFF THE CUE.
+   signal-flow-daily.html and contact.html used to carry data-cue="cue1" so they would open
+   already looking like the homepage does after the wall calls CUE 1. That tied them to
+   --cue1-level, the LED WALL's dim level, so taking the wall to 20% dragged both pages down
+   with it. They were moved to their own data-rest level, and then off the cue altogether:
+   there is no wall on them and nothing to obey, so they carry no cue attribute and render at
+   the root's --ch-site of 1. Nothing here applies to them any more. */
+
+/* the patch — each channel wired to its fixtures */
+/* ONE CHANNEL, ON THE CONTAINERS. This used to be five channels wired to individual
+   elements — the wordmark, the titles, the card headings, the body copy. The cue now takes
+   the WHOLE site, so the patch moved up to the containers: everything on the page is inside
+   one of these four, and each element is inside exactly one of them, so nothing is dimmed
+   twice. Leaf-level filters cannot do this — .show-in-hero holds a .section-title and a
+   .show-copy that carried their own filter, and a container filter over the top of them
+   multiplies: 0.30 x 0.30 is 0.09, near black.
+   The LED wall is the one thing left out, by name. It has no channel and sits outside this
+   list, so no cue can dim it — everything else steps back and the wall is the brightest
+   thing on the page. That is the whole point of the dim cue. */
+.nav,
+footer,
+body > section,
+.hero > *:not(.hero-screen) { filter: brightness(var(--ch-site)); }
+/* Fade times. .hero-word is excluded BY SELECTOR, not by intent.
+   This used to read `.hero > *:not(.hero-screen)` with a comment saying the wordmark was
+   "absent on purpose" because it carries its own transition list in home.css — but that
+   selector matches .hero-word, and at two classes it outranks the one-class `.hero-word`
+   rule whatever the file order. So it replaced that list with filter alone and the
+   wordmark's 20s colour cycle lost its 3.2s crossfade and started cutting. Measured: the
+   colour jumped between samples 250ms apart with no intermediate values.
+   The wordmark is named out of the selector now. Its own rule in home.css carries BOTH
+   color and filter, which is the only place that list can live — `transition` is a
+   shorthand, so any rule declaring it here would wipe the colour fade again. */
 .hero-lockup,
-.section-title.display,
-.segment-card h3,
-.show-copy,
-.hero-hook,
-.segment-card p,
-.watch-note { transition: filter var(--cue-fade) ease-in-out; }
+.nav,
+footer,
+body > section,
+.hero > *:not(.hero-screen):not(.hero-word) { transition: filter var(--cue-fade) ease-in-out; }
 
 /* the eyebrow label above each section title */
 .section-eyebrow {

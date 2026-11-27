@@ -36,6 +36,35 @@ html, body {
   overflow: hidden;            /* the stage is the only thing on the page */
 }
 
+/* ---- back to the site ---- */
+/* Authored in real pixels, not stage units: it belongs to the browser window, not to the
+   3840x2160 stage, so it must stay legible at any fit scale. */
+.sc-back {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  left: max(12px, env(safe-area-inset-left, 0px));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  font: 600 13px/1 var(--font-display, system-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--signal-white, #F5F5F0);
+  background: rgba(11, 11, 13, 0.72);
+  border: 1px solid rgba(245, 245, 240, 0.30);
+  border-radius: 999px;
+}
+
+.sc-back:hover,
+.sc-back:focus-visible { background: rgba(11, 11, 13, 0.92); }
+
+/* `display: inline-flex` above outranks the [hidden] attribute's UA rule, so the script that
+   hides this inside a frame does nothing without it. Same trap as .wall-card and
+   .showcall-poster in home.css. */
+.sc-back[hidden] { display: none !important; }
+
 /* ---- the letterbox ---- */
 .sc-frame {
   position: fixed;
@@ -363,32 +392,41 @@ html, body {
 
 /* ═══ FULL SCREEN — the visitor's control, not the page's ═══════════════════════════════ */
 /* Sits beside the audio button, same size and same treatment: two controls, one pair. */
-.wall-full {
-  position: absolute;
-  top: calc(var(--u) * 40);
-  right: calc(var(--u) * 190);          /* one button-width plus a gap, left of the speaker */
-  width: calc(var(--u) * 110);
-  height: calc(var(--u) * 110);
+/* ═══ FULL SCREEN — the visitor's control, not the page's ══════════════════════════════
+   Authored in real pixels, beside the back link, NOT in stage units. In the stage it scaled
+   with the 4K fit, so on a phone it painted about 13px across: visible, not tappable.
+   44px is the minimum comfortable touch target. */
+.sc-full {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  right: max(12px, env(safe-area-inset-right, 0px));
+  z-index: 20;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
-  border: calc(var(--u) * 3) solid rgba(245, 245, 240, 0.30);
-  border-radius: 50%;
-  background: rgba(11, 11, 13, 0.62);
+  padding: 0;
   color: var(--signal-white, #F5F5F0);
+  background: rgba(11, 11, 13, 0.72);
+  border: 1px solid rgba(245, 245, 240, 0.30);
+  border-radius: 50%;
   cursor: pointer;
-  z-index: 7;                            /* above the invite, so it is reachable before the show */
-  pointer-events: auto;
 }
-.wall-full svg {
-  width: 56%; height: 56%;
+
+.sc-full:hover,
+.sc-full:focus-visible { background: rgba(11, 11, 13, 0.92); }
+
+.sc-full svg {
+  width: 22px; height: 22px;
   fill: none; stroke: currentColor;
-  stroke-width: calc(var(--u) * 1.6);
+  stroke-width: 1.8;
   stroke-linecap: round; stroke-linejoin: round;
 }
-.wall-full .wf-out { display: none; }
-.wall-full[aria-pressed="true"] .wf-in  { display: none; }
-.wall-full[aria-pressed="true"] .wf-out { display: block; }
-.wall-full[hidden] { display: none !important; }
+
+.sc-full .wf-out { display: none; }
+.sc-full[aria-pressed="true"] .wf-in  { display: none; }
+.sc-full[aria-pressed="true"] .wf-out { display: block; }
+.sc-full[hidden] { display: none !important; }
 
 /* ═══ THE PICTURE IS UP ONLY WHILE A CLIP ROLLS ═════════════════════════════════════════ */
 /* A paused clip holds its last frame, so the wall used to carry the ARTEMIS frame behind the

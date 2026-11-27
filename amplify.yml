@@ -9,6 +9,8 @@ frontend:
     baseDirectory: /
     files:
       - 'index.html'
+      - 'showcall.html'
+      - 'compare.html'
       - 'contact.html'
       - 'signal-flow-daily.html'
       - 'robots.txt'
