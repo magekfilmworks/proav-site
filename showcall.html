@@ -27,9 +27,14 @@
 <link rel="stylesheet" href="css/showcall.css">
 </head>
 <body>
-<!-- Back to the site. The show is reached as its own page on a phone, so it needs a way out
-     that is not the browser chrome. Fixed to the frame, clear of the show's own controls. -->
-<a class="sc-back" href="/">&larr;&nbsp; ProAV</a>
+<!-- Back to the site. This page stands on its own as well as being framed, so it needs a way
+     out when it is the whole window. HIDDEN WHEN FRAMED — inside the 4K window the overlay
+     has its own close button in the same corner and the two collide. -->
+<a class="sc-back" href="/" hidden>&larr;&nbsp; ProAV</a>
+<script>
+  // Only the top-level document gets the back link. In a frame the host page owns the close.
+  if (window.top === window.self) document.querySelector('.sc-back').hidden = false;
+</script>
 
 <!-- The letterbox. Black, and the stage is centred in it. -->
 <div class="sc-frame" id="scFrame">

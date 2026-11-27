@@ -426,15 +426,6 @@
       </div>
       <div class="showcall-poster-line line-b">THE SHOW CALL CUES</div>
     </div>
-    <!-- THE SHOW, IN PLACE. No overlay: the poster is swapped for the frame inside the card
-         it already occupies, so the page keeps its normal layout and nothing is laid over it.
-         The src is only set on play and taken away on stop, so the show never runs unseen. -->
-    <div class="showcall-inline" hidden>
-      <iframe id="showCallInline" src="" title="ProAV show call, 4K"
-        allow="autoplay; fullscreen" allowfullscreen></iframe>
-      <button class="showcall-inline-stop" type="button" onclick="closeShowCall()"
-        aria-label="Stop the show call">&times;</button>
-    </div>
     <div class="video-meta">
       <div class="video-eyebrow backstage">SHOW CALL</div>
       <div class="video-title">Play and experience the show call cues</div>
@@ -468,6 +459,23 @@
 
 </section>
 
+<!-- THE 4K SHOW CALL, FULL SCREEN. Built like the video modal beside it, but it frames
+     showcall.html rather than YouTube. The iframe is only given its src on open and has it
+     taken away on close, so the show never runs behind a closed overlay.
+     IT IS A DIRECT CHILD OF BODY, AND THAT MATTERS. The cue dims `body > section`, and a
+     filter applies to an element's whole subtree with no way for a descendant to opt out —
+     so a player inside a section goes down with the page when CUE 1 is taken. Out here the
+     window keeps its level while the house steps back around it, the same way the LED wall
+     does. Do not move this inside a section. -->
+<div class="video-modal showcall-modal" id="showCallModal" onclick="if(event.target===this) closeShowCall()">
+  <div class="video-modal-inner">
+    <button class="video-modal-close" onclick="closeShowCall()" aria-label="Close show call">&times;</button>
+    <div class="video-modal-frame showcall-modal-frame">
+      <iframe id="showCallIframe" src="" title="ProAV show call, 4K"
+        allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
 <div class="video-modal" id="videoModal" onclick="if(event.target===this) closeVideoModal()">
   <div class="video-modal-inner">
     <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">&times;</button>
@@ -809,19 +817,53 @@
   // THE SHOW RUNS IN THE PAGE, NOT OVER IT. The overlay is gone: the poster hides, the frame
   // takes its place in the same card, and the page is left exactly as it was — no fixed
   // layer, no scroll lock, nothing covering the document.
-  // The show plays in the card, on every device.
-  // It framed badly on iOS until 26 Nov, when the root's `zoom: 0.95` was removed — that zoom
-  // was what made a framed document render 5% short of its frame. v236 worked around it by
-  // navigating away on a phone; that is gone, because the cause is.
-  function openShowCall() {
-    var poster = document.querySelector('.showcall-poster');
-    var box    = document.querySelector('.showcall-inline');
-    if (!poster || !box) return;
-    document.getElementById('showCallInline').src = 'showcall.html';
-    poster.hidden = true;
-    box.hidden = false;
-    box.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  // THE WINDOW ZOOMS UP OUT OF THE TILE, over a ground that goes dark.
+  // A FLIP: the window is laid out where it will end up, measured against the tile that was
+  // pressed, put back over that tile with a transform, and then released. The browser
+  // animates the transform, not layout, so it stays smooth at any size.
+  // The window is a direct child of body — see the note on its markup — so CUE 1 cannot dim
+  // it, and nothing here depends on where the tile sits on the page.
+  var SC_FLIP = 420;   // ms. The scrim's own fade is 0.25s, set on .video-modal.
+
+  function scFlip(modal, from, back) {
+    var inner = modal.querySelector('.video-modal-inner');
+    if (!inner || !from) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var to = inner.getBoundingClientRect();
+    if (!to.width || !to.height || !from.width || !from.height) return;
+    var sx = from.width / to.width;
+    var sy = from.height / to.height;
+    var dx = (from.left + from.width  / 2) - (to.left + to.width  / 2);
+    var dy = (from.top  + from.height / 2) - (to.top  + to.height / 2);
+    var at = 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx + ',' + sy + ')';
+
+    if (back) {                                   // closing: fall back into the tile
+      inner.style.transition = 'transform ' + SC_FLIP + 'ms cubic-bezier(.4,0,.7,.3)';
+      inner.style.transform = at;
+      return;
+    }
+    inner.style.transition = 'none';               // opening: start on the tile...
+    inner.style.transform = at;
+    // two frames, so the start state is painted before the class that animates off it —
+    // one frame and the browser coalesces both and the thing simply appears
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        inner.style.transition = 'transform ' + SC_FLIP + 'ms cubic-bezier(.2,.7,.2,1)';
+        inner.style.transform = '';               // ...and let it go
+      });
+    });
   }
+
+  function openShowCall() {
+    var modal  = document.getElementById('showCallModal');
+    var poster = document.querySelector('.showcall-poster');
+    var from   = poster ? poster.getBoundingClientRect() : null;
+    document.getElementById('showCallIframe').src = 'showcall.html';
+    modal.classList.add('open');                   // lays the window out where it ends up
+    scFlip(modal, from, false);                    // then zooms it up out of the tile
+    document.body.style.overflow = 'hidden';
+  }
+
   // The 4K show calls its cues from inside the iframe, where data-cue can only dim the iframe.
   // The house it means is THIS page, so the show posts each cue out and it is applied here —
   // the same attribute, the same --cue1-level, the same 30%. Nothing else is accepted, and only
@@ -830,19 +872,30 @@
     if (e.origin !== location.origin) return;
     var d = e.data;
     if (!d || d.proavShowCall !== 'cue') return;
-    var f = document.getElementById('showCallInline');
+    var f = document.getElementById('showCallIframe');
     if (!f || !e.source || e.source !== f.contentWindow) return;   // only the show's own frame
     if (d.cue) document.documentElement.setAttribute('data-cue', String(d.cue));
     else document.documentElement.removeAttribute('data-cue');
   });
 
   function closeShowCall() {
+    var modal  = document.getElementById('showCallModal');
     var poster = document.querySelector('.showcall-poster');
-    var box    = document.querySelector('.showcall-inline');
-    document.getElementById('showCallInline').src = '';   // stops the show and its audio
-    if (box) box.hidden = true;
-    if (poster) poster.hidden = false;
+    var inner  = modal.querySelector('.video-modal-inner');
+    // The show stops on the press, not when the animation lands — a 420ms tail of a voice
+    // still calling cues while the window falls away reads as a mistake.
+    document.getElementById('showCallIframe').src = '';
     document.documentElement.removeAttribute('data-cue');  // house back to 100% on a mid-show close
+    document.body.style.overflow = '';
+    scFlip(modal, poster ? poster.getBoundingClientRect() : null, true);
+    modal.classList.remove('open');                // the scrim fades over its own 0.25s
+    // clear the transform once it is out of sight, or the next open starts from the old one
+    setTimeout(function () {
+      if (inner && !modal.classList.contains('open')) {
+        inner.style.transition = 'none';
+        inner.style.transform = '';
+      }
+    }, SC_FLIP + 60);
   }
   function closeVideoModal() {
     document.getElementById('videoModal').classList.remove('open');

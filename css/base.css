@@ -230,30 +230,6 @@ html[data-cue="cue1"] .hero-word { --ch-site: var(--logo-cue1); }
 footer,
 body > section,
 .hero > *:not(.hero-screen) { filter: brightness(var(--ch-site)); }
-
-/* ═══ THE 4K PLAYER IS LEFT OUT, THE SAME WAY THE WALL IS ══════════════════════════════
-   A filter on an element applies to everything inside it — a descendant cannot opt out, and
-   a counter-brightness does not work either, because each filter clamps before the next one
-   runs, so brightness(5) under brightness(0.2) comes back as blown-out grey, not the
-   original picture.
-   So the player can only stay lit if NOTHING above it is filtered. #watch is a body > section
-   and would carry the dim for its whole subtree, which is why the show went down with the
-   page when it played in the card. (It never happened while the show was in a lightbox: that
-   overlay was a direct child of body, outside this list entirely.)
-   The patch is therefore walked down the three containers between the section and the card,
-   each level filtering its own children except the one that leads to the player. Every other
-   element still sits inside exactly one filtered container, so nothing is dimmed twice and
-   nothing else changes.
-   This is the same move as naming .hero-screen out of the selector above: the thing the cue
-   is ABOUT stays at full level while the house steps back around it. */
-#watch,
-#watch .watch-pair,
-#watch .watch-grid { filter: none; }
-
-#watch > *:not(.watch-pair),
-#watch .watch-pair > *:not(.watch-grid),
-#watch .watch-grid > *:not(.showcall-card) { filter: brightness(var(--ch-site)); }
-
 /* Fade times. .hero-word is excluded BY SELECTOR, not by intent.
    This used to read `.hero > *:not(.hero-screen)` with a comment saying the wordmark was
    "absent on purpose" because it carries its own transition list in home.css — but that
@@ -264,9 +240,6 @@ body > section,
    The wordmark is named out of the selector now. Its own rule in home.css carries BOTH
    color and filter, which is the only place that list can live — `transition` is a
    shorthand, so any rule declaring it here would wipe the colour fade again. */
-#watch > *:not(.watch-pair),
-#watch .watch-pair > *:not(.watch-grid),
-#watch .watch-grid > *:not(.showcall-card),
 .hero-lockup,
 .nav,
 footer,
