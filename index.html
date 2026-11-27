@@ -812,8 +812,7 @@
   function openShowCall() {
     document.getElementById('showCallIframe').src = 'showcall.html';
     document.getElementById('showCallModal').classList.add('open');
-    // The lock goes on the ROOT, not on body — see .scroll-lock in css/base.css.
-    document.documentElement.classList.add('scroll-lock');
+    document.body.style.overflow = 'hidden';
   }
   // The 4K show calls its cues from inside the iframe, where data-cue can only dim the iframe.
   // The house it means is THIS page, so the show posts each cue out and it is applied here —
@@ -833,7 +832,7 @@
     document.getElementById('showCallModal').classList.remove('open');
     document.getElementById('showCallIframe').src = '';   // stops the show and its audio
     document.documentElement.removeAttribute('data-cue');  // house back to 100% on a mid-show close
-    document.documentElement.classList.remove('scroll-lock');
+    document.body.style.overflow = '';
   }
   function closeVideoModal() {
     document.getElementById('videoModal').classList.remove('open');
@@ -2958,6 +2957,7 @@
   btn('html bg',    function () { R.style.background = R.style.background ? '' : '#0B0B0D'; });
   btn('body ovf',   function () { B.style.overflow = B.style.overflow ? '' : 'hidden'; });
   btn('html ovf',   function () { R.style.overflow = R.style.overflow ? '' : 'hidden'; });
+  btn('guard off',  function () { R.classList.toggle('no-guard'); });
   btn('open 4K',    function () { if (window.openShowCall) openShowCall(); });
   btn('close 4K',   function () { if (window.closeShowCall) closeShowCall(); });
 
@@ -2974,7 +2974,7 @@
       'rootbg ' + cs.backgroundColor,
       'bodybg ' + bs.backgroundColor,
       'ovf    root ' + cs.overflow + ' / body ' + bs.overflow,
-      'lock   ' + R.classList.contains('scroll-lock'),
+      'guard  ' + (R.classList.contains('no-guard') ? 'OFF' : 'on'),
       '4K     ' + !!document.querySelector('.showcall-modal.open')
     ].join('\n');
   }

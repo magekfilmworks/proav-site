@@ -15,16 +15,36 @@ html {
      which happens only while the root's own background is transparent — give the root a
      colour and propagation stops and the colour is painted in the scaled box instead, which
      is the top-left 95% and no more. v228 tried exactly that and the white stayed.
-     The scroll lock is what has to stay off body; see .scroll-lock below. */
+     The canvas guard below is what covers the gap instead. */
 }
 
-/* THE SCROLL LOCK, ON THE ROOT — not on body.
-   Every modal used to freeze the page with body.style.overflow = 'hidden'. On iOS that is
-   what loses the body-to-canvas background propagation described above, and the uncovered
-   right and bottom edges fall back to the browser's default white — the white band down the
-   side of the 4K window. Locking the root instead leaves body's background doing its job. */
-html.scroll-lock {
-  overflow: hidden;
+/* ═══ THE CANVAS GUARD ═════════════════════════════════════════════════════════════════
+   The root is zoomed to 0.95, so everything this document paints lands inside the top-left
+   95% of the screen. That normally does not show, because body's background is PROPAGATED to
+   the canvas and the canvas is the whole screen. The moment anything stops that propagation,
+   the uncovered right and bottom edges fall back to the browser's default white — which on
+   iOS is the white band down the side and under the 4K window.
+
+   Three attempts went at the propagation itself: making the window fill the screen (v226),
+   giving the root its own colour (v228 — which STOPS propagation and paints only the root's
+   scaled box, so it could never have worked), and moving the modals' scroll lock off body
+   (v229). The white survived all three.
+
+   So this stops guessing which rule breaks it and paints the ground directly: one fixed
+   layer, oversized past every edge so the zoom cannot leave a gap, sitting behind everything
+   on the page. Whatever the propagation does or does not do, there is no bare canvas left to
+   show through. It is the colour the page already is, so nothing looks different.
+
+   -10% rather than 0: the inset resolves against the viewport and is then scaled by the same
+   0.95, so it has to overshoot by more than the 5% the zoom takes away. */
+html.no-guard::before { display: none; }   /* the ?wb=1 readout's "guard off" button */
+html::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  background: var(--stage-black);
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* body */
