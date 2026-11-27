@@ -2970,6 +2970,9 @@
       'win    ' + innerWidth + 'x' + innerHeight,
       'visual ' + (vv ? Math.round(vv.width) + 'x' + Math.round(vv.height) : 'n/a'),
       'root   ' + rect(R) + '  zoom ' + cs.zoom,
+      'rootmin ' + cs.minWidth + ' x ' + cs.minHeight,
+      'paints  ' + Math.round(R.getBoundingClientRect().width * parseFloat(cs.zoom || 1)) +
+                   ' of ' + innerWidth,
       'body   ' + rect(B),
       'rootbg ' + cs.backgroundColor,
       'bodybg ' + bs.backgroundColor,

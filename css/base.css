@@ -10,6 +10,22 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
   zoom: 0.95;
+
+  /* THE ZOOM HAS TO BE PAID BACK IN LAYOUT, OR THE PAGE IS 5% TOO SMALL FOR THE SCREEN.
+     Measured on an iPhone, 26 Nov: win 440x868, root rect 440 wide, zoom 0.95 — so the
+     document is laid out at 440 and PAINTED at 418, leaving a 22px strip of bare canvas down
+     the right and the same under the bottom. That strip is the white band.
+     Blink expands the layout viewport to 1/zoom when the root is zoomed, so the document
+     still fills the screen and nothing shows; WebKit does not. That is why this never
+     reproduced on any bench here, and why four attempts at painting the gap all failed —
+     there was no background to fix, the page itself was short.
+     100vw/100vh are the real screen either way, so dividing by the zoom gives the root a
+     layout box that lands back on the screen edge once it is scaled. In Blink it matches
+     what the engine already does, so it changes nothing there. If the zoom above ever moves
+     off 0.95, these two move with it. */
+  min-width: calc(100vw / 0.95);
+  min-height: calc(100vh / 0.95);
+
   /* NO background here, deliberately. The root is zoomed to 0.95, so its own box covers only
      the top-left 95% of the screen. The canvas behind it is painted by PROPAGATION from body,
      which happens only while the root's own background is transparent — give the root a
