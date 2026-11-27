@@ -1110,69 +1110,11 @@
   .showcall-poster .play-btn { right: 12px; bottom: 12px; }
 }
 
-/* Every iframe on the page has the same white backdrop behind it — see the note on
-   .showcall-inline iframe below. The Apple embed and the YouTube modal are framed the same
-   way and get the same 5% strip, so the floor is set once, here, for all of them. */
+/* An iframe paints its OWN backdrop behind the document it frames, and that backdrop is
+   white by default. That is what showed as a 5% strip down every frame on iOS under the
+   root zoom that used to live in base.css. It is gone as of 26 Nov and the strip with it,
+   but this stays as a floor so no frame can ever show browser white again. */
 iframe { background: #000; }
-
-/* `display: flex` on .showcall-poster below outranks the [hidden] attribute's UA rule, so
-   hiding the poster in script does nothing without this. Same trap as .wall-card. */
-.showcall-poster[hidden],
-.showcall-inline[hidden] { display: none !important; }
-
-/* ═══ THE SHOW CALL, IN PLACE ══════════════════════════════════════════════════════════
-   No overlay. The poster is swapped for this frame inside the card it already occupies, so
-   the show sits in the page's normal flow — nothing fixed, nothing laid over the document,
-   no scroll lock. 16:9, the same box the poster filled. */
-.showcall-inline {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #000;
-  overflow: hidden;
-}
-
-.showcall-inline iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-  /* THE WHITE STRIP. An iframe element paints its OWN backdrop behind the document it
-     frames, and that backdrop is white by default. This page used to carry zoom: 0.95, and WebKit
-     scales the framed document without scaling the frame's inner viewport to match — so
-     made showcall.html render 5% short of the box; the uncovered 18px showed that white
-     backdrop. Measured on an iPhone, 26 Nov: player 357px wide, document 339px, strip 18px,
-     5.0% exactly, and the same 5% when the frame filled the screen. Setting this colour did
-     NOT fix it — the gap is outside the frame's painted box. Removing the root zoom did.
-     This stays as a floor so no frame can ever show browser white again. */
-  background: #000;
-}
-
-/* Stop, top-right, clear of the show's own controls in the opposite corner. */
-.showcall-inline-stop {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 2;
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  font: 400 20px/1 var(--font-body, system-ui);
-  color: var(--signal-white, #F5F5F0);
-  background: rgba(11, 11, 13, 0.72);
-  border: 1px solid rgba(245, 245, 240, 0.30);
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.showcall-inline-stop:hover,
-.showcall-inline-stop:focus-visible {
-  background: rgba(11, 11, 13, 0.92);
-}
 
 /* The show-call window has no scrim of its own. .video-modal lays 85% black over the page,
    which would hide the very thing CUE 1 does — take the house to 30%. With the scrim gone the
