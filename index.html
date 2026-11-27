@@ -809,7 +809,20 @@
   // THE SHOW RUNS IN THE PAGE, NOT OVER IT. The overlay is gone: the poster hides, the frame
   // takes its place in the same card, and the page is left exactly as it was — no fixed
   // layer, no scroll lock, nothing covering the document.
+  // NO FRAME ON A PHONE.
+  // Every white edge chased on 26 Nov came from the same place: an iframe inside a document
+  // that carries zoom: 0.95. The framed page renders 5% short of the frame's box and the
+  // uncovered strip is the browser's own white — measured at exactly 255,255,255, a colour
+  // that appears nowhere in this palette. It was 5% of the screen when the frame filled the
+  // screen and 5% of the card when the frame sat in the card, which is what named it.
+  // A phone gets the show as its own page instead. showcall.html already stands on its own,
+  // it is unzoomed, and a 4K frame is worth the whole screen on a phone anyway. Back returns.
+  // The desktop keeps the frame in the card, where there is room for it and no artifact.
   function openShowCall() {
+    if (window.matchMedia('(max-width: 720px), (max-height: 520px)').matches) {
+      location.href = 'showcall.html';
+      return;
+    }
     var poster = document.querySelector('.showcall-poster');
     var box    = document.querySelector('.showcall-inline');
     if (!poster || !box) return;

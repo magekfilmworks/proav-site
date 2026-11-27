@@ -36,6 +36,30 @@ html, body {
   overflow: hidden;            /* the stage is the only thing on the page */
 }
 
+/* ---- back to the site ---- */
+/* Authored in real pixels, not stage units: it belongs to the browser window, not to the
+   3840x2160 stage, so it must stay legible at any fit scale. */
+.sc-back {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  left: max(12px, env(safe-area-inset-left, 0px));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  font: 600 13px/1 var(--font-display, system-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--signal-white, #F5F5F0);
+  background: rgba(11, 11, 13, 0.72);
+  border: 1px solid rgba(245, 245, 240, 0.30);
+  border-radius: 999px;
+}
+
+.sc-back:hover,
+.sc-back:focus-visible { background: rgba(11, 11, 13, 0.92); }
+
 /* ---- the letterbox ---- */
 .sc-frame {
   position: fixed;
