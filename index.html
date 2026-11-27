@@ -78,6 +78,7 @@
       <a href="#guests">Who's On</a>
       <a href="#listen">Listen</a>
       <a href="#watch">Episodes</a>
+      <a href="/showcall">Showcall</a>
       <a href="#merch">Merch</a>
       <a href="/signal-flow-daily.html">Signal Flow Daily</a>
       <a href="/contact">Contact</a>
@@ -87,7 +88,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <kbd>&#8984;K</kbd>
       </button>
-      <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
+      <a href="https://www.youtube.com/@theproavpodcast" aria-label="YouTube" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8ZM9.6 15.5v-7l6.3 3.5-6.3 3.5Z"/></svg>
       </a>
       <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener">
@@ -112,11 +113,12 @@
   <a href="#guests">Who's On</a>
   <a href="#listen">Listen</a>
   <a href="#watch">Episodes</a>
+  <a href="/showcall">Showcall</a>
   <a href="#merch">Merch</a>
   <a href="/signal-flow-daily.html">Signal Flow Daily</a>
   <a href="/contact">Contact</a>
   <div class="footer-social" style="margin-top: 32px;">
-    <a href="#" aria-label="YouTube" target="_blank" rel="noopener">
+    <a href="https://www.youtube.com/@theproavpodcast" aria-label="YouTube" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8ZM9.6 15.5v-7l6.3 3.5-6.3 3.5Z"/></svg>
     </a>
     <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener">
@@ -393,7 +395,7 @@
   <h2 class="section-title display reveal">Wherever you already are.</h2>
   <div class="listen-grid reveal">
     <a href="#" class="platform-btn"><span>Apple Podcasts</span><span class="arrow">&rarr;</span></a>
-    <a href="#" class="platform-btn"><span>YouTube Channel</span><span class="arrow">&rarr;</span></a>
+    <a href="https://www.youtube.com/@theproavpodcast" class="platform-btn" target="_blank" rel="noopener"><span>YouTube Channel</span><span class="arrow">&rarr;</span></a>
     <a href="#" class="platform-btn"><span>LinkedIn</span><span class="arrow">&rarr;</span></a>
   </div>
 </section>
@@ -404,10 +406,17 @@
   <!-- Video on the left, audio on the right. Each .video-card in .watch-grid is one tile and
        they stack down the left column; copy a whole tile to add one. The episode tile that
        used to sit above the 4K show call ("The Art of Cutting Live") was removed, so the
-       episode tile sits above the 4K show-call link in the left column. -->
+       episode tile sits above the 4K show-call link in the left column.
+
+       ═══ THIS STRIP IS CAPPED AT THREE TILES. ═══
+       George, 27 Nov: "I don't want demos to over saturate the main page, make it super
+       long." The full library lives on /watch, and the "See all" link below is how you get
+       there. A fourth tile here is the thing that page exists to prevent — put the new
+       video on /watch instead, and only swap one in here when it should be one of the three
+       the front page leads with. Today there is one real video, so one shows. -->
   <div class="watch-pair">
   <div class="watch-grid">
-  <!-- THE SHOW CALL, 4K. The poster is a still; the show runs in showcall.html, which also
+  <!-- THE SHOW CALL, 4K. The poster is a still; the show runs in showcaller.html, which also
        stands on its own at /showcall. Clicking opens it in the overlay. -->
   <div class="video-card showcall-card reveal">
     <div class="watch-segments" aria-hidden="true">
@@ -457,25 +466,36 @@
     </div>
   </div>
 
+  <!-- The way off the front page and into the library. -->
+  <div class="watch-seeall reveal">
+    <a href="/showcall" class="btn btn-secondary">See all videos</a>
+  </div>
+
 </section>
 
 <!-- THE 4K SHOW CALL, FULL SCREEN. Built like the video modal beside it, but it frames
-     showcall.html rather than YouTube. The iframe is only given its src on open and has it
+     showcaller.html rather than YouTube. The iframe is only given its src on open and has it
      taken away on close, so the show never runs behind a closed overlay.
      IT IS A DIRECT CHILD OF BODY, AND THAT MATTERS. The cue dims `body > section`, and a
      filter applies to an element's whole subtree with no way for a descendant to opt out —
      so a player inside a section goes down with the page when CUE 1 is taken. Out here the
      window keeps its level while the house steps back around it, the same way the LED wall
      does. Do not move this inside a section. -->
-<div class="video-modal showcall-modal" id="showCallModal" onclick="if(event.target===this) closeShowCall()">
+<div class="video-modal showcall-modal" id="showCallModal" onclick="scBackdrop(event, this)">
   <div class="video-modal-inner">
     <button class="video-modal-close" onclick="closeShowCall()" aria-label="Close show call">&times;</button>
     <div class="video-modal-frame showcall-modal-frame">
-      <!-- THE RENDERED SHOW. A plain video element, which is what buys native fullscreen on
-           iOS, a scrub bar, AirPlay and captions — none of which a framed DOM stage can have.
-           `controls` is deliberate: the browser's own full-screen control is the only one
-           that works on an iPhone, so the show no longer needs one of its own.
-           The framed stage below is UNCHANGED and still reachable — see SHOWCALL_SOURCE. -->
+      <!-- THE RENDERED SHOW. A plain video element, which is what buys real fullscreen on
+           iOS — none of which a framed DOM stage can have.
+           The framed stage below is UNCHANGED and still reachable — see SHOWCALL_SOURCE.
+
+           `controls` IS APPLE'S OWN, and that is the decision. v255 replaced it with a bar
+           of ours so full screen could sit on the right, because iOS pins its expand and PiP
+           to the video's TOP-LEFT and no CSS reaches them. George, 27 Nov: "let's revert to
+           Apple standard player, lets keep the one tap in place." So the chrome is the
+           platform's again — familiar, free, and it cannot drift from what iOS does next.
+           The close button stays in its own strip above the picture (v246), clear of the
+           controls Apple draws in that corner. Do not put a control of ours in there. -->
       <video id="showCallVideo" class="showcall-video" playsinline webkit-playsinline
              controls preload="metadata" poster="images/showcall-poster.jpg"
              title="Play and experience the show call cues" hidden></video>
@@ -827,7 +847,7 @@
   // layer, no scroll lock, nothing covering the document.
   // ═══ WHICH SHOW THE WINDOW HOLDS ════════════════════════════════════════════════════
   // 'video' — the rendered file. Native fullscreen on iOS, a scrub bar, one asset.
-  // 'frame' — the live DOM stage in showcall.html, exactly as it shipped in v244.
+  // 'frame' — the live DOM stage in showcaller.html, exactly as it shipped in v244.
   // Both are wired. Change this one word to step back; nothing else has to move.
   var SHOWCALL_SOURCE = 'video';
 
@@ -872,7 +892,99 @@
     if (v.getAttribute('src') !== src) v.setAttribute('src', src);
   }
 
+  // ONE TAP, NOT TWO. George, 27 Nov: "I have to tap the mobile player twice, once to
+  // activate, and once to play, this should be one action."
+  //
+  // He was describing a race. On the first open the element is display:none until that
+  // instant, its src is set in the same tick, and play() is called before a single byte of
+  // the file exists — iOS rejects that, and the .catch() swallowed the rejection without a
+  // word. By the time he tapped our play button the metadata had arrived, so the second tap
+  // worked. Two fixes, because either alone still leaves a case broken:
+  //
+  //   1. Give the element its src at page load, not at open. `preload="metadata"` makes that
+  //      a small range request for the header, not the 46MB file, so the tap arrives to an
+  //      element that already knows what it is.
+  //   2. Keep the intent. If play() is still refused — a slow network, a cold cache — the
+  //      tap is remembered and replayed once the element can actually play. Without this,
+  //      fix 1 only moves the race rather than ending it.
+  // THE DEAD BEAT AT THE HEAD. George, 27 Nov: "the screen for this video is already black"
+  // — the window opens and nothing happens for four seconds.
+  // That is SHOWCALL_LEAD: the render carries 4.0s of empty grid at its head, put there so the
+  // piece has a clean start of its own. On the LED wall that reads as a stage waiting. In a
+  // lightbox, where the window has just zoomed up under your finger, it reads as broken.
+  // So the window starts PAST most of it and keeps a short breath. The soundtrack is delayed
+  // by the same 4.0s, so what is skipped is silence over an empty grid — no call is lost — and
+  // the cue table is keyed to absolute time in the file, so every cue still lands where it did.
+  // THIS IS THE NUMBER TO MOVE: 0 plays the full head as before, 4.0 jumps straight to the
+  // first call. The rendered file itself is untouched either way.
+  var SHOWCALL_HEAD_SKIP = 3.4;
+
+  function scSeekHead(v) {
+    if (!SHOWCALL_HEAD_SKIP) return;
+    try { if (v.currentTime < 0.1) v.currentTime = SHOWCALL_HEAD_SKIP; } catch (e) {}
+  }
+
+  var scWantsPlay = false;
+
+  // THE CHROME DOES NOT RIDE IN ON THE FIRST TAP. v265.
+  // George: "can the this clear faster after pressing play?" — Apple's controls sat over the
+  // opening call for several seconds. Their auto-hide delay belongs to iOS and there is no
+  // API for it, so the delay is not what changed: the chrome simply is not there to hide.
+  // `controls` goes OFF for the moment the show starts and back ON once it is running. iOS
+  // only raises the overlay on an interaction, so re-enabling it while the viewer's finger
+  // is nowhere near leaves it armed but invisible — one tap on the picture brings it up, the
+  // same as every other video on the phone.
+  // 900ms: long enough that the enable does not land inside the tap that started playback
+  // and get read as the interaction, short enough that a pause is never far away.
+  var SHOWCALL_CHROME_HOLD = 900;
+  var scChromeTimer = null;
+
+  function scArmChrome(v) {
+    clearTimeout(scChromeTimer);
+    scChromeTimer = setTimeout(function () { v.controls = true; }, SHOWCALL_CHROME_HOLD);
+  }
+
+  function scPlayNow(v) {
+    v.controls = false;          // start clean; scArmChrome puts it back
+    scArmChrome(v);
+    // iOS re-reads these when src changes and treats a play() after a tap as a request to go
+    // fullscreen unless the element is explicitly inline. Re-assert rather than trust markup.
+    v.setAttribute('playsinline', '');
+    v.setAttribute('webkit-playsinline', '');
+    v.playsInline = true;
+    scWantsPlay = true;
+    scSeekHead(v);
+    var p = v.play();
+    if (p && p.catch) p.catch(function () { /* held: scRetryPlay picks it up */ });
+  }
+
+  function scRetryPlay(v) {
+    if (!scWantsPlay || !v.paused) return;
+    scSeekHead(v);
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+
   var scWired = false;
+  // Apple's own controls are back as of v262 (George: "let's revert to Apple standard
+  // player, lets keep the one tap in place"), so the bar, its scrub, its full-screen and
+  // PiP buttons and the geometry that positioned it on the picture are all gone with it.
+  // WHAT STAYS is the one-tap work, which was never part of the bar: scPlayNow/scRetryPlay
+  // above, and the src armed at page load. Those fixed a race in the TAP, not in the chrome.
+  // If a control is ever wanted somewhere iOS does not put one, the answer is not to put a
+  // second control next to Apple's — it is to replace the chrome wholesale again, and v255
+  // in the bible is the record of what that costs.
+
+  // The backdrop closes the window — except just after a full-screen exit, when the tap
+  // that dismissed Apple's player can arrive here as a click on the modal itself.
+  var scFsExitAt = 0;
+
+  function scBackdrop(e, el) {
+    if (e.target !== el) return;                 // only the ground, never a child
+    if (Date.now() - scFsExitAt < 700) return;   // that was the Done tap, not a close
+    closeShowCall();
+  }
+
   function scWireVideo(v) {
     if (scWired) return;
     scWired = true;
@@ -881,10 +993,48 @@
     v.addEventListener('seeked',     function () { scApplyCue(v.currentTime); });
     v.addEventListener('play',       function () { scApplyCue(v.currentTime); });
     v.addEventListener('ended',      function () { document.documentElement.removeAttribute('data-cue'); });
+    // The held tap, replayed the moment the element can honour it.
+    v.addEventListener('loadedmetadata', function () { scRetryPlay(v); });
+    v.addEventListener('canplay',        function () { scRetryPlay(v); });
     // The window keeps its black while the picture is popped out — see .is-pip in home.css.
     var modal = document.getElementById('showCallModal');
     v.addEventListener('enterpictureinpicture', function () { modal.classList.add('is-pip'); });
     v.addEventListener('leavepictureinpicture', function () { modal.classList.remove('is-pip'); });
+    // ═══ COMING BACK FROM APPLE'S FULL-SCREEN PLAYER ═══════════════════════════════
+    // George, 27 Nov: "when I go to full screen, the good things are still playing; when I
+    // jump out of full screen, the player stops."
+    // Two separate things do that, and both are handled here.
+    //
+    // 1. iOS PAUSES ON EXIT. Leaving its native full-screen player pauses the element —
+    //    `playsinline` governs whether it may play inline, not whether it keeps playing
+    //    through the transition. So remember whether it was running on the way IN, and if
+    //    it was, start it again on the way OUT. Going in needs nothing: that already works.
+    // 2. THE DISMISS TAP CAN REACH THE PAGE. As the overlay goes away iOS can deliver a
+    //    click, and the backdrop handler on this modal treats a click on itself as "close".
+    //    So the exit is timestamped and scBackdrop ignores anything within 700ms of it —
+    //    see scBackdrop. Without that, one Done tap closed the whole window.
+    var scFsWasPlaying = false;
+    v.addEventListener('webkitbeginfullscreen', function () { scFsWasPlaying = !v.paused; });
+    v.addEventListener('webkitendfullscreen', function () {
+      scFsExitAt = Date.now();
+      if (scFsWasPlaying && v.paused) {
+        var r = v.play();
+        if (r && r.catch) r.catch(function () {});
+      }
+    });
+    // The standard-API equivalent, for the desktop path where the FRAME goes full screen.
+    ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+      document.addEventListener(ev, function () {
+        var full = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        if (full) { scFsWasPlaying = !v.paused; return; }
+        scFsExitAt = Date.now();
+        if (scFsWasPlaying && v.paused) {
+          var r = v.play();
+          if (r && r.catch) r.catch(function () {});
+        }
+      });
+    });
+
     // Safari fires its own names for the same thing.
     v.addEventListener('webkitpresentationmodechanged', function () {
       var m = v.webkitPresentationMode;
@@ -929,6 +1079,19 @@
     });
   }
 
+  // The src goes on at page load, not at open. preload="metadata" means this is a range
+  // request for the file's header, not the 46MB of it, and it is what lets a single tap both
+  // open the window and start the show. Only for the rendered source; the framed stage has
+  // nothing to preload.
+  (function () {
+    function arm() {
+      var v = document.getElementById('showCallVideo');
+      if (v && SHOWCALL_SOURCE === 'video') scPickSource(v);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arm);
+    else arm();
+  })();
+
   function openShowCall() {
     var modal  = document.getElementById('showCallModal');
     var poster = document.querySelector('.showcall-poster');
@@ -943,12 +1106,11 @@
       scWireVideo(vid);
       modal.classList.add('open');
       scFlip(modal, from, false);
-      var p = vid.play();
-      if (p && p.catch) p.catch(function () {});   // a refused autoplay leaves the controls
+      scPlayNow(vid);        // one tap: this IS the play, and it is held if refused
     } else {
       vid && (vid.hidden = true);
       frame.hidden = false;
-      frame.src = 'showcall.html';
+      frame.src = 'showcaller.html';
       modal.classList.add('open');
       scFlip(modal, from, false);
     }
@@ -976,6 +1138,9 @@
     var vid    = document.getElementById('showCallVideo');
     // Stop on the press, not when the animation lands — a tail of a voice still calling cues
     // while the window falls away reads as a mistake.
+    scWantsPlay = false;                       // a held tap does not survive the close
+    clearTimeout(scChromeTimer);
+    if (vid) vid.controls = true;              // next open starts with chrome available
     if (vid) { try { vid.pause(); vid.currentTime = 0; } catch (e) {} }
     document.getElementById('showCallIframe').src = '';
     document.documentElement.removeAttribute('data-cue');  // house back to 100%
@@ -1616,7 +1781,7 @@
           dates: 'TRT 00:04:31',
           title: 'Play and experience the show call cues',
           meta:  '3840 \u00d7 2160',
-          href:  'showcall.html',
+          href:  'showcaller.html',
           overlay: true }
       ];
 

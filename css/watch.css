@@ -1,0 +1,151 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   WATCH — the video library page.
+
+   Loaded AFTER home.css on watch.html, which is deliberate: home.css carries the
+   card DNA this page reuses (.video-card, .showcall-poster, .video-meta, .play-btn),
+   so the tiles here are the same objects as the ones on the home page rather than a
+   second set that drifts. Nothing in this file redefines a card — it adds the page's
+   own furniture: the intro, the hashtags, the chips and the two grids.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── the page head ─────────────────────────────────────────────────────── */
+
+/* Left-aligned, like every other band on this site. The first pass centred this page and
+   the series band, which read as a different site the moment you scrolled past it into the
+   left-aligned library. The site's bands are left-aligned; this page is not an exception. */
+/* padding-block-start, NOT the padding shorthand. The section carries .band-plain for the
+   site's side gutter, and `padding: 140px 0 0` quietly set those sides back to 0 — the
+   eyebrow and the headline ran to the very edge of the screen while every band under them
+   stayed on the gutter. Only the top is this page's business. */
+.watch-page {
+  padding-block-start: 140px;
+}
+
+.watch-page-note {
+  max-width: 62ch;
+  margin: 18px 0 0;
+  color: var(--text-soft);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* ─── hashtags ──────────────────────────────────────────────────────────
+   George's own strings, shown rather than paraphrased. The same .watch-hash
+   serves the row under the intro, the series band and the card meta, so a tag
+   reads identically everywhere it appears. */
+
+.watch-hash {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--data-cyan);
+  background: rgba(42, 217, 236, 0.08);
+  border: 1px solid rgba(42, 217, 236, 0.22);
+  border-radius: 999px;
+  padding: 4px 11px;
+}
+
+.watch-hashes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+/* ─── the series band ───────────────────────────────────────────────────── */
+
+/* block, not the inline-block .watch-hash default: as an inline box it sat in a line box
+   whose leading ate most of the grid's top margin, and the chip ended up 8px off the grid
+   instead of 32. As a block its own box is the chip, so the spacing below is the margin. */
+.c2c-hash {
+  display: block;
+  width: fit-content;
+  margin-top: 14px;
+  font-size: 0.8rem;
+  padding: 5px 14px;
+}
+
+.c2c-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+  margin-top: 38px;
+}
+
+/* ─── the library grid ──────────────────────────────────────────────────── */
+
+.watch-library {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+  /* clear of the band's hashtag above it — without this the chip sat on the first row's
+     top edge, and on an empty band it landed on the dashed box */
+  margin-top: 32px;
+}
+
+.watch-item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  /* so the poster inside can size to the TILE, not the window — see below */
+  container-type: inline-size;
+}
+
+/* ─── the show-call poster, resized for a library tile ───────────────────
+   The poster's type in home.css is viewport-relative: clamp(26px, 3.7vw, 54px). On the home
+   page that tile is half the page wide, so 3.7vw is right. Dropped into a 340px library
+   column on a 1440px screen it still asked for 53px and ran "EXPERIENCE" straight out of
+   both sides of the frame — the type was sized to the window while the box was sized to the
+   grid. Container units fix the mismatch at the root: 7cqw is 7% of THIS TILE, so a poster
+   reads the same whether it is one of two tiles or one of four.
+
+   5.6cqw, not 7: the two halves of "PLAY AND [>] EXPERIENCE" are nowrap by design, so at
+   7cqw they came to a hair more than a phone-width tile could hold and spilled out of both
+   sides rather than wrapping. 5.6 leaves the line room to sit inside the frame at every
+   tile width from a 340px column up.
+
+   If another poster-style tile is added here, give it these three rules too. */
+.watch-item .showcall-poster-line { font-size: clamp(14px, 5.6cqw, 30px); }
+.watch-item .showcall-poster-row  { gap: clamp(5px, 2cqw, 12px); }
+.watch-item .showcall-poster-tc   { top: 11px; left: 11px; gap: 8px; }
+
+/* Each half also carries `padding: 0 24px` from home.css, which on a full-width home tile
+   is breathing room and in a library column is 96px the tile does not have — it pushed
+   PLAY AND against one edge and EXPERIENCE against the other. The row centres itself; the
+   two halves inside it need no padding of their own. */
+.watch-item .showcall-poster-row .showcall-poster-line { padding: 0; }
+
+.watch-item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* ─── empty states ──────────────────────────────────────────────────────
+   Shown where a band has nothing in it yet. An honest empty beats a fake tile:
+   this page launches with one real video and will fill up as they are made. */
+
+.watch-empty {
+  grid-column: 1 / -1;
+  border: 1px dashed var(--border-quiet);
+  border-radius: 10px;
+  padding: 42px 24px;
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 0.95rem;
+}
+
+.watch-empty a { color: var(--data-cyan); }
+
+/* ─── phone ─────────────────────────────────────────────────────────────
+   One column, and the chip row scrolls sideways instead of stacking into a block
+   four rows deep that pushes the first video off the screen. */
+
+@media (max-width: 720px) {
+  .watch-page { padding-top: 110px; }
+
+  .watch-library,
+  .c2c-grid { grid-template-columns: 1fr; gap: 22px; }
+}
