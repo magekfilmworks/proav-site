@@ -1152,6 +1152,7 @@ iframe { background: #000; }
    it is out, and comes back the moment it returns. */
 .showcall-modal.is-pip { background: #000; }
 .showcall-modal.is-pip .showcall-modal-frame,
+.showcall-modal.is-pip .showcall-video,
 .showcall-modal.is-pip .video-modal-inner { background: #000; }
 
 .showcall-modal .video-modal-inner {
@@ -1193,6 +1194,22 @@ iframe { background: #000; }
     height: 100%;
     padding-top: 0;                    /* the 16:9 box goes; the stage letterboxes itself */
     border-radius: 0;
+  }
+
+  /* THE HOUSE SHOWS THROUGH THE LETTERBOX.
+     On a phone the frame is stretched to the whole screen so Apple's controls get the full
+     width to lay themselves out in — the arrangement that was locked in. But the frame and
+     the video element both carry a solid black ground, and stretched that far the two of them
+     painted over the 55% scrim edge to edge. The page WAS dimming on CUE 1 the whole time;
+     it was dimming behind a wall. Only the picture itself needs to be opaque, and the picture
+     is what object-fit paints — everything around it is the element's own ground, so handing
+     that ground back makes the bars above and below the show into scrim, and the house steps
+     down through them when the caller takes the level.
+     Nothing moves: same box, same controls, same close. Only the bars change.
+     The pop-out keeps its black — see .is-pip above, which outranks both of these. */
+  .showcall-modal .showcall-modal-frame,
+  .showcall-modal .showcall-video {
+    background: transparent;
   }
 
   /* Top left, in its own strip, clear of the notch and of Apple's controls below it. */
