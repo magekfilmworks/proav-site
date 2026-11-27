@@ -1116,6 +1116,20 @@
    it, but this stays as a floor so no frame can ever show browser white again. */
 iframe { background: #000; }
 
+/* The rendered show, in the window the framed stage used to hold. Same box, same 16:9, so
+   nothing about the lightbox changes when the source does. */
+.showcall-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  background: #000;
+  object-fit: contain;
+}
+.showcall-video[hidden] { display: none !important; }
+
 /* THE SHOW-CALL WINDOW IS A LIGHTBOX: the ground goes dark and the tile zooms up into it.
    It used to be deliberately scrimless so the page's CUE 1 dim showed through behind the
    frame. That reading is gone — the dim is showcased on the LED wall now, where the show
