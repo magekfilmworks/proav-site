@@ -792,10 +792,12 @@
       // is never delayed by it — only the call lingers, the way a caller's last word hangs
       // for a moment on comms.
       const GO_READ = 700;
-      // A video take gets LONGER, not shorter. The slate is sitting over a clip that has just
-      // started, so it is the one place the GO has to fight for attention — cutting it with
-      // the picture, or at the end of the spoken line, went by before the word could be read.
-      const GO_READ_CLIP = 1500;
+      // A video take used to get LONGER — 1500 — because the slate was sitting over a clip
+      // that had already started and the GO had to fight the picture for attention. The
+      // picture now waits for the beat instead of starting under it, so the GO is read on an
+      // empty wall and needs no more room than any other. Back to the house beat.
+      // This is the number to move if the pause before a clip feels wrong: it IS the pause.
+      const GO_READ_CLIP = GO_READ;
       let goHold = 0, goTimer = 0, cueGen = 0;
       const lightGo = (el, hold) => {
         if (!el) return;
@@ -1298,12 +1300,23 @@
           // The CARD is not part of that cut. It carries its own GO, it is not sitting over
           // the picture, and it keeps the beat so the word can be read before it goes.
           const gen = cueGen;
-          // if a new cue card has gone up inside the beat, this deferred hide is stale
-          dropAfterGo(() => { if (cue && cueGen === gen) cue.hidden = true; });
+          // THE PICTURE WAITS FOR THE WALL TO CLEAR.
+          // The clip used to roll on the word while the call was still serving out its beat,
+          // so for about a second the GO lay across the opening of the clip — at 00:00:17;18
+          // "Mitti Playback-Video 1, GO" was sitting over the ARTEMIS title. The call is not
+          // something to read THROUGH a picture.
+          // So the whole take now hangs off the same beat: the call is read, the wall clears,
+          // and the picture arrives on an empty grid. The card and the burn-in go with it, so
+          // nothing appears before the clip it belongs to.
+          // Its own handle, not cueTimers — see dropAfterGo. If a new cue card has gone up
+          // inside the beat this deferred take is stale, which the gen check catches.
           if (card) card.hidden = true;
-          if (tcWrap) tcWrap.hidden = false;
-          if (nameEl) nameEl.textContent = v.name;
-          startClip();
+          dropAfterGo(() => {
+            if (cue && cueGen === gen) cue.hidden = true;
+            if (tcWrap) tcWrap.hidden = false;
+            if (nameEl) nameEl.textContent = v.name;
+            startClip();
+          });
         };
         if (item.call) { callReady(item.call, 2600, roll, GO_READ_CLIP); return; }
         clearReady(true);
