@@ -31,6 +31,17 @@
      out when it is the whole window. HIDDEN WHEN FRAMED — inside the 4K window the overlay
      has its own close button in the same corner and the two collide. -->
 <a class="sc-back" href="/" hidden>&larr;&nbsp; ProAV</a>
+<!-- FULL SCREEN, IN REAL PIXELS. It used to live inside the 3840x2160 stage, so on a phone a
+     110-unit button painted about 13px across — there, but not tappable. Out here it belongs
+     to the browser window like the back link does, so it is the same size at any fit.
+     The script hides it where the browser has no element fullscreen; see the note there. -->
+<button class="sc-full" id="scFull" type="button" aria-pressed="false"
+        aria-label="Full screen" title="Full screen">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <g class="wf-in"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g>
+    <g class="wf-out"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></g>
+  </svg>
+</button>
 <script>
   // Only the top-level document gets the back link. In a frame the host page owns the close.
   if (window.top === window.self) document.querySelector('.sc-back').hidden = false;
@@ -126,14 +137,6 @@
          unmuted, it would not play at all. This button is the visitor's way to turn it on. It
          sits top-right, the one corner no mask fades, and carries pointer-events:auto to
          override the wall's pointer-events:none. -->
-    
-      <button class="wall-full" id="scFull" type="button" aria-pressed="false"
-            aria-label="Full screen" title="Full screen">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <g class="wf-in"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g>
-        <g class="wf-out"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></g>
-      </svg>
-    </button>
     </div>
       
     </div>

@@ -1123,7 +1123,12 @@ iframe { background: #000; }
    video modal's because the 4K frame is the only thing meant to be lit.
    The zoom-up itself is a FLIP in index.html: the window is measured, placed over the tile,
    and released. Nothing here fixes its start position, so the tile can be anywhere. */
-.showcall-modal { background: rgba(5, 5, 7, 0.92); }
+/* LIGHT ENOUGH TO SEE THE HOUSE BEHIND IT.
+   At 0.92 the ground was opaque and CUE 1 did nothing visible — the page dimmed behind a wall
+   you could not see through. At 0.55 the site is legible through the scrim, so when the
+   caller takes the level the whole page steps down behind the window and the dim is the
+   thing you watch. This single number is the balance between the two readings. */
+.showcall-modal { background: rgba(5, 5, 7, 0.55); }
 
 .showcall-modal .video-modal-inner {
   transform-origin: 50% 50%;
