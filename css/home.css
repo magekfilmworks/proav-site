@@ -1108,6 +1108,56 @@
   .showcall-poster .play-btn { right: 12px; bottom: 12px; }
 }
 
+/* `display: flex` on .showcall-poster below outranks the [hidden] attribute's UA rule, so
+   hiding the poster in script does nothing without this. Same trap as .wall-card. */
+.showcall-poster[hidden],
+.showcall-inline[hidden] { display: none !important; }
+
+/* ═══ THE SHOW CALL, IN PLACE ══════════════════════════════════════════════════════════
+   No overlay. The poster is swapped for this frame inside the card it already occupies, so
+   the show sits in the page's normal flow — nothing fixed, nothing laid over the document,
+   no scroll lock. 16:9, the same box the poster filled. */
+.showcall-inline {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  overflow: hidden;
+}
+
+.showcall-inline iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Stop, top-right, clear of the show's own controls in the opposite corner. */
+.showcall-inline-stop {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font: 400 20px/1 var(--font-body, system-ui);
+  color: var(--signal-white, #F5F5F0);
+  background: rgba(11, 11, 13, 0.72);
+  border: 1px solid rgba(245, 245, 240, 0.30);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.showcall-inline-stop:hover,
+.showcall-inline-stop:focus-visible {
+  background: rgba(11, 11, 13, 0.92);
+}
+
 /* The show-call window has no scrim of its own. .video-modal lays 85% black over the page,
    which would hide the very thing CUE 1 does — take the house to 30%. With the scrim gone the
    site is simply there at full strength, and when the caller takes the level the whole page

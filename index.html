@@ -426,6 +426,15 @@
       </div>
       <div class="showcall-poster-line line-b">THE SHOW CALL CUES</div>
     </div>
+    <!-- THE SHOW, IN PLACE. No overlay: the poster is swapped for the frame inside the card
+         it already occupies, so the page keeps its normal layout and nothing is laid over it.
+         The src is only set on play and taken away on stop, so the show never runs unseen. -->
+    <div class="showcall-inline" hidden>
+      <iframe id="showCallInline" src="" title="ProAV show call, 4K"
+        allow="autoplay; fullscreen" allowfullscreen></iframe>
+      <button class="showcall-inline-stop" type="button" onclick="closeShowCall()"
+        aria-label="Stop the show call">&times;</button>
+    </div>
     <div class="video-meta">
       <div class="video-eyebrow backstage">SHOW CALL</div>
       <div class="video-title">Play and experience the show call cues</div>
@@ -459,18 +468,6 @@
 
 </section>
 
-<!-- The 4K show call, full screen. Built like the video modal beside it, but it frames
-     showcall.html rather than YouTube. The iframe is only given its src on open and has it
-     taken away on close, so the show never runs behind a closed overlay. -->
-<div class="video-modal showcall-modal" id="showCallModal" onclick="if(event.target===this) closeShowCall()">
-  <div class="video-modal-inner">
-    <button class="video-modal-close" onclick="closeShowCall()" aria-label="Close show call">&times;</button>
-    <div class="video-modal-frame showcall-modal-frame">
-      <iframe id="showCallIframe" src="" title="ProAV show call, 4K"
-        allow="autoplay; fullscreen" allowfullscreen></iframe>
-    </div>
-  </div>
-</div>
 <div class="video-modal" id="videoModal" onclick="if(event.target===this) closeVideoModal()">
   <div class="video-modal-inner">
     <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Close video">&times;</button>
@@ -809,10 +806,17 @@
   }
   // The 4K show call. The iframe gets its src here and loses it on close: the show is a live
   // page with audio, and a page left loaded behind a closed overlay would keep running.
+  // THE SHOW RUNS IN THE PAGE, NOT OVER IT. The overlay is gone: the poster hides, the frame
+  // takes its place in the same card, and the page is left exactly as it was — no fixed
+  // layer, no scroll lock, nothing covering the document.
   function openShowCall() {
-    document.getElementById('showCallIframe').src = 'showcall.html';
-    document.getElementById('showCallModal').classList.add('open');
-    document.body.style.overflow = 'hidden';
+    var poster = document.querySelector('.showcall-poster');
+    var box    = document.querySelector('.showcall-inline');
+    if (!poster || !box) return;
+    document.getElementById('showCallInline').src = 'showcall.html';
+    poster.hidden = true;
+    box.hidden = false;
+    box.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
   // The 4K show calls its cues from inside the iframe, where data-cue can only dim the iframe.
   // The house it means is THIS page, so the show posts each cue out and it is applied here —
@@ -822,17 +826,19 @@
     if (e.origin !== location.origin) return;
     var d = e.data;
     if (!d || d.proavShowCall !== 'cue') return;
-    var f = document.getElementById('showCallIframe');
+    var f = document.getElementById('showCallInline');
     if (!f || !e.source || e.source !== f.contentWindow) return;   // only the show's own frame
     if (d.cue) document.documentElement.setAttribute('data-cue', String(d.cue));
     else document.documentElement.removeAttribute('data-cue');
   });
 
   function closeShowCall() {
-    document.getElementById('showCallModal').classList.remove('open');
-    document.getElementById('showCallIframe').src = '';   // stops the show and its audio
+    var poster = document.querySelector('.showcall-poster');
+    var box    = document.querySelector('.showcall-inline');
+    document.getElementById('showCallInline').src = '';   // stops the show and its audio
+    if (box) box.hidden = true;
+    if (poster) poster.hidden = false;
     document.documentElement.removeAttribute('data-cue');  // house back to 100% on a mid-show close
-    document.body.style.overflow = '';
   }
   function closeVideoModal() {
     document.getElementById('videoModal').classList.remove('open');
