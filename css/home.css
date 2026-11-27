@@ -109,27 +109,11 @@
      so the wall simply fills whatever is left — it grows with the window instead of stopping
      at a fixed cap. --ink-r is measured in the page (see index.html), so this lands in the same
      place whether or not Impact is installed. */
-  /* A VIEWPORT LENGTH, with no percentage anywhere in its chain.
-     This was `2.3%`, which Safari resolved as 0.16% inside the `width: calc()` below — about
-     3px instead of about 40 — and the wall slid left into the V of PROAV. The first fix made
-     it `calc(var(--word-w) * 0.0238)`, which looked like a length but is not one: --word-w is
-     itself a min() of two percentage calcs, so Safari still resolved the whole thing to zero.
-     Measured on the page afterwards: 10px of clearance where 32px was intended, and the 10px
-     was entirely the --ink-l term, with --wall-gap contributing nothing at all.
-     vw is a real length. 2.3vw reproduces what Chrome and Firefox were already drawing to
-     within a pixel at every width measured (33.4 vs 33.5 at 1454, 58.7 vs 58.7 at 2554), and
-     no engine has to resolve a percentage against a containing block to get there. */
-  --wall-gap: 2.3vw;
+  --wall-gap: 2.3%;
   /* Right edge on --hero-left, left edge on --col-left: the wordmark starts at the column, so
      its ink ends that much further right, and the wall gives back the same amount. */
-  /* --ink-w is the ink's width as a FINISHED LENGTH, set in index.html. It used to be
-     `var(--word-w) * var(--ink-r)` computed here, and that product breaks this calc on WebKit:
-     with it present every way of writing --wall-gap resolved to zero, and the wall slid left
-     into the V of PROAV. Without it, all of them work. There is no multiplication left in this
-     rule — just four lengths — and --ink-w has a fallback so the wall is sane before the
-     measurement lands. */
   width: calc(100% - var(--hero-left) - var(--col-left)
-              - var(--ink-w, 43vw) - var(--wall-gap));
+              - var(--word-w) * var(--ink-r) - var(--wall-gap));
 
   z-index:1; pointer-events:none;
 }
@@ -308,23 +292,17 @@
 
 .wall-audio-note.is-in { opacity: 1; transition: opacity 320ms ease; }
 
-/* ON THE WALL on a phone too, under the speaker icon, the same as desktop. It used to be
-   parked below the panel because the wall was once only ~130px tall there and a note under
-   the icon landed on the cue's first line; the wall is taller now and the note belongs with
-   the button it is describing. Only the chrome is lightened here — the placement comes from
-   the desktop rule above. */
+/* On a phone the wall is only ~130px tall, so 50px down from its top edge is the middle of
+   the panel — the note landed straight on the cue's first line. Below the wall instead, in
+   the margin that is already there under it. */
 @media (max-width: 1024px) {
   .wall-audio-note {
+    top: 100%;
+    /* same line as the glyph above it, on the phone's smaller button: 30px circle, 17px glyph */
+    right: calc(8px + (30px - 17px) / 2);
+    margin-top: 7px;
     background: none;
     border-color: var(--border-quiet);
-  }
-}
-/* The phone's button is smaller — 30px circle at an 8px inset, 17px glyph — so the note
-   follows it down and keeps the same 6px below the button that desktop uses (8 + 30 + 6). */
-@media (max-width: 720px) {
-  .wall-audio-note {
-    top: 44px;
-    right: calc(8px + (30px - 17px) / 2);
   }
 }
 /* [hidden] is a plain display:none and any later display declaration beats it; this one has
@@ -389,12 +367,6 @@
    source now scales down whole and pillarboxes onto the grid, the way a real wall runs a
    16:9 feed. */
 .screen-content video{width:100%;height:100%;object-fit:contain;display:block;opacity:.92}
-/* ARMING — the beat between the press on the show-call slate and the first cue.
-   The press primes the clip (a muted play(), which is what makes audio legal later) while the
-   slate is still fading, and the slate is the ONLY thing covering the video: left alone, the
-   slate dissolved into a full-frame clip and the wall then jumped to the grid. The slate has
-   to fade to the GRID. Cleared on the frame a clip is actually called up. */
-.screen-content.is-arming video{visibility:hidden}
 .screen-frame{position:absolute;inset:0;width:100%;height:100%}
 
 /* The wordmark must never sit on the panel. Below 1024px there is no room beside it, so the
@@ -996,251 +968,4 @@
     );
     margin-bottom: 14px;
   }
-}
-
-/* ═══ THE 4K SHOW CALL, IN THE EPISODES SECTION ═════════════════════════════════════════
-   A poster for showcall.html — the hero's cue stack laid out as a flat 3840x2160 broadcast
-   frame. The poster is a still; the show runs in the overlay, or at /showcall on its own.
-   It sits on its own row under the episode and the listen slot, full width, because a 4K
-   frame deserves the whole column rather than half of one. `order` rather than moved markup,
-   so the two existing cards are untouched. */
-.showcall-card { min-width: 0; }
-
-.showcall-poster {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  border-radius: 0;              /* flat edges */
-  overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  background:
-    radial-gradient(120% 90% at 18% 24%, rgba(255,156,61,.13), transparent 60%),
-    radial-gradient(110% 90% at 86% 88%, rgba(42,217,236,.13), transparent 62%),
-    var(--stage-black-raised, #131316);
-  border: 1px solid var(--border-quiet, rgba(245,245,240,0.12));
-}
-.showcall-poster:hover,
-.showcall-poster:focus-visible {
-  border-color: var(--signal-white, #F5F5F0);
-  outline: none;
-}
-
-/* The readout, in the same corner the real frame carries it. */
-.showcall-poster-tc {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
-  padding: 5px 11px;
-  border: 1px solid var(--border-quiet, rgba(245,245,240,0.12));
-  border-radius: 0;              /* flat edges */
-  background: rgba(11,11,13,0.6);
-  font-family: var(--font-mono, ui-monospace, Menlo, monospace);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: var(--graphite-light, #8a8a92);
-  white-space: nowrap;
-}
-.showcall-poster-tc span:first-child { color: var(--signal-white, #F5F5F0); }
-
-.showcall-poster-line {
-  order: 2;
-  /* Slate B's type treatment on the slate we kept: the title face at the headings' own 800,
-     set large with the leading closed up so the two rows read as one block, and the second
-     row dropped to graphite so the block still has a hierarchy. Condensed at this weight
-     wants tight tracking, not loose. */
-  font-family: var(--font-display);
-  font-size: clamp(26px, 3.7vw, 54px);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.005em;
-  line-height: 0.92;
-  text-align: center;
-  color: var(--signal-white, #F5F5F0);
-  padding: 0 24px;
-}
-
-/* The play affordance sits in the middle of the player, like every other player on the site,
-   with the copy beneath it — the same stack the 4K frame's own invitation uses. It comes out
-   of absolute positioning and into the column so the two cannot overlap, which is what pinning
-   it to a corner was working around. */
-/* The control sits INSIDE the top row, between PLAY AND and EXPERIENCE, so it reads as a
-   word in the line rather than a thing resting over it. Baseline-ish alignment: the row
-   centres on the control, which is taller than the caps it sits among. */
-.showcall-poster-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(8px, 1.1vw, 18px);
-  /* Wrap rather than overflow. If the frame cannot carry PLAY AND [>] EXPERIENCE on one line
-     it drops EXPERIENCE to the next row, which still reads. Before this it ran past both
-     edges of the frame and the control ended up outside it. */
-  flex-wrap: wrap;
-  max-width: 100%;
-}
-/* The two halves must not wrap — letting them break is what pushed the control off the left
-   edge and stacked PLAY over AND. They hold their line and the row stays one line. */
-.showcall-poster-row .showcall-poster-line {
-  white-space: nowrap;      /* letting them break pushed the control off the left edge */
-  flex: 0 1 auto;
-  order: 0;                 /* .showcall-poster-line carries order:2 for the stacked form;
-                               inside the row that sorted both words AFTER the control */
-}
-.showcall-poster .play-btn {
-  position: static;
-  transform: none;
-  flex: 0 0 auto;
-}
-.showcall-poster-line.line-a { color: var(--signal-white); }
-.showcall-poster-line.line-b { color: var(--graphite); }
-
-.showcall-poster:hover .play-btn,
-.showcall-poster:focus-visible .play-btn { background: rgba(11,11,13,0.95); }
-
-@media (max-width: 720px) {
-  .showcall-poster-tc { top: 12px; left: 12px; font-size: 10px; padding: 4px 9px; }
-  .showcall-poster .play-btn { right: 12px; bottom: 12px; }
-}
-
-/* The show-call window has no scrim of its own. .video-modal lays 85% black over the page,
-   which would hide the very thing CUE 1 does — take the house to 30%. With the scrim gone the
-   site is simply there at full strength, and when the caller takes the level the whole page
-   dims behind the frame, exactly as it does in the hero. */
-.showcall-modal { background: transparent; }
-
-/* ═══ THE 4K WINDOW ON A PHONE ══════════════════════════════════════════════════════════ */
-/* .video-modal-inner is capped at 100vw - 48px and .video-modal-frame is a 56.25% padding
-   box, which on a 390px phone left the show a 341x192 stage: the audio button came out 10px
-   across and a call rendered at about 7px. A 3840x2160 frame cannot live inside a padded
-   card on a phone, so here the window is the screen. Scoped to .showcall-modal — the YouTube
-   modal keeps its card exactly as it was. */
-/* Keyed on orientation as well as width: a phone in landscape is 844px wide, so a plain
-   max-width phone query handed it the desktop card and pushed the close button off the top
-   of a 390px-tall viewport. */
-@media (max-width: 720px), (max-height: 520px) {
-  .showcall-modal { padding: 0; }
-
-  /* THE ZOOM HAS TO BE PAID BACK HERE.
-     `html` carries zoom: 0.95 (css/base.css). A fixed box written as 100vw x 100dvh is sized
-     in the viewport's own pixels and THEN scaled by that zoom, so it came out 373x627 inside
-     a 393x660 phone — a 10px gutter down each side and 17px top and bottom. On iOS that
-     gutter is the canvas outside the scaled root, which WebKit paints WHITE, which is the
-     white band down the right of the 4K window.
-     Dividing by the zoom makes the box the real screen again. A single-term division by a
-     literal, deliberately: a calc() here that multiplies a var() by a var() hits the WebKit
-     defect that zeroes a sibling term. If the zoom in base.css ever changes, change it here. */
-  .showcall-modal .video-modal-inner {
-    width: calc(100vw / 0.95);
-    height: calc(100dvh / 0.95);       /* dvh, so iOS browser chrome does not crop the frame */
-  }
-
-  .showcall-modal .showcall-modal-frame {
-    width: 100%;
-    height: 100%;
-    padding-top: 0;                    /* the 16:9 box goes; the stage letterboxes itself */
-    border-radius: 0;
-  }
-
-  /* With no card above it the close button floats over the frame, clear of the notch and of
-     the show's own controls in the opposite corner. */
-  .showcall-modal .video-modal-close {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 10px);
-    left: calc(env(safe-area-inset-left, 0px) + 10px);
-    margin: 0;
-    z-index: 2;
-    background: rgba(11,11,13,0.72);
-  }
-}
-
-
-/* ═══ THE SHOW-CALL SLATE ON A PHONE ════════════════════════════════════════════════════ */
-/* With the episode tile gone the slate is the first thing in Episodes, and at 310px wide the
-   frame is only 174px tall. The desktop sizes did not survive that: the readout collided with
-   PLAY AND, the row broke across lines, and THE SHOW CALL CUES wrapped to two. The type comes
-   down so the whole slate sits inside the frame on one line each, and the control comes down
-   with it so it stays in proportion rather than filling a third of the height. */
-@media (max-width: 720px) {
-  .showcall-poster { gap: 10px; }
-
-  .showcall-poster-line {
-    font-size: 15px;
-    letter-spacing: 0.04em;    /* condensed at this size needs the tracking back */
-    line-height: 1.1;
-    white-space: nowrap;       /* one line each, including the graphite row */
-  }
-
-  .showcall-poster-row { gap: 9px; flex-wrap: nowrap; }
-
-  .showcall-poster .play-btn { width: 34px; height: 34px; }
-  .showcall-poster .play-btn svg { width: 13px; height: 13px; }
-
-  .showcall-poster-tc { top: 10px; left: 10px; font-size: 9px; padding: 3px 7px; }
-}
-
-/* ═══ THE 4K SHOW CALL, AS A TEXT LINK ══════════════════════════════════════════════════
-   Set like a class slate on the wall — mono slate row, condensed title, mono meta — so the
-   two read as the same kind of object. The wall sizes its card in cqw against the wall's own
-   width; this one is in px because it sits in the page, not in the frame. */
-.showcall-link {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 22px 0 26px;
-  border-top: 1px solid var(--border-strong);
-  text-decoration: none;
-  color: inherit;
-}
-.showcall-link:hover .showcall-link-title,
-.showcall-link:focus-visible .showcall-link-title { color: var(--tungsten-amber); }
-
-.showcall-link-slate {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  font-family: var(--font-mono);
-  line-height: 1;
-  white-space: nowrap;
-}
-.showcall-link-kind {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  color: var(--graphite-light);
-  padding: 5px 9px;
-  border: 1px solid var(--border-strong);
-  border-radius: 2px;
-}
-.showcall-link-dates {
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-soft);
-}
-.showcall-link-title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: clamp(30px, 4.4vw, 58px);
-  line-height: 0.95;
-  letter-spacing: 0.01em;
-  color: var(--signal-white);
-  transition: color 0.2s ease;
-}
-.showcall-link-meta {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  line-height: 1.5;
-  color: var(--graphite-light);
-}
-
-@media (max-width: 720px) {
-  .showcall-link { padding: 18px 0 20px; gap: 8px; }
-  .showcall-link-meta { font-size: 11px; letter-spacing: 0.06em; }
 }
