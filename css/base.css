@@ -9,63 +9,26 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
-  zoom: 0.95;
 
-  /* THE ZOOM HAS TO BE PAID BACK IN LAYOUT, OR THE PAGE IS 5% TOO SMALL FOR THE SCREEN.
-     Measured on an iPhone, 26 Nov: win 440x868, root rect 440 wide, zoom 0.95 — so the
-     document is laid out at 440 and PAINTED at 418, leaving a 22px strip of bare canvas down
-     the right and the same under the bottom. That strip is the white band.
-     Blink expands the layout viewport to 1/zoom when the root is zoomed, so the document
-     still fills the screen and nothing shows; WebKit does not. That is why this never
-     reproduced on any bench here, and why four attempts at painting the gap all failed —
-     there was no background to fix, the page itself was short.
-     100vw/100vh are the real screen either way, so dividing by the zoom gives the root a
-     layout box that lands back on the screen edge once it is scaled. In Blink it matches
-     what the engine already does, so it changes nothing there. If the zoom above ever moves
-     off 0.95, these two move with it. */
-  min-width: calc(100vw / 0.95);
-  min-height: calc(100vh / 0.95);
-
-  /* NO background here, deliberately. The root is zoomed to 0.95, so its own box covers only
-     the top-left 95% of the screen. The canvas behind it is painted by PROPAGATION from body,
-     which happens only while the root's own background is transparent — give the root a
-     colour and propagation stops and the colour is painted in the scaled box instead, which
-     is the top-left 95% and no more. v228 tried exactly that and the white stayed.
-     The canvas guard below is what covers the gap instead. */
-}
-
-/* ═══ THE CANVAS GUARD ═════════════════════════════════════════════════════════════════
-   The root is zoomed to 0.95, so everything this document paints lands inside the top-left
-   95% of the screen. That normally does not show, because body's background is PROPAGATED to
-   the canvas and the canvas is the whole screen. The moment anything stops that propagation,
-   the uncovered right and bottom edges fall back to the browser's default white — which on
-   iOS is the white band down the side and under the 4K window.
-
-   Three attempts went at the propagation itself: making the window fill the screen (v226),
-   giving the root its own colour (v228 — which STOPS propagation and paints only the root's
-   scaled box, so it could never have worked), and moving the modals' scroll lock off body
-   (v229). The white survived all three.
-
-   So this stops guessing which rule breaks it and paints the ground directly: one fixed
-   layer, oversized past every edge so the zoom cannot leave a gap, sitting behind everything
-   on the page. Whatever the propagation does or does not do, there is no bare canvas left to
-   show through. It is the colour the page already is, so nothing looks different.
-
-   -10% rather than 0: the inset resolves against the viewport and is then scaled by the same
-   0.95, so it has to overshoot by more than the 5% the zoom takes away. */
-html.no-guard::before { display: none; }   /* the ?wb=1 readout's "guard off" button */
-html::before {
-  content: "";
-  position: fixed;
-  inset: -10%;
+  /* THE ROOT IS NOT ZOOMED. THE BODY IS. Measured on an iPhone, 26 Nov:
+       win 440x868   root 440x5492   zoom 0.95
+     The root was laid out at 440 and PAINTED at 418, so 22px down the right and the same
+     under the bottom were bare canvas — the white band. Blink expands the layout viewport to
+     1/zoom when the ROOT is zoomed and WebKit does not, which is why this never reproduced on
+     any bench here and why four attempts at painting the gap all failed: there was no
+     background to fix, the document itself was 5% short of the screen.
+     Moving the zoom down to body ends it. The root is full size, so it always covers the
+     screen; everything with any ink in it lives inside body and is scaled exactly as before.
+     Checked at 440x868 and 1600x1000 across ten elements plus scroll width, scroll height and
+     computed type size: every number identical either way. Nothing moves.
+     Do not put the zoom back on html. */
   background: var(--stage-black);
-  z-index: -1;
-  pointer-events: none;
 }
 
 /* body */
 body {
   margin: 0;
+  zoom: 0.95;              /* was on html — see the note above. Do not move it back. */
   background: var(--stage-black);
   color: var(--signal-white);
   font-family: var(--font-body);
