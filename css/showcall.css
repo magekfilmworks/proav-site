@@ -454,3 +454,11 @@ html, body {
    text over the picture. The GO stays readable for its full beat, and the clip is clean from
    its first frame. */
 .screen-content.is-clip .wall-cue { background: transparent; }
+
+/* ═══ ONE CALL OVER THE PICTURE, NOT THE WHOLE EXCHANGE ═════════════════════════════════ */
+/* Calls stack on the wall — the standby stays up while the call that answers it arrives, and
+   that is right while they are read against the grid. Once the picture is rolling the standby
+   is spent: it was left sitting over the clip's opening next to its own GO, which is what read
+   as a trail of the last content. The engine marks the cue while a clip rolls, so only the
+   last line stays, for the rest of its beat. */
+.wall-cue.is-over-clip .wall-cue-line:not(:last-of-type) { display: none; }

@@ -63,7 +63,7 @@
 <body>
 
 <nav class="nav">
-  <a href="#top" class="nav-logo" aria-label="Back to top">
+  <a href="/" class="nav-logo" aria-label="Back to home">
     <svg class="nav-bug" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
       <rect width="64" height="64" rx="10" fill="var(--stage-black)" stroke="var(--border-quiet)" stroke-width="2"/>
       <text x="32" y="45" text-anchor="middle"
@@ -165,20 +165,9 @@
       <!-- The cue call, on the wall. Two beats — the standby, then the take — and on the take
            the page's DIM cue actually fires. The wall is not illustrating a cue; it is calling
            one the page obeys. Filled from the SHOW cue stack below, like the card above. -->
-      <!-- The house is dark and the show has not started. Nothing on this page makes a sound
-           or moves a level until this is pressed, which also makes it the gesture browsers
-           require before audio is allowed — so the cue is guaranteed to be heard rather than
-           hoped for. The whole wall is the button. -->
-      <button class="wall-invite" type="button">
-        <span class="wall-invite-icon" aria-hidden="true">
-          <!-- Play. It was a speaker, which is the wrong promise: the control starts the show,
-               and sound comes on with it rather than being the thing being switched. -->
-          <svg viewBox="0 0 24 24" focusable="false">
-            <path d="M9 6.5v11l9-5.5z" fill="currentColor" stroke="none"/>
-          </svg>
-        </span>
-        <span class="wall-invite-line">PLAY AND EXPERIENCE THE SHOW CALL CUES</span>
-      </button>
+            <!-- NO INVITATION. The wall is a display board: it rolls its classes and clips from the
+           first frame and nothing is laid over them. The show call it used to launch now lives
+           in the 4K window, opened from the text link in Episodes. -->
       <!-- A call given while something else is still on the wall — over a running clip, or
            over a slide being read. It does not replace what is up; it sits beside it on the
            right, which is the whole point of a standby. -->
@@ -219,9 +208,9 @@
     </pattern>
   </defs>
   <g clip-path="url(#wallClip)"><rect x="150" y="28" width="750" height="293" fill="url(#panels)"/></g>
-  <!-- The wall's outline is off. The panel seams already describe where the wall is, and the
-       drawn frame on top of them was the thing reading as a bevelled edge. The trapezoid
-       itself is untouched. -->
+  <!-- A slim outline. The full-weight 1.5 stroke read as a bevelled edge over the seams;
+       this is half of it at a lower opacity, so the wall has an edge without a frame. -->
+  <path d="M150 58 L900 28 L900 321 L150 292 Z" fill="none" stroke="#F5F5F0" stroke-opacity=".22" stroke-width="0.75"/>
 </svg>
   </div>
   <div class="hero-word display">
@@ -412,35 +401,14 @@
 <section id="watch" class="band-plain">  <div class="section-eyebrow reveal">EPISODES</div>
   <h2 class="section-title display reveal">ProAV Talk: Conversations, The People, The Gear, Demos</h2>
   <p class="watch-note reveal">1-hour conversations with ProAV professionals, demos with hardware and software manufacturers.</p>
-  <!-- Video on the left, audio on the right. Each .video-card.watch-hero is one tile;
-       copy a whole tile to add a video and they stack down the left column. -->
+  <!-- Video on the left, audio on the right. Each .video-card in .watch-grid is one tile and
+       they stack down the left column; copy a whole tile to add one. The episode tile that
+       used to sit above the 4K show call ("The Art of Cutting Live") was removed, so the
+       episode tile sits above the 4K show-call link in the left column. -->
   <div class="watch-pair">
   <div class="watch-grid">
-  <div class="video-card watch-hero reveal">
-    <div class="watch-segments" role="tablist" aria-label="Jump to episode segment">
-      <button type="button" class="watch-seg-btn" data-seg="mainstage" data-start="180" onclick="setWatchSegment(this)">MAINSTAGE</button>
-      <button type="button" class="watch-seg-btn active" data-seg="backstage" data-start="0" onclick="setWatchSegment(this)">BACKSTAGE</button>
-      <button type="button" class="watch-seg-btn" data-seg="cloud" data-start="2700" onclick="setWatchSegment(this)">CLOUD</button>
-    </div>
-    <!--
-      Current episode only. When a new episode goes up:
-      1. Swap data-video-id below (and on the thumbnail img src) for the new YouTube ID.
-      2. Update each button's data-start (seconds) to that episode's actual segment timestamps.
-      3. Update the title in .video-title.
-    -->
-    <div class="video-embed" data-video-id="lQ_MciOESPY" data-start="0" onclick="openVideoModal(this)">
-      <img src="https://img.youtube.com/vi/lQ_MciOESPY/hqdefault.jpg" alt="Current episode thumbnail" loading="lazy" decoding="async" onerror="this.style.display='none'">
-      <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-    </div>
-    <div class="video-meta">
-      <div class="video-eyebrow backstage" id="watchActiveLabel">BACKSTAGE</div>
-      <div class="video-title">The Art of Cutting Live</div>
-    </div>
-  </div>
-
-  <!-- THE SHOW CALL, 4K. Same cue stack as the hero wall, laid out as a flat 3840x2160
-       broadcast frame. The poster is a still; the show itself runs in showcall.html, which
-       also stands on its own at /showcall. Clicking opens it full screen. -->
+  <!-- THE SHOW CALL, 4K. The poster is a still; the show runs in showcall.html, which also
+       stands on its own at /showcall. Clicking opens it in the overlay. -->
   <div class="video-card showcall-card reveal">
     <div class="watch-segments" aria-hidden="true">
       <span class="watch-seg-tag active" data-seg="backstage">SHOW CALL</span>
@@ -450,12 +418,17 @@
          aria-label="Open the 4K show call full screen"
          onclick="openShowCall()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openShowCall();}">
       <div class="showcall-poster-tc"><span>SHOW CALL</span><span>TRT 00:04:31</span></div>
-      <div class="showcall-poster-line">PLAY AND EXPERIENCE<br>THE SHOW CALL CUES</div>
-      <div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      <!-- The top row reads across the control: PLAY AND [>] EXPERIENCE. -->
+      <div class="showcall-poster-row">
+        <span class="showcall-poster-line line-a">PLAY AND</span>
+        <span class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        <span class="showcall-poster-line line-a">EXPERIENCE</span>
+      </div>
+      <div class="showcall-poster-line line-b">THE SHOW CALL CUES</div>
     </div>
     <div class="video-meta">
       <div class="video-eyebrow backstage">SHOW CALL</div>
-      <div class="video-title">Demo, in 4K</div>
+      <div class="video-title">Play and experience the show call cues</div>
     </div>
   </div>
   </div>
@@ -1397,6 +1370,7 @@
       const tc = document.querySelector('.wall-tc-code');
       const tcWrap = document.querySelector('.wall-tc');
       const nameEl = document.querySelector('.wall-tc-name');
+      const screenEl = document.querySelector('.screen-content');
       if (!vid) return;
 
       // ═══ THE SHOW, AND THE LOOP ═══════════════════════════════════════════════════════
@@ -1412,8 +1386,8 @@
       //
       // Both clips are 29.97, so one drop-frame convention covers them.
       const VIDEOS = [
-        { src: 'images/hero-artemis-v1.mp4', name: 'ARTEMIS I',         fps: 30000 / 1001 },
-        { src: 'images/hero-sun-v1.mp4',     name: 'SDO / SOLAR CYCLE', fps: 30000 / 1001 }
+        { src: 'images/hero-artemis-v1.mp4', name: 'ARTEMIS I',         fps: 30000 / 1001, dur: 120.02 },
+        { src: 'images/hero-sun-v1.mp4',     name: 'SDO / SOLAR CYCLE', fps: 30000 / 1001, dur: 119.99 }
       ];
 
       const SLIDES = [
@@ -1426,7 +1400,69 @@
           dates: '2027-01-13',
           title: 'Millumin Operator Fundamentals Workshop',
           meta:  'Las Vegas \u00b7 Evolve Academy',
-          href:  'https://evolveacademy.live/product/millumin/' }
+          href:  'https://evolveacademy.live/product/millumin/' },
+        // 2027, pulled from Analog Way Academy's in-person training schedule. Start dates only:
+        // the schedule lists each as 5 days but does not print an end date, and working one out
+        // would be inventing it. US sessions only — the schedule also carries ten more in
+        // Leighton Buzzard (UK) and Antony (France), including Level 1 and Level 2 in January.
+        { label: 'Aquilon Level 3 class',
+          dates: '2027-02-01',
+          title: 'Aquilon Certified Operator Training, Level\u00a03',
+          meta:  'Buford, GA \u00b7 Analog Way Academy',
+          href:  'https://academy.analogway.com/in-person-certifications/nala---2027-02-01---livepremier-tm-presentation-systems---certification---level-3-db024' },
+        { label: 'Aquilon Level 3 class',
+          dates: '2027-03-01',
+          title: 'Aquilon Certified Operator Training, Level\u00a03',
+          meta:  'Buford, GA \u00b7 Analog Way Academy',
+          href:  'https://academy.analogway.com/in-person-certifications/nala---2027-03-01---livepremier-tm-presentation-systems---certification---level-3' },
+        { label: 'Aquilon Level 3 class',
+          dates: '2027-03-15',
+          title: 'Aquilon Certified Operator Training, Level\u00a03',
+          meta:  'Buford, GA \u00b7 Analog Way Academy',
+          href:  'https://academy.analogway.com/in-person-certifications/nala---2027-03-15---livepremier-tm-presentation-systems---certification---level-3' },
+        // Evolve Academy's Pixera page lists its sessions WITHOUT a year ("February 11-13",
+        // "June 19-21", "December 7-9"). February and June have already passed in 2026, so
+        // 2027 is the only reading for those two. December 7-9 could be either, so it is not
+        // here — it needs confirming before it goes on the wall.
+        { label: 'Pixera operator class',
+          dates: '2027-02-11 \u2192 2027-02-13',
+          title: 'Pixera Operator Training',
+          meta:  'Las Vegas \u00b7 Evolve Academy',
+          href:  'https://evolveacademy.live/product/pixera/' },
+        { label: 'Pixera operator class',
+          dates: '2027-06-19 \u2192 2027-06-21',
+          title: 'Pixera Operator Training',
+          meta:  'Las Vegas \u00b7 Evolve Academy',
+          href:  'https://evolveacademy.live/product/pixera/' },
+        // Same as Pixera: Evolve prints "January 20 - 21" with no year, and January has gone
+        // in 2026, so 2027 is the only reading.
+        { label: 'Kairos operator class',
+          dates: '2027-01-20 \u2192 2027-01-21',
+          title: 'Panasonic Kairos Training',
+          meta:  'Las Vegas \u00b7 Evolve Academy',
+          href:  'https://evolveacademy.live/product/panasonic-kairos-training/' },
+        // The two sessions George linked. Each of these pages also lists an earlier date with
+        // no year — "December 8-9 Vegas" on the EIC course and "November 17-19 Orlando" on the
+        // projector course — which could be this year or next, so neither is on the wall.
+        { label: 'Panasonic EIC class',
+          dates: '2027-02-16 \u2192 2027-02-17',
+          title: 'Panasonic Camera EIC',
+          meta:  'Orlando \u00b7 Evolve Academy',
+          href:  'https://evolveacademy.live/product/panasonic-certified-camera-eic/' },
+        { label: 'Panasonic projection class',
+          dates: '2027-03-16 \u2192 2027-03-18',
+          title: 'Panasonic Projector Operations for Live Events',
+          meta:  'Orlando \u00b7 Evolve Academy',
+          href:  'https://evolveacademy.live/product/panasonic-certified-projection-specialist/' },
+        // THE SHOW CALL, as a slate in the cycle. Same shape as a class, with its own tag and
+        // an overlay flag: pressing it opens the 4K window in place rather than navigating.
+        { label: 'Show call',
+          kind:  'SHOW CALL',
+          dates: 'TRT 00:04:31',
+          title: 'Play and experience the show call cues',
+          meta:  '3840 \u00d7 2160',
+          href:  'showcall.html',
+          overlay: true }
       ];
 
       // THE CUE STACK.
@@ -1505,18 +1541,38 @@
       ];
 
       // What the wall does once the show has finished. Rotates forever; every item gets a dot.
+      // Every item holds for the same beat, so the wall turns over roughly every nine seconds
+      // whatever is on it. The clips are 2:00 each and are NOT cut short by this — they keep
+      // their place in wall time (see the clip clock below) and carry on from there.
+      const WALL_BEAT = 9500;
+      // The clips are spaced through the cards rather than bunched, so the wall never runs
+      // more than two slates before picture comes back.
+      // Ten slates in date order with the two clips a third and two thirds of the way round,
+      // so the wall never runs more than five slates before picture comes back. A full lap is
+      // twelve items, a little under two minutes.
       const LOOP = [
-        { kind: 'video', v: 0 },
-        { kind: 'slide', c: 0, hold: 9000 },
-        { kind: 'video', v: 1 },
-        { kind: 'slide', c: 1, hold: 9000 }
+        { kind: 'slide', c: 10, hold: WALL_BEAT },  // the show call — the wall opens on it
+        { kind: 'video', v: 0, hold: WALL_BEAT },
+        { kind: 'slide', c: 0, hold: WALL_BEAT },   // 2026-12-07  Aquilon L3
+        { kind: 'slide', c: 1, hold: WALL_BEAT },   // 2027-01-13  Millumin
+        { kind: 'slide', c: 7, hold: WALL_BEAT },   // 2027-01-20  Kairos
+        { kind: 'slide', c: 2, hold: WALL_BEAT },   // 2027-02-01  Aquilon L3
+        { kind: 'slide', c: 5, hold: WALL_BEAT },   // 2027-02-11  Pixera
+        { kind: 'video', v: 1, hold: WALL_BEAT },
+        { kind: 'slide', c: 8, hold: WALL_BEAT },   // 2027-02-16  Panasonic EIC
+        { kind: 'slide', c: 3, hold: WALL_BEAT },   // 2027-03-01  Aquilon L3
+        { kind: 'slide', c: 4, hold: WALL_BEAT },   // 2027-03-15  Aquilon L3
+        { kind: 'slide', c: 9, hold: WALL_BEAT },   // 2027-03-16  Panasonic projection
+        { kind: 'slide', c: 6, hold: WALL_BEAT }    // 2027-06-19  Pixera
       ];
 
       let i = 0;              // index into LOOP, once the show is over
       let showAt = -1;        // index into SHOW while it runs; -1 means the show is done
+      let showCalled = false; // the visitor pressed play, so the invitation has done its job
       let cur = null;         // the step actually on the wall, from either list
 
       const card = document.querySelector('.wall-card');
+      const cardKind  = document.querySelector('.wall-card-kind');
       const cardDates = document.querySelector('.wall-card-dates');
       const cardTitle = document.querySelector('.wall-card-title');
       const cardMeta  = document.querySelector('.wall-card-meta');
@@ -2340,6 +2396,100 @@
       // wall itself is pointer-events:none, so the strip turns pointers back on for itself.
       // They are built from LOOP, not SHOW: a dot is an invitation to come back to something,
       // and nothing in a cue stack is come back to.
+      // A slate flagged `overlay` opens the 4K window here instead of navigating to it. The
+      // href stays real, so a middle-click or "open in new tab" still works.
+      if (card) {
+        card.addEventListener('click', e => {
+          if (swipedJustNow) { e.preventDefault(); return; }   // that was a swipe, not a press
+          if (!card.dataset.overlay) return;
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+          e.preventDefault();
+          startShowOnWall();
+        });
+      }
+
+      // ── THE SHOW, CALLED FROM THE WALL ITSELF ───────────────────────────────────────────
+      // Pressing the show-call slate runs the cue stack ON the wall. It used to open the 4K
+      // window instead, which put the show somewhere the dim could not be seen: the whole
+      // point of CUE 1 is that the house goes down AROUND a wall that stays lit, and that
+      // only reads if the wall is still on the page.
+      // The press is also the gesture that makes audio legal, so the priming happens here,
+      // in the handler, while the gesture is still ours.
+      function startShowOnWall() {
+        if (showCalled) return;              // the show runs once
+        showCalled = true;
+
+        // one muted play() on the press — this is what lets the first clip come up WITH sound
+        try { vid.muted = true; const r = vid.play(); if (r && r.catch) r.catch(() => {}); } catch (e) {}
+        VO.pick(VO.current() ? VO.current().name : 'male');
+        VO.pickOp('female');
+        VO.warm();                           // start pulling the 25 recordings down
+        // The clip under the slate is running for the unlock and must not be SEEN or HEARD
+        // through the fade: the wall is going to the grid, not to a clip.
+        if (screenEl) screenEl.classList.add('is-arming');
+
+        // the rotation is mid-slate: take its hold off the clock before it advances under us
+        cueTimers.forEach(clearTimeout); cueTimers = [];
+        clearTimeout(holdTimer); holdTimer = 0;
+
+        // FADE TO THE GRID, THEN CALL. 900ms of fade, then a breath on the bare grid, and
+        // CUE 1's own `lead` sits on top of that before its first line.
+        const FADE = 900, BREATH_TO_CUE = 400;
+        if (card) card.classList.add('is-out');
+        setTimeout(() => {
+          if (card) { card.hidden = true; card.classList.remove('is-out'); }
+          audioMode('on');                   // sound comes on WITH the show, not with the fade
+          startSeqClock();                   // the sequence clock runs from here
+          runShow(0);                        // the cue stack, from CUE 1
+        }, FADE + BREATH_TO_CUE);
+      }
+
+      // ── SWIPE, ON A TOUCH SCREEN ────────────────────────────────────────────────────────
+      // The dots are how you move between items with a mouse; a thumb expects to swipe.
+      // Only touch events are bound, so this is a phone and tablet affordance by nature and
+      // nothing is added for a mouse.
+      //
+      // Bound to .hero, NOT to the wall: .hero-screen is pointer-events:none so the wordmark
+      // painted over it stays clickable, which means the wall never receives a touch. The
+      // start point is tested against the wall's own rect instead.
+      //
+      // Horizontal only. Anything steeper is the page being scrolled and is left alone, and
+      // the listeners are passive so a scroll is never held up waiting on this.
+      let swipedJustNow = false;
+      (function swipe() {
+        const heroEl = document.querySelector('.hero');   // own lookup: the hero const above
+        const stage  = document.querySelector('.hero-screen');  // lives in a different IIFE
+        if (!heroEl || !stage) return;
+        const MIN = 40;        // px of travel before it counts as a swipe at all
+        const SLOPE = 1.4;     // how much more horizontal than vertical it has to be
+        let x0 = 0, y0 = 0, live = false;
+
+        heroEl.addEventListener('touchstart', e => {
+          if (e.touches.length !== 1) { live = false; return; }
+          const t = e.touches[0], r = stage.getBoundingClientRect();
+          live = t.clientX >= r.left && t.clientX <= r.right &&
+                 t.clientY >= r.top  && t.clientY <= r.bottom;
+          x0 = t.clientX; y0 = t.clientY;
+        }, { passive: true });
+
+        heroEl.addEventListener('touchend', e => {
+          if (!live) return;
+          live = false;
+          const t = e.changedTouches[0];
+          const dx = t.clientX - x0, dy = t.clientY - y0;
+          if (Math.abs(dx) < MIN || Math.abs(dx) < Math.abs(dy) * SLOPE) return;
+          // The show is a written cue stack: there is nothing to swipe between while it runs,
+          // which is the same reason the dots are hidden for its whole length. A swipe during
+          // the show does nothing rather than throwing the visitor out of it.
+          if (showAt >= 0) return;
+          // suppress the click the browser fires after the touch, or a swipe that started on
+          // the show-call slate would also open the show
+          swipedJustNow = true;
+          setTimeout(() => { swipedJustNow = false; }, 400);
+          go(dx < 0 ? i + 1 : i - 1);          // swipe left for the next item, right for the last
+        }, { passive: true });
+      })();
+
       const dots = LOOP.map((item, n) => {
         const b = document.createElement('button');
         b.type = 'button';
@@ -2369,7 +2519,28 @@
       // Take a running clip down gently. A clip that is cut away from mid-audio should fade,
       // not stop dead on a frame — the only place a hard stop is right is when it has already
       // played to its end, where there is nothing left to fade.
-      function leaveClip() { stop(); vid.pause(); }
+      // THE CLIP CLOCK. Only one <video> can decode at a time, so a clip that is not on the
+      // wall is not really playing — but it should look as though it never stopped. Each clip
+      // records where it was and when it left; coming back, it is put where wall time says it
+      // would be by now. From the wall's side the two feeds run continuously and it cuts
+      // between them, which is what a playback rack actually does.
+      const clipAt = [];            // per clip: { t, since } — position, and when it left
+      // Which clip the element is carrying. NOT read off `cur`: show() sets cur = item on its
+      // first line and only calls leaveClip() further down, so by then cur is already the
+      // INCOMING item and the outgoing clip's position was being filed against the wrong one.
+      let onDeck = -1;
+      const markLeft = () => {
+        if (onDeck < 0 || !vid.duration) return;
+        clipAt[onDeck] = { t: vid.currentTime, since: performance.now() };
+        onDeck = -1;
+      };
+      const whereNow = (n, dur) => {
+        const m = clipAt[n];
+        if (!m || !dur) return 0;
+        return (m.t + (performance.now() - m.since) / 1000) % dur;
+      };
+
+      function leaveClip() { stop(); markLeft(); vid.pause(); }
 
       function show(item, done) {
         cur = item;
@@ -2390,7 +2561,8 @@
           if (invite) { invite.hidden = false; fadeIn(invite); }
           return;                       // no timer: the wall waits here for as long as it takes
         }
-        if (invite) invite.hidden = true;
+        // The control stays up over the rotating content; the press is what takes it down.
+        if (invite && showCalled) invite.hidden = true;
 
         if (item.kind === 'cue') {
           leaveClip();
@@ -2424,9 +2596,15 @@
             const s = SLIDES[item.c];
             if (card) {
               card.href = s.href;
+              if (cardKind) cardKind.textContent = s.kind || 'CLASS';
+              // A slate that opens the 4K window stays in this tab and is handled by the
+              // click below; a class slate goes out to its academy in a new one.
+              if (s.overlay) { card.removeAttribute('target'); card.dataset.overlay = '1'; }
+              else { card.setAttribute('target', '_blank'); delete card.dataset.overlay; }
               cardDates.textContent = s.dates;
               cardTitle.textContent = s.title;
               cardMeta.textContent = s.meta;
+              card.classList.remove('is-out');   // never inherit the press's fade
               card.hidden = false;
             }
             if (tcWrap) tcWrap.hidden = true;   // the burn-in names a clip, not a slide
@@ -2463,6 +2641,7 @@
           // if a new cue card has gone up inside the beat, this deferred hide is stale
           dropAfterGo(() => { if (cue && cueGen === gen) cue.hidden = true; });
           if (card) card.hidden = true;
+          if (screenEl) screenEl.classList.remove('is-arming');   // a clip is called: picture back
           if (tcWrap) tcWrap.hidden = false;
           if (nameEl) nameEl.textContent = v.name;
           startClip();
@@ -2473,8 +2652,20 @@
         return;
 
         function startClip() {
-        if (vid.getAttribute('src') !== v.src) { vid.src = v.src; vid.currentTime = 0; }
-        else if (vid.currentTime > 0.05) vid.currentTime = 0;   // already primed at 0: don't re-seek
+        // Where this clip would be if it had never stopped. During the SHOW a clip is being
+        // called and has to start at its head; in the LOOP it picks up its own wall time.
+        const resume = showAt < 0 ? whereNow(item.v, v.dur || 0) : 0;
+        if (vid.getAttribute('src') !== v.src) {
+          vid.src = v.src;
+          const seek = () => { try { if (resume > 0.2) vid.currentTime = resume; } catch (e) {} };
+          if (vid.readyState >= 1) seek();
+          else vid.addEventListener('loadedmetadata', seek, { once: true });
+        } else if (resume > 0.2) {
+          try { vid.currentTime = resume; } catch (e) {}
+        } else if (vid.currentTime > 0.05) {
+          vid.currentTime = 0;        // already primed at 0: don't re-seek
+        }
+        onDeck = item.v;              // the element is carrying this clip now
         primed = '';
         // iPhones take a play() that follows a tap as a request to go fullscreen unless the
         // element is explicitly inline, and setting src re-reads these, so they are re-asserted
@@ -2518,6 +2709,14 @@
           else goGiven = true;              // hold: the 'ended' handler will take it
         };
         onClipEnd = finishClip;
+
+        // THE LOOP'S BEAT. A card holds for its `hold` and so does a clip now — the wall
+        // changes on the same beat whatever is on it. The clip is not cut short by this: it
+        // keeps its place in wall time and carries on from there when it comes round again.
+        // `fire` is the same guarded hand-on the clip's own end uses, so whichever comes
+        // first wins and the step only ever hands on once. The SHOW never does this — there
+        // a clip runs to its last frame and the cue stack governs.
+        if (showAt < 0 && item.hold) cueTimers.push(setTimeout(fire, item.hold));
         }
       }
 
@@ -2558,6 +2757,7 @@
       function endShow() {
         if (showAt < 0) return;
         showAt = -1;
+        if (screenEl) screenEl.classList.remove('is-arming');
         cueTimers.forEach(clearTimeout); cueTimers = [];
         clearReady(true);
         stopSeqClock();
@@ -2629,6 +2829,8 @@
       // lets the first clip start with sound later without being refused.
       if (invite) {
         invite.addEventListener('click', () => {
+          showCalled = true;
+          invite.hidden = true;
           try { vid.muted = true; const r = vid.play(); if (r && r.catch) r.catch(() => {}); } catch (e) {}
           VO.pick(VO.current() ? VO.current().name : 'male');
           VO.pickOp('female');   // by now the voice list has certainly loaded
@@ -2642,7 +2844,13 @@
       // Everything on the wall — the standby, the take, the dim it fires — waits for the site
       // to finish loading, so the cue is called against a settled page rather than racing the
       // fonts and the first clip. If load has already gone by, start now.
-      const roll = () => show({ kind: 'invite' }, () => {});
+      // The wall opens ON ITS CONTENT and cycles from the first frame. It used to open on the
+      // invitation and wait there for as long as it took, which meant the rotation — ten
+      // classes and two clips — was never seen unless a visitor pressed play and sat through
+      // the whole 4:31 cue stack first. The invitation is now a corner control over the top
+      // instead of a panel across the wall: the cycle runs behind it, muted, and the press is
+      // still what calls the show and makes sound legal.
+      const roll = () => go(0);
       if (document.readyState === 'complete') roll();
       else addEventListener('load', roll, { once: true });
 
