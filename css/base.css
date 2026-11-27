@@ -9,26 +9,12 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
-
-  /* THE ROOT IS NOT ZOOMED. THE BODY IS. Measured on an iPhone, 26 Nov:
-       win 440x868   root 440x5492   zoom 0.95
-     The root was laid out at 440 and PAINTED at 418, so 22px down the right and the same
-     under the bottom were bare canvas — the white band. Blink expands the layout viewport to
-     1/zoom when the ROOT is zoomed and WebKit does not, which is why this never reproduced on
-     any bench here and why four attempts at painting the gap all failed: there was no
-     background to fix, the document itself was 5% short of the screen.
-     Moving the zoom down to body ends it. The root is full size, so it always covers the
-     screen; everything with any ink in it lives inside body and is scaled exactly as before.
-     Checked at 440x868 and 1600x1000 across ten elements plus scroll width, scroll height and
-     computed type size: every number identical either way. Nothing moves.
-     Do not put the zoom back on html. */
-  background: var(--stage-black);
+  zoom: 0.95;
 }
 
 /* body */
 body {
   margin: 0;
-  zoom: 0.95;              /* was on html — see the note above. Do not move it back. */
   background: var(--stage-black);
   color: var(--signal-white);
   font-family: var(--font-body);
