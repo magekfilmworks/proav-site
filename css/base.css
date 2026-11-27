@@ -10,6 +10,15 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
   zoom: 0.95;
+  /* THE CANVAS, PAINTED FROM THE ROOT — not left to the body.
+     The root is zoomed to 0.95, so its box covers only the top-left 95% of the screen. With
+     no background here the canvas is painted by PROPAGATION from body, and WebKit drops that
+     propagation once body is given overflow:hidden — which is exactly what opening the 4K
+     window does. The uncovered right and bottom edges then show the browser's default white.
+     Setting the colour on the root removes the dependency: a root background is the canvas
+     background and is painted over the whole canvas, zoom or no zoom. Same colour body
+     already carries, so nothing else changes. */
+  background: var(--stage-black);
 }
 
 /* body */
