@@ -1144,6 +1144,16 @@ iframe { background: #000; }
    thing you watch. This single number is the balance between the two readings. */
 .showcall-modal { background: rgba(5, 5, 7, 0.55); }
 
+/* THE POP-OUT KEEPS THE BLACK.
+   The scrim is 55% so the house dim reads through it. The moment the video pops out to
+   picture-in-picture the element collapses to Apple's placeholder, and that 45% of page
+   showing through turns the whole screen into a pale slab behind a grey icon. There is no
+   dim to watch while the picture is somewhere else, so the ground goes solid for as long as
+   it is out, and comes back the moment it returns. */
+.showcall-modal.is-pip { background: #000; }
+.showcall-modal.is-pip .showcall-modal-frame,
+.showcall-modal.is-pip .video-modal-inner { background: #000; }
+
 .showcall-modal .video-modal-inner {
   transform-origin: 50% 50%;
   will-change: transform;
@@ -1168,6 +1178,16 @@ iframe { background: #000; }
     height: 100dvh;                    /* dvh, so iOS browser chrome does not crop the frame */
   }
 
+  /* THE CLOSE GETS ITS OWN STRIP. iOS draws the video's expand and picture-in-picture
+     buttons at the TOP-LEFT of the element, which is exactly where the close sat — on a
+     phone the three piled on top of each other. Apple's controls cannot be moved, so the
+     frame is pushed down instead and the close lives in the band above it. Nothing can
+     collide because nothing shares that row.
+     56px: 44px of touch target plus the 12px it is inset by. */
+  .showcall-modal .video-modal-inner {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 56px);
+  }
+
   .showcall-modal .showcall-modal-frame {
     width: 100%;
     height: 100%;
@@ -1175,14 +1195,15 @@ iframe { background: #000; }
     border-radius: 0;
   }
 
-  /* With no card above it the close button floats over the frame, clear of the notch and of
-     the show's own controls in the opposite corner. */
+  /* Top left, in its own strip, clear of the notch and of Apple's controls below it. */
   .showcall-modal .video-modal-close {
     position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 10px);
+    top: calc(env(safe-area-inset-top, 0px) + 6px);
     left: calc(env(safe-area-inset-left, 0px) + 10px);
     margin: 0;
-    z-index: 2;
+    z-index: 3;
+    width: 44px;
+    height: 44px;
     background: rgba(11,11,13,0.72);
   }
 }
