@@ -36,7 +36,9 @@
   --col-right: calc(var(--hero-left) + var(--brk-clear));
   /* The wordmark's own box, so the wall can be placed against where PROAV actually prints.
      This repeats .hero-word's own width expression. It uses % rather than vw: html carries
-     zoom: 0.95, which vw arithmetic does not see but percentages of this element do. Only
+     the root zoom that used to live here, which vw arithmetic did not see but percentages of
+     this element did. (The zoom is gone as of 26 Nov; the note stays because the reasoning
+     for using percentages rather than vw is still why this is written this way.) Only
      `width` and `margin-left` consume it, and both resolve a percentage against this element's
      width, so it means what it says. (It must never be consumed by `height` — a percentage
      there resolves against the parent's height and collapses to zero.)
@@ -1138,13 +1140,13 @@ iframe { background: #000; }
   border: 0;
   display: block;
   /* THE WHITE STRIP. An iframe element paints its OWN backdrop behind the document it
-     frames, and that backdrop is white by default. This page carries zoom: 0.95, and WebKit
+     frames, and that backdrop is white by default. This page used to carry zoom: 0.95, and WebKit
      scales the framed document without scaling the frame's inner viewport to match — so
-     showcall.html renders 5% short of the box and the uncovered 18px shows that white
+     made showcall.html render 5% short of the box; the uncovered 18px showed that white
      backdrop. Measured on an iPhone, 26 Nov: player 357px wide, document 339px, strip 18px,
-     5.0% exactly, and the same 5% when the frame filled the screen.
-     It is the FRAME's background, not the page's, which is why nothing done to html or body
-     ever touched it. */
+     5.0% exactly, and the same 5% when the frame filled the screen. Setting this colour did
+     NOT fix it — the gap is outside the frame's painted box. Removing the root zoom did.
+     This stays as a floor so no frame can ever show browser white again. */
   background: #000;
 }
 
@@ -1179,29 +1181,17 @@ iframe { background: #000; }
 .showcall-modal { background: transparent; }
 
 /* ═══ THE 4K WINDOW ON A PHONE ══════════════════════════════════════════════════════════ */
-/* .video-modal-inner is capped at 100vw - 48px and .video-modal-frame is a 56.25% padding
-   box, which on a 390px phone left the show a 341x192 stage: the audio button came out 10px
-   across and a call rendered at about 7px. A 3840x2160 frame cannot live inside a padded
-   card on a phone, so here the window is the screen. Scoped to .showcall-modal — the YouTube
-   modal keeps its card exactly as it was. */
-/* Keyed on orientation as well as width: a phone in landscape is 844px wide, so a plain
-   max-width phone query handed it the desktop card and pushed the close button off the top
-   of a 390px-tall viewport. */
+/* Kept for the overlay markup that no longer ships — the show plays in the card now. The
+   root no longer carries a zoom, so these are plain viewport units again. */
 @media (max-width: 720px), (max-height: 520px) {
   .showcall-modal { padding: 0; }
 
   /* THE ZOOM HAS TO BE PAID BACK HERE.
-     `html` carries zoom: 0.95 (css/base.css). A fixed box written as 100vw x 100dvh is sized
-     in the viewport's own pixels and THEN scaled by that zoom, so it came out 373x627 inside
-     a 393x660 phone — a 10px gutter down each side and 17px top and bottom. On iOS that
-     gutter is the canvas outside the scaled root, which WebKit paints WHITE, which is the
-     white band down the right of the 4K window.
-     Dividing by the zoom makes the box the real screen again. A single-term division by a
-     literal, deliberately: a calc() here that multiplies a var() by a var() hits the WebKit
-     defect that zeroes a sibling term. If the zoom in base.css ever changes, change it here. */
+     Kept for the overlay markup that no longer ships. The root no longer carries a zoom, so
+     these are plain viewport units. */
   .showcall-modal .video-modal-inner {
-    width: calc(100vw / 0.95);
-    height: calc(100dvh / 0.95);       /* dvh, so iOS browser chrome does not crop the frame */
+    width: 100vw;
+    height: 100dvh;                    /* dvh, so iOS browser chrome does not crop the frame */
   }
 
   .showcall-modal .showcall-modal-frame {
