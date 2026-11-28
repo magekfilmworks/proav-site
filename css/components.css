@@ -394,7 +394,7 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
   box-shadow: 0 20px 60px rgba(0,0,0,0.6);
   user-select: none;
   -webkit-user-drag: none;
-  background: var(--stage-black-raised);
+  background: var(--signal-white);   /* matches the tile — the enlarged shot is the same cut-out */
 }
 
 /* play */
@@ -479,12 +479,20 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
   flex-direction: column;
 }
 
+/* WHITE BEHIND THE MERCH. George, 28 Nov: "can we put the merch on white background".
+   The garments are black and were sitting on a black page, so the silhouettes disappeared and
+   only the printed wordmark read. The product shots are already cut out — every one is RGBA
+   with 50-67% of its pixels fully transparent — so this is a background under them and NOT an
+   edit to his images: nothing is recomposited, resized or re-encoded.
+   --signal-white (#F5F5F0), not #fff: it is the brand's own white, and a pure-white block in a
+   page this dark reads as a hole punched in it. */
 .merch-swatch-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
   cursor: pointer;
   overflow: hidden;
+  background: var(--signal-white);
 }
 
 .merch-swatch-wrap::before {
