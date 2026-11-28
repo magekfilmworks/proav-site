@@ -13,7 +13,7 @@ frontend:
       - 'showcaller.html'
       - 'compare.html'
       - 'contact.html'
-      - 'signal-flow-daily.html'
+      - 'digest.html'
       - 'robots.txt'
       - 'sitemap.xml'
       - 'og-image.png'

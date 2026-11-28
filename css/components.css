@@ -394,7 +394,8 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
   box-shadow: 0 20px 60px rgba(0,0,0,0.6);
   user-select: none;
   -webkit-user-drag: none;
-  background: var(--signal-white);   /* matches the tile — the enlarged shot is the same cut-out */
+  background: #E8E8E3;   /* the lightbox. White, pulled back from #F5F5F0 so one open panel
+                            against the 90%-black scrim is not a flashbulb. */
 }
 
 /* play */
@@ -484,15 +485,20 @@ html.is-scrolling .guest-tag:hover:not(:focus-within) .guest-tooltip {
    only the printed wordmark read. The product shots are already cut out — every one is RGBA
    with 50-67% of its pixels fully transparent — so this is a background under them and NOT an
    edit to his images: nothing is recomposited, resized or re-encoded.
-   --signal-white (#F5F5F0), not #fff: it is the brand's own white, and a pure-white block in a
-   page this dark reads as a hole punched in it. */
+   TWO VALUES, NOT ONE. George, 28 Nov: "take it back to gray in normal state and white in the
+   light box, but tone the white down its bright." So the tile sits at a mid grey and only the
+   lightbox goes near white — the grid is four blocks seen at once against near-black, which is
+   where the brightness was coming from, while the lightbox is one panel the viewer opened on
+   purpose. Both are warm-neutral, mixed toward --signal-white (#F5F5F0) rather than pure grey,
+   so they belong to the brand rather than reading as a default #ccc. */
 .merch-swatch-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
   cursor: pointer;
   overflow: hidden;
-  background: var(--signal-white);
+  background: #C2C2BD;   /* the tile. Lighter = brighter grid; #DCDCD7 and #A8A8A3 are the
+                            next steps either way if this wants nudging. */
 }
 
 .merch-swatch-wrap::before {

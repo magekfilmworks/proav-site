@@ -208,7 +208,7 @@ html[data-cue="cue1"] {
 html[data-cue="cue1"] .hero-word { --ch-site: var(--logo-cue1); }
 
 /* THE INTERIOR PAGES ARE OFF THE CUE.
-   signal-flow-daily.html and contact.html used to carry data-cue="cue1" so they would open
+   digest.html and contact.html used to carry data-cue="cue1" so they would open
    already looking like the homepage does after the wall calls CUE 1. That tied them to
    --cue1-level, the LED WALL's dim level, so taking the wall to 20% dragged both pages down
    with it. They were moved to their own data-rest level, and then off the cue altogether:

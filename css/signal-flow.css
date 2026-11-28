@@ -1,4 +1,4 @@
-/* Signal Flow Daily — the briefing, vendor tabs and tiles. */
+/* Signal Flow Digest — the briefing, vendor tabs and tiles. */
 
 /* * */
 .sf-items > * {
@@ -12,6 +12,18 @@
   line-height: 1.75;
   color: var(--text-soft);
   margin: 0 0 28px;
+}
+
+/* SAYS WHAT IT IS, quietly. Sits under the lede in the same grey as the vendor note, a step
+   down from it: the page is a digest of other people's reporting and should not be mistaken
+   for a newsroom, but the admission is a footnote, not a headline. */
+.sf-disclosure {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  letter-spacing: .02em;
+  color: var(--graphite-light);
 }
 
 .sf-issue {
@@ -463,7 +475,7 @@
   }
 }
 
-/* page: Signal Flow Daily lives on its own page, so clear the fixed nav */
+/* page: Signal Flow Digest lives on its own page, so clear the fixed nav */
 section.sf-page {
   padding-top: 148px;
 }
