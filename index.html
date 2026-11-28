@@ -855,14 +855,11 @@
     else document.documentElement.removeAttribute('data-cue');
   }
 
-  // ONE FILE, 1080, EVERYWHERE — INCLUDING PHONES.
-  // There was a 720 cut for mobile. It went on 27 Nov: the audience is video professionals
-  // and most of them land on a phone, so the small screen is the last place to send the
-  // softer file. Modern phones decode 1080 without trouble, preload is metadata-only so
-  // nothing is fetched until the press, and dropping the second file took 20MB off the site
-  // rather than adding to it.
+  // Two files: the full-size render, and a lighter one for a phone. Same framing, same
+  // cues — only the pixels differ, so the table serves both.
   function scPickSource(v) {
-    var src = 'images/showcall-1080.mp4';
+    var small = window.matchMedia('(max-width: 900px)').matches;
+    var src = small ? 'images/showcall-720.mp4' : 'images/showcall-1080.mp4';
     if (v.getAttribute('src') !== src) v.setAttribute('src', src);
   }
 
