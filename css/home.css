@@ -688,6 +688,62 @@
   margin-bottom: 28px;
 }
 
+/* WHO STARTED IT — the creator credit at the foot of THE SHOW.
+   Apple Podcasts Connect asks for a Creator; this is that same credit on the page, and the
+   reason there is no about page. A hairline above it rather than a heading: it is a credit,
+   not a section, and a fourth eyebrow in the hero would compete with THE SHOW itself. */
+.show-creator {
+  max-width: 1000px;
+  margin-top: 40px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border-quiet);
+}
+.show-creator-line {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text-soft);
+}
+.show-creator-line a {
+  color: var(--signal-white);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245, 245, 240, .35);
+  transition: border-color .2s ease;
+}
+.show-creator-line a:hover,
+.show-creator-line a:focus-visible { border-bottom-color: var(--signal-white); }
+.show-creator-sub {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 16px;            /* was 13.5 — George, 28 Nov: "Font size bump" */
+  line-height: 1.7;
+  letter-spacing: .02em;      /* eased from .03 so the longer line still breaks well on a phone */
+  color: var(--graphite-light);
+}
+
+/* HIS LINE. Set in the body face rather than the display one: Barlow Condensed at this size
+   would shout over the show's own headings a few hundred pixels above it. Signal white against
+   the graphite line below it is what separates the quote from the stats, not a bigger size. */
+.show-creator-quote {
+  margin-top: 18px;
+  font-size: 19px;
+  line-height: 1.6;
+  color: var(--signal-white);
+}
+.show-creator-attrib {
+  color: var(--graphite-light);
+  font-size: 15px;
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .show-creator { margin-top: 32px; padding-top: 22px; }
+  .show-creator-line { font-size: 16px; }
+  .show-creator-sub { font-size: 14px; }      /* was 12.5 — the same bump, held back from 16
+                                                 because mono at 16 wraps this line to four
+                                                 rows at 390px */
+  .show-creator-quote { font-size: 17px; margin-top: 16px; }
+  .show-creator-attrib { font-size: 14px; }
+}
+
 /* segments */
 .segments-wrap {
   position: relative;
