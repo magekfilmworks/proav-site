@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════════════════════
+     SHOW CALL — 3840 x 2160
+
+     The same show as the LED wall in the hero, laid out as a flat broadcast frame instead of
+     a perspective panel. Same cue stack, same two voices, same clips, same GO.
+
+     THE CUE ENGINE BELOW IS THE HERO'S, VERBATIM. Every selector it reaches for is a .wall-*
+     class, so the port is a restyle, not a rewrite: the markup contract is identical and only
+     the CSS differs. Do not "tidy" the engine here — see §"one copy" at the foot of this file.
+
+     The stage is exactly 3840x2160 and everything inside it is authored in those pixels, the
+     way a 4K graphics project is. A single transform scales the whole stage to whatever screen
+     it lands on, so proportions are exact at any size and there is no responsive guesswork.
+     ═══════════════════════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>ProAV — Show Call</title>
+<!-- Same three families as the rest of the site, or the frame falls back to a system serif. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/showcall.css">
+</head>
+<body>
+<!-- Back to the site. This page stands on its own as well as being framed, so it needs a way
+     out when it is the whole window. HIDDEN WHEN FRAMED — inside the 4K window the overlay
+     has its own close button in the same corner and the two collide. -->
+<a class="sc-back" href="/" hidden>&larr;&nbsp; ProAV</a>
+<!-- FULL SCREEN, IN REAL PIXELS. It used to live inside the 3840x2160 stage, so on a phone a
+     110-unit button painted about 13px across — there, but not tappable. Out here it belongs
+     to the browser window like the back link does, so it is the same size at any fit.
+     The script hides it where the browser has no element fullscreen; see the note there. -->
+<button class="sc-full" id="scFull" type="button" aria-pressed="false"
+        aria-label="Full screen" title="Full screen">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <g class="wf-in"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></g>
+    <g class="wf-out"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></g>
+  </svg>
+</button>
+<script>
+  // Only the top-level document gets the back link. In a frame the host page owns the close.
+  if (window.top === window.self) document.querySelector('.sc-back').hidden = false;
+</script>
+
+<!-- The letterbox. Black, and the stage is centred in it. -->
+<div class="sc-frame" id="scFrame">
+  <div class="sc-stage" id="scStage">
+    <div class="hero-screen">
+<div class="screen-content">
+      <!-- No `loop`: the playlist in the script below advances on `ended`. -->
+      <!-- No `autoplay`: the wall opens on its invitation and plays nothing until the show
+           whether that is a clip or a card. With autoplay here the tag's own src played first
+           and the card never got its turn at the top of the rotation. -->
+      <video id="wall-video" src="images/hero-artemis-v1.mp4" muted playsinline webkit-playsinline preload="auto" aria-hidden="true"></video>
+      <!-- One shell; the script fills it from whichever card the wall is on, so a new class is
+           an entry in SLIDES below and needs no markup of its own. -->
+      <a class="wall-card" hidden target="_blank" rel="noopener">
+        <span class="wall-card-slate">
+          <span class="wall-card-kind">CLASS</span>
+          <span class="wall-card-dates"></span>
+        </span>
+        <span class="wall-card-title"></span>
+        <span class="wall-card-meta"></span>
+      </a>
+      <!-- The cue call, on the wall. Two beats — the standby, then the take — and on the take
+           the page's DIM cue actually fires. The wall is not illustrating a cue; it is calling
+           one the page obeys. Filled from the SHOW cue stack below, like the card above. -->
+      <!-- The house is dark and the show has not started. Nothing on this page makes a sound
+           or moves a level until this is pressed, which also makes it the gesture browsers
+           require before audio is allowed — so the cue is guaranteed to be heard rather than
+           hoped for. The whole wall is the button. -->
+      <button class="wall-invite" type="button">
+        <span class="wall-invite-icon" aria-hidden="true">
+          <!-- Play, not a speaker. Sound is on from the press — nothing here is being unmuted,
+               a show is being started, and the icon should say the same thing the line does. -->
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M9 6.5v11l9-5.5z" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="wall-invite-line">PLAY AND EXPERIENCE THE SHOW CALL CUES</span>
+      </button>
+      <!-- A call given while something else is still on the wall — over a running clip, or
+           over a slide being read. It does not replace what is up; it sits beside it on the
+           right, which is the whole point of a standby. -->
+      <div class="wall-ready" hidden aria-live="polite">
+        <span class="wall-ready-line"></span>
+      </div>
+      <div class="wall-cue" hidden aria-live="polite">
+        <!-- Builds are appended here, not swapped: build 2 arrives under build 1 with build 1
+             still on the wall, so the standby is still readable when the take lands. The cue
+             carries no slate — the standby is the first thing on the wall. -->
+        <span class="wall-cue-builds"></span>
+      </div>
+    </div>
+      <!-- THE PANEL GRID. The same 26-unit pattern the hero wall carries (index.html's
+           .screen-frame) — a dark seam with a light highlight on its far side, which is what
+           reads as the gap between two LED panels. The hero runs 26 units across a 750-unit
+           viewBox, so 28.8 panels span the wall; this keeps that count across 3840, which puts
+           a panel at 133.3px. No trapezoid clip and no perspective: this wall is flat on. It
+           sits above the content and below the cue furniture, and it is on the first screen
+           too, so the frame reads as a wall before the show is called. -->
+      <svg class="sc-grid" viewBox="0 0 3840 2160" xmlns="http://www.w3.org/2000/svg"
+           aria-hidden="true" preserveAspectRatio="none">
+        <defs>
+          <pattern id="scPanels" width="133.333" height="133.333" patternUnits="userSpaceOnUse">
+            <path d="M133.333 0V133.333M0 133.333H133.333"
+                  stroke="#0B0B0D" stroke-opacity=".55" stroke-width="7.7"/>
+            <path d="M125.6 0V133.333M0 125.6H133.333"
+                  stroke="#F5F5F0" stroke-opacity=".13" stroke-width="5.1"/>
+          </pattern>
+        </defs>
+        <rect width="3840" height="2160" fill="url(#scPanels)"/>
+        <rect x="3.9" y="3.9" width="3832.2" height="2152.2"
+              fill="none" stroke="#F5F5F0" stroke-opacity=".30" stroke-width="7.7"/>
+      </svg>
+    <!-- Timecode burn-in. A sibling of .screen-content rather than a child, so the 46% opacity
+         the picture carries on phones does not dim it. Top-left: the one corner nothing masks,
+         and it balances the sound button opposite. -->
+    <!-- The sequence's own readout, on the wall's TOP edge — the mirror of the clip burn-in
+         below. Up while the show call is running, gone when it ends. -->
+    <div class="wall-seq" hidden aria-hidden="true">
+      <span class="wall-seq-name">SHOW CALL</span>
+      <span class="wall-seq-trt">TRT --:--:--</span>
+      <span class="wall-seq-code">00:00:00;00</span>
+    </div>
+    <div class="wall-tc" aria-hidden="true">
+      <span class="wall-tc-name">ARTEMIS I</span>
+      <span class="wall-tc-trt">TRT --:--:--</span>
+      <span class="wall-tc-code">00:00:00;00</span>
+    </div>
+    <!-- The wall starts muted because every browser refuses to autoplay a video with sound;
+         unmuted, it would not play at all. This button is the visitor's way to turn it on. It
+         sits top-right, the one corner no mask fades, and carries pointer-events:auto to
+         override the wall's pointer-events:none. -->
+    </div>
+      
+    </div>
+    
+    <!-- Jump between the wall's items. pointer-events:auto, since .hero-screen turns them off. -->
+    <div class="wall-dots" role="group" aria-label="Wall content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── FIT THE STAGE ────────────────────────────────────────────────────────────────────────
+// The stage is 3840x2160 and never changes. This scales it to the largest size that fits,
+// which is what keeps every position and type size exactly where it was authored.
+(() => {
+  const stage = document.getElementById('scStage');
+  const fit = () => {
+    const s = Math.min(innerWidth / 3840, innerHeight / 2160);
+    stage.style.transform = 'translate(-50%, -50%) scale(' + s + ')';
+    // The scale is published so the two operator controls can hold a usable physical size on
+    // a small screen. Everything else in the frame is meant to shrink with the wall; a button
+    // you cannot hit is not a smaller button, it is a broken one.
+    stage.style.setProperty('--fit', s);
+  };
+  fit();
+  addEventListener('resize', fit);
+  addEventListener('orientationchange', fit);
+  // Fullscreen changes the viewport without always firing resize in time.
+  document.addEventListener('fullscreenchange', () => requestAnimationFrame(fit));
+  document.addEventListener('webkitfullscreenchange', () => requestAnimationFrame(fit));
+})();
+
+// ── FULL SCREEN IS THE VISITOR'S CALL ──────────────────────────────────────────────────
+// The show plays in whatever window it is given. Nothing requests full screen on its own:
+// pressing the frame starts the show, and the control in the corner is the only thing that
+// goes full screen, because a page that seizes the display unasked is the complaint.
+(() => {
+  const frame = document.getElementById('scFrame');
+  const btn   = document.getElementById('scFull');
+  if (!btn || !frame) return;
+  const can = frame.requestFullscreen || frame.webkitRequestFullscreen;
+  if (!can) { btn.hidden = true; return; }       // iPhone Safari has no element fullscreen
+  const isFull = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+  const paint  = () => btn.setAttribute('aria-pressed', isFull() ? 'true' : 'false');
+  btn.addEventListener('click', () => {
+    try {
+      if (isFull()) {
+        const out = document.exitFullscreen || document.webkitExitFullscreen;
+        if (out) out.call(document);
+      } else {
+        const p = can.call(frame);
+        if (p && p.catch) p.catch(() => {});
+      }
+    } catch (e) {}
+  });
+  document.addEventListener('fullscreenchange', paint);
+  document.addEventListener('webkitfullscreenchange', paint);
+  paint();
+})();
+</script>
+
+<script>
+    (() => {
+      const vid = document.getElementById('wall-video');
+      const tc = document.querySelector('.wall-tc-code');
+      const tcWrap = document.querySelector('.wall-tc');
+      const nameEl = document.querySelector('.wall-tc-name');
+      if (!vid) return;
+
+      // ═══ THE SHOW, AND THE LOOP ═══════════════════════════════════════════════════════
+      // Two different things, deliberately kept apart.
+      //
+      //   SHOW  a written cue stack, run ONCE when the visitor starts the show. It is a
+      //         sequence, not a rotation: every step runs in order and then it is over.
+      //   LOOP  what the wall does for the rest of the visit, rotating forever.
+      //
+      // When SHOW ends, the house comes back to 100% and LOOP takes over. Nothing in SHOW is
+      // ever returned to and none of it gets a dot — a standby is called once, not every four
+      // minutes.
+      //
+      // Both clips are 29.97, so one drop-frame convention covers them.
+      const VIDEOS = [
+        { src: 'images/hero-artemis-v1.mp4', name: 'ARTEMIS I',         fps: 30000 / 1001 },
+        { src: 'images/hero-sun-v1.mp4',     name: 'SDO / SOLAR CYCLE', fps: 30000 / 1001 }
+      ];
+
+      const SLIDES = [
+        { label: 'Aquilon Level 3 class',
+          dates: '2026-12-07 \u2192 2026-12-11',
+          title: 'Aquilon Certified Operator Training, Level\u00a03',
+          meta:  'Buford, GA \u00b7 Analog Way Academy',
+          href:  'https://academy.analogway.com/in-person-certifications/nala---2026-12-07---livepremier-tm-presentation-systems---certification---level-3---u-s-a' },
+        { label: 'Millumin workshop class',
+          dates: '2027-01-13',
+          title: 'Millumin Operator Fundamentals Workshop',
+          meta:  'Las Vegas \u00b7 Evolve Academy',
+          href:  'https://evolveacademy.live/product/millumin/' }
+      ];
+
+      // THE CUE STACK.
+      //   cue     a full card on the wall, built line by line. The house cue.
+      //   video   a clip. `ready` fires a call on the right of the wall with N seconds left
+      //           in the clip — the way a standby is given while something is still running.
+      //   slide   a GFX slide. `call` is spoken as it comes up; `ready` fires one later,
+      //           part-way through, while the slide is still being read.
+      // {lvl} is filled from --cue1-level in the cue sheet (css/base.css) and printed as a
+      // percentage, so the number called is the number taken. Change the level there and the
+      // whole stack says the new figure by itself.
+      //
+      // THE RHYTHM — every number is a beat in ms, and nothing else sets the pace.
+      //   lead      before the first line of a cue card appears. The wall is empty for it.
+      //   beat      on each line: how long after the PREVIOUS line this one appears.
+      //   hold      after the last line, before the stack moves on.
+      //   remaining seconds left in a clip when its standby is called.
+      //   after     how far into a slide its standby is called.
+      // Seven cues. A cue with a standby and a GO is one step with two builds; a cue that is
+      // only a standby, or only a GO, rides the step it is called over — which is why CUE 3,
+      // 5 and 7's standbys are `ready` entries on a clip or a slide rather than cards of
+      // their own. A standby does not take the wall away from what is on it.
+      const SHOW = [
+        // ── CUE 1 ── the house
+        { kind: 'cue', label: 'CUE 1', lead: 1200, hold: 1800, builds: [
+            { beat: 0,    line: 'Standby to Take LOGO, Titles, and Elements to {lvl}' },
+            // the standby sits longer than the other beats, the way a real one does: it is
+            // held while everyone gets ready, and the GO is what breaks it
+            { beat: 2400, line: 'LOGO, Titles, and Elements to {lvl}, GO', take: 'cue1' }
+          ] },
+
+        // ── CUE 2 ── the standby only. Its GO lives on the clip below, NOT as a second build
+        // here, and that is the whole point: a build on a card is followed by the card's hold,
+        // so calling the GO here left six seconds between the word and the picture. A GO is
+        // called OVER the thing it starts — the clip is up on the frame the word lands.
+        // Both of its lines live on the card, stacked under CUE 1's, on the left. `go` on the
+        // second one hands to the clip on the word GO — so the call stays whole and in one
+        // place, and the picture still lands on the word.
+        { kind: 'cue', label: 'CUE 2', lead: 600, hold: 0, builds: [
+            { beat: 0,    line: 'Standby for Mitti Playback-Video 1' },
+            { beat: 2200, line: 'Mitti Playback-Video 1, GO', go: true }
+          ] },
+
+        // ── VIDEO 1 ── the operator counts it out; the caller calls CUE 3 over the top.
+        //    CUE 3 sits at 13s, not 15s: the operator has the 15 mark ("Fifteen seconds,
+        //    standby for count out") and the two would otherwise queue on top of each other.
+        //    No `out` call here — the count IS the lead-in, and the take happens on zero, the
+        //    way it does in the room. The caller confirms it as the slide lands.
+        { kind: 'video', v: 0, count: true,
+          ready: { remaining: 13, line: 'READY GFX 1.' } },
+
+        // ── CUE 4 ── slide 1, up on the clip's last frame, called as it lands
+        // ── CUE 5 ── the standby to advance, called while it is being read
+        // Taken ON the word, like every other cue on this stack. It used to be called over a
+        // slide already up — the count-out had run to zero, so the picture went in on zero and
+        // the caller's GO arrived two seconds behind it, calling a GO for something already on
+        // the wall. The clip holds its last frame through the line instead, and the slide
+        // lands on GO.
+        { kind: 'slide', c: 0, hold: 9000, call: 'GFX 1, Slide 1, GO.',
+          ready: { after: 4000, line: 'Standby to advance on GFX 1.' } },
+
+        // ── CUE 6 ── slide 2 up ── CUE 7 ── the standby for playback 2, called while it is read
+        { kind: 'slide', c: 1, hold: 10500, call: 'Advance GFX1, SLIDE 2, GO.',
+          ready: { after: 4000, line: 'Standby for Mitti Playback-Video 2' } },
+
+        // ── CUE 7, GO ── playback 2
+        { kind: 'video', v: 1, count: true, call: 'Mitti Playback-Video 2, GO' },
+
+        // ── THE SIGN-OFF ── the last thing the show says. On the card, on the left, like the
+        // cues that opened it. When it clears, the house comes back to 100% and the wall goes
+        // back to rotating — with the sound OFF, because the show the visitor unmuted for is
+        // over and nothing should keep playing at them.
+        { kind: 'cue', label: 'SIGN-OFF', lead: 700, hold: 2600, builds: [
+            { beat: 0, line: 'THANKS FOR WATCHING' }
+          ] }
+      ];
+
+      // What the wall does once the show has finished. Rotates forever; every item gets a dot.
+      const LOOP = [
+        { kind: 'video', v: 0 },
+        { kind: 'slide', c: 0, hold: 9000 },
+        { kind: 'video', v: 1 },
+        { kind: 'slide', c: 1, hold: 9000 }
+      ];
+
+      let i = 0;              // index into LOOP, once the show is over
+      let showAt = -1;        // index into SHOW while it runs; -1 means the show is done
+      let cur = null;         // the step actually on the wall, from either list
+
+      const card = document.querySelector('.wall-card');
+      const cardDates = document.querySelector('.wall-card-dates');
+      const cardTitle = document.querySelector('.wall-card-title');
+      const cardMeta  = document.querySelector('.wall-card-meta');
+      const cue = document.querySelector('.wall-cue');
+      const cueBuilds = document.querySelector('.wall-cue-builds');
+      const dotsWrap = document.querySelector('.wall-dots');
+      const audioNote = document.querySelector('.wall-audio-note');
+      const invite = document.querySelector('.wall-invite');
+      const ready = document.querySelector('.wall-ready');
+      const readyLine = document.querySelector('.wall-ready-line');
+      const seqEl = document.querySelector('.wall-seq');
+      const seqTrtEl = document.querySelector('.wall-seq-trt');
+      const seqCodeEl = document.querySelector('.wall-seq-code');
+      const tcTrt = document.querySelector('.wall-tc-trt');
+      let holdTimer = 0;
+      // a cue schedules several timers at once, so leaving one behind would have an old
+      // cue still laying builds onto whatever the wall moved on to
+      let cueTimers = [];
+
+      // Take a cue. The levels live in the cue sheet at the top of css/base.css, not here —
+      // this only says WHICH look is up. take() with no argument restores HOUSE, so a level
+      // comes back up as easily as it went down:  take('cue1')  …  take()
+      const take = c => {
+        const root = document.documentElement;
+        if (c) root.setAttribute('data-cue', c); else root.removeAttribute('data-cue');
+        // Inside the window on index.html this page is an iframe, and data-cue here only
+        // reaches this document — the house it is meant to dim is the PAGE BEHIND. So the cue
+        // is passed out to whatever embedded it, which sets the same attribute on itself and
+        // takes the site to --cue1-level. Harmless when this page stands on its own: the
+        // parent is this window and the message goes nowhere. Same origin only.
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ proavShowCall: 'cue', cue: c || null }, location.origin);
+          }
+        } catch (e) {}
+      };
+
+
+      // The level CUE 1 takes, read from the cue sheet rather than written out here, so the
+      // figure on the wall and the figure in the CSS cannot drift apart. 0.55 -> "55%".
+      const cueLevel = () => {
+        // The SPOKEN figure, not the level. --cue1-say is what the recording says; it is
+        // deliberately allowed to differ from --cue1-level, which is what the cue actually
+        // does. Falls back to the level if --cue1-say is ever removed.
+        const say = getComputedStyle(document.documentElement)
+          .getPropertyValue('--cue1-say').trim();
+        if (say) return say;
+        const raw = parseFloat(getComputedStyle(document.documentElement)
+          .getPropertyValue('--cue1-level'));
+        return (isFinite(raw) ? Math.round(raw * 100) : 55) + '%';
+      };
+
+      // ── CUE VO — PROTOTYPE ───────────────────────────────────────────────────────────────
+      // Calls the cue aloud with the browser's own speech synthesis. This is for judging
+      // timing and picking a voice, NOT for shipping: the voice is whatever the visitor's OS
+      // has, so it varies by machine and sounds like a system voice rather than an announcer.
+      // Replace with real audio files when the voice is chosen — see say() below for where.
+      //
+      // Nothing here has to fight the browser's autoplay rule. The show does not begin until
+      // the visitor presses the wall, and that press is the gesture that makes audio legal —
+      // so the cue is heard rather than hoped for, and the same holds when these lines are
+      // swapped for real recordings.
+      // ── THE RECORDED VOICES ──────────────────────────────────────────────────────────────
+      // 25 files in images/vo/, cut from one continuous read. The show caller is the male
+      // voice, the playback operator the female one.
+      //
+      // GO_AT is where the word GO begins inside the file, in seconds — MEASURED off each
+      // recording, not estimated. The picture is taken at that mark, so the cut lands on the
+      // word exactly as it does when a real operator is listening for it.
+      //
+      // Matching is on the line itself, normalised: case, punctuation and spacing are ignored
+      // so 'GFX 1' and 'GFX1' both find their file. A percentage is reduced to a placeholder,
+      // which means the two level lines match whatever --cue1-level says — but the recording
+      // says "55%". Change the level and those two files have to be re-recorded.
+      const VO_DIR = 'images/vo/';
+      const VO_KEY = s => String(s).toLowerCase().replace(/\d+\s*%/g, '#')
+                                   .replace(/[^a-z0-9#]+/g, '');
+      const VO_LINES = [
+        // line as it is called                                  file                        GO at
+        ['Standby to Take LOGO, Titles, and Elements to 55%', 'caller-01-standby-levels',     0   ],
+        ['LOGO, Titles, and Elements to 55%, GO',             'caller-02-take-levels',     3.44  ],
+        ['Standby for Mitti Playback-Video 1',                'caller-03-standby-pb1',        0   ],
+        ['Mitti Playback-Video 1, GO',                        'caller-04-pb1',             1.91  ],
+        ['READY GFX 1.',                                      'caller-05-ready-gfx1',         0   ],
+        ['GFX 1, Slide 1, GO.',                               'caller-06-gfx1-slide1',     2.16  ],
+        ['Standby to advance on GFX 1.',                      'caller-07-standby-advance',    0   ],
+        ['Advance GFX1, SLIDE 2, GO.',                        'caller-08-advance-slide2',  2.61  ],
+        ['Standby for Mitti Playback-Video 2',                'caller-09-standby-pb2',        0   ],
+        ['Mitti Playback-Video 2, GO',                        'caller-10-pb2',             1.89  ],
+        ['THANKS FOR WATCHING',                               'caller-11-thanks',             0   ],
+        ['One minute remaining',                              'op-60',                        0   ],
+        ['Fifty seconds',                                     'op-50',                        0   ],
+        ['Thirty',                                            'op-30',                        0   ],
+        ['Fifteen seconds. Standby for count out.',            'op-15',                        0   ],
+        ['Ten',   'op-10', 0], ['Nine', 'op-09', 0], ['Eight', 'op-08', 0],
+        ['Seven', 'op-07', 0], ['Six',  'op-06', 0], ['Five',  'op-05', 0],
+        ['Four',  'op-04', 0], ['Three','op-03', 0], ['Two',   'op-02', 0],
+        ['One',   'op-01', 0]
+      ];
+      const VO_MAP = (() => {
+        const m = new Map();
+        VO_LINES.forEach(([line, file, goAt]) => m.set(VO_KEY(line), { file, goAt }));
+        return m;
+      })();
+
+      const VO = (() => {
+        const synth = window.speechSynthesis;
+        // The recorded files do not need a speech engine, so a browser without one is no
+        // longer mute — it just has no fallback for a line that has no file.
+        const hasTTS = !!(synth && window.SpeechSynthesisUtterance);
+
+        // A SpeechSynthesisVoice carries no gender flag, so these are the voice NAMES the
+        // common platforms ship. Anything unmatched is still selectable by its own name.
+        // macOS ships a different voice set per release and Chrome adds its own on top, so a
+        // short name list silently misses — and a miss used to fall back by index, which is
+        // how the operator ended up sounding like the caller. Both lists are wide, and the
+        // fallback below prefers a voice that is NOT a known female over a blind index pick.
+        const FEMALE = /\b(samantha|ava|allison|susan|vicki|victoria|kathy|princess|agnes|karen|moira|tessa|fiona|serena|zoe|nicky|flo|grandma|shelley|sandy|noelle|google us english|google uk english female|zira|aria|jenny|michelle|catherine|hazel|linda|heather)\b/i;
+        const MALE   = /\b(alex|fred|tom|bruce|ralph|daniel|oliver|rishi|lee|aaron|arthur|gordon|eddy|reed|rocko|david|mark|guy|christopher|george|james|ryan|google uk english male)\b/i;
+
+        // macOS ships a set of NOVELTY voices — they are deliberately distorted, robotic or
+        // sung, and several have male-sounding names. Widening the male list to improve the
+        // odds pulled these in, and on a Mac with no Alex or Tom installed the operator came
+        // out as Bad News or Zarvox. That is the "broken up" voice. They are filtered out of
+        // the voice list entirely: no role should ever be cast from this set.
+        const NOVELTY = /\b(albert|bad news|bahh|bells|boing|bubbles|cellos|deranged|good news|jester|organ|trinoids|whisper|wobble|zarvox|superstar|grandma|grandpa|junior|princess|pipe organ|hysterical|alice|bruce\s*\(novelty\))\b/i;
+
+        // off until the visitor starts the show; audioMode() owns this from then on
+        // TWO VOICES. The show caller and the playback operator are different people, so they
+        // are different voices — but one browser has ONE speech engine and one queue, so they
+        // physically cannot talk at the same time. That is not a limitation worth fighting:
+        // on a real comms channel they take turns too. Each queued line carries its own voice.
+        let on = false, voice = null, voiceOp = null, rate = 1.03;
+        const queue = [];
+
+        // ── THE RECORDED LINE ──────────────────────────────────────────────────────────────
+        // WEB AUDIO, not an <audio> element. This matters only on iOS, and it is the third
+        // thing tried there.
+        //
+        //   25 elements, one per file  — iOS unlocks ONE element per gesture, so the visitor's
+        //                                press freed whichever spoke first and refused the rest.
+        //   one element, src swapped   — unlocked fine and spoke the opening cues, then went
+        //                                permanently silent the instant the first clip rolled:
+        //                                iOS takes the permission back when another media
+        //                                element starts, and it does not come back. Measured
+        //                                on the phone: the voice never returned, not even over
+        //                                the slides, where nothing else is playing.
+        //   Web Audio (here)           — an AudioContext is not a media element. It is unlocked
+        //                                once, by the same press, and the video cannot take
+        //                                that away. It also mixes WITH the clip instead of
+        //                                fighting it, which is what a comms channel does.
+        //
+        // The clock is better too: a buffer's position comes from ctx.currentTime, which is a
+        // sample clock, so the GO still lands on the word.
+        const AC = window.AudioContext || window.webkitAudioContext;
+        let actx = null;
+        const decoded = new Map();     // file -> Promise<AudioBuffer>
+        let liveSrc = null;            // the one source playing, so disable() can stop it
+
+        const ctxOf = () => {
+          if (!AC) return null;
+          if (!actx) { try { actx = new AC(); } catch (e) { actx = null; } }
+          return actx;
+        };
+
+        // Called INSIDE the press — the only moment iOS accepts. resume() plus one silent
+        // sample is what spends the gesture on the context. Nothing is heard.
+        const unlock = () => {
+          const c = ctxOf();
+          if (!c) return;
+          try {
+            if (c.state === 'suspended' && c.resume) c.resume();
+            const src = c.createBufferSource();
+            src.buffer = c.createBuffer(1, 1, 22050);
+            src.connect(c.destination);
+            src.start(0);
+          } catch (e) {}
+        };
+
+        const load = file => {
+          let p = decoded.get(file);
+          if (p) return p;
+          const c = ctxOf();
+          if (!c) return null;
+          p = fetch(VO_DIR + file + '.mp3')
+            .then(r => r.arrayBuffer())
+            .then(ab => new Promise((res, rej) => {
+              // the callback form as well as the promise form — older WebKit only has callbacks
+              const d = c.decodeAudioData(ab, res, rej);
+              if (d && d.then) d.then(res, rej);
+            }));
+          decoded.set(file, p);
+          return p;
+        };
+        // Fetch and decode all 25 on the press, so a GO never waits on the network.
+        const warm = () => { unlock(); VO_LINES.forEach(([, f]) => { try { load(f); } catch (e) {} }); };
+
+        function speakFile(hit, text, then, onGo, who) {
+          const c = ctxOf();
+          let went = false, closed = false, raf = 0;
+          const go = () => { if (!went) { went = true; if (onGo) onGo(); } };
+          const done = () => {
+            if (closed) return;
+            closed = true;
+            cancelAnimationFrame(raf);
+            clearTimeout(bail);
+            live = Math.max(0, live - 1);
+            if (then) then();
+            const nextUp = queue.shift();
+            if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+          };
+          const fail = () => { go(); done(); };
+          live++;
+          // A line that never arrives must not hold the show behind it.
+          const bail = setTimeout(fail, 9000);
+          const p = c && load(hit.file);
+          if (!p) { fail(); return; }
+
+          p.then(buf => {
+            if (closed) return;
+            if (c.state === 'suspended' && c.resume) c.resume();
+            const src = c.createBufferSource();
+            src.buffer = buf;
+            src.connect(c.destination);          // straight out: no ducking, no gain stage
+            liveSrc = src;
+            src.onended = () => { if (liveSrc === src) liveSrc = null; go(); done(); };
+            const t0 = c.currentTime;
+            src.start();
+            spoke = true;
+            clearTimeout(bail);
+            // THE GO IS READ OFF THE AUDIO CLOCK. ctx.currentTime is a sample clock, so the
+            // picture lands on the word under load as well as idle. GO_AT was measured off
+            // the recording.
+            const watch = () => {
+              if (closed) return;
+              if (onGo && hit.goAt > 0 && (c.currentTime - t0) >= hit.goAt) { go(); return; }
+              raf = requestAnimationFrame(watch);
+            };
+            watch();
+          }).catch(fail);
+        }
+
+        // Which engine says this line. A recording if there is one for it, the browser's own
+        // voice if there is not — so a line added to the cue stack before it has been recorded
+        // is still called aloud rather than silently skipped.
+        function speak(text, then, onGo, who) {
+          const hit = VO_MAP.get(VO_KEY(text));
+          if (hit) return speakFile(hit, text, then, onGo, who);
+          return speakTTS(text, then, onGo, who);
+        }
+
+        // Say one line now. Nothing calls this while she is still talking — say() queues
+        // instead — so there is no cancel here at all; a cancel is what cut her off.
+        function speakTTS(text, then, onGo, who) {
+          if (!hasTTS) {
+            if (onGo) onGo();
+            if (then) then();
+            const nextUp = queue.shift();
+            if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+            return;
+          }
+          try {
+            const u = new SpeechSynthesisUtterance(text);
+            // Resolve the operator HERE, not once at startup. getVoices() is empty on the
+            // first call in Chrome and fills in asynchronously, so an operator picked too
+            // early stays null — and `voiceOp || voice` then quietly hands his lines to the
+            // caller. That is why the count-out was coming back in the caller's voice.
+            if (who === 'op' && (!voiceOp || (voice && voiceOp.name === voice.name))) pickOp('female');
+            const v = who === 'op' ? (voiceOp || voice) : voice;
+            if (v) { u.voice = v; u.lang = v.lang; }
+            // the operator counts a touch quicker and flatter — it is a count, not a call
+            u.rate = who === 'op' ? rate + 0.04 : rate;
+            u.pitch = 1; u.volume = 1;
+            let went = false;
+            const go = () => { if (!went) { went = true; if (onGo) onGo(); } };
+
+            // THE GO LANDS INSIDE THE LINE, not between two of them.
+            // This used to speak the phrase and the word GO as separate utterances so the
+            // content could be fired on the second one. It worked, but speech synthesis puts
+            // an audible gap between utterances — so every cue ending in GO was chopped at
+            // the comma. One utterance now, with a `boundary` event watching the characters
+            // go by, and the content fires as the engine reaches the word.
+            const goAt = onGo ? String(text).search(/\bGO\b[.!]?\s*$/i) : -1;
+            if (goAt > 0) {
+              u.addEventListener('boundary', e => {
+                if (typeof e.charIndex === 'number' && e.charIndex >= goAt) go();
+              });
+            }
+            // NO ESTIMATED FALLBACK. There was one here that guessed where GO sat from the
+            // word count. The guess ran short, so it beat the real boundary event and took
+            // the picture before the word was spoken — a guess racing a fact wins often
+            // enough to be a bug, and an early take is worse than a late one.
+            // Where boundary events are not supported, `end` fires it instead. GO is always
+            // the last word of a line, so that lands within a breath of it.
+            // The clip is ducked under her and brought back when she stops — the caller talks
+            // over the program, the program does not vanish. `done` is guarded so a browser
+            // that fires both end and error cannot run it twice.
+            let closed = false;
+            const done = () => {
+              if (closed) return;
+              closed = true;
+              live = Math.max(0, live - 1);
+              if (then) then();
+              const nextUp = queue.shift();
+              if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+            };
+            live++;                    // counted at speak(), not at start, so a line queued
+                                       // behind this one cannot jump in before it begins
+            // NOT go() here. 'start' is the start of the LINE. It used to also be the word,
+            // back when GO was spoken as its own utterance — leaving it here after the lines
+            // were joined took the picture on the first syllable of the phrase.
+            u.addEventListener('start', () => { spoke = true; });
+            u.addEventListener('end', () => { go(); done(); });
+            u.addEventListener('error', () => { go(); done(); });
+            // A line that is never spoken must not hang the show behind it. Browsers do
+            // occasionally drop an utterance without firing either event, so this is the
+            // backstop: a generous estimate of how long the line could possibly take.
+            setTimeout(() => { go(); done(); }, 2500 + text.length * 120);
+            synth.speak(u);
+          } catch (e) {
+            live = Math.max(0, live - 1);
+            go();
+            if (then) then();
+            const nextUp = queue.shift();
+            if (nextUp) speak(nextUp[0], nextUp[1], nextUp[2], nextUp[3]);
+          }
+        }
+        // How many utterances are in the air. A count, not a flag: say() cancels the previous
+        // one, whose `end` fires after the new one's `start`, and a flag would unduck the clip
+        // the instant the new line began talking over it.
+        let live = 0;
+        // did a browser ever actually let an utterance BEGIN? speak() resolving tells us
+        // nothing — a blocked utterance is queued silently and simply never starts.
+        let spoke = false;
+        // English, and never a novelty voice — those are not people, they are sound effects.
+        const list = () => !hasTTS ? [] : synth.getVoices()
+          .filter(v => /^en/i.test(v.lang) && !NOVELTY.test(v.name));
+        const byKind = kind => {
+          const vs = list();
+          const re = kind === 'male' ? MALE : FEMALE;
+          const other = kind === 'male' ? FEMALE : MALE;
+          return vs.find(v => re.test(v.name))          // a name we know is this kind
+              || vs.find(v => !other.test(v.name))      // failing that, one we know is NOT the other
+              || vs[kind === 'male' ? 1 : 0] || null;   // last resort
+        };
+        const pick = who => {
+          if (!who) return voice;
+          voice = (who === 'male' || who === 'female')
+            ? byKind(who)
+            : list().find(v => v.name === who) || voice;
+          return voice;
+        };
+        // The operator is the other person, and must SOUND like another person. If the name
+        // lists do not match anything this machine has, byKind falls back by index and both
+        // roles can land on the same voice — two people with one voice is worse than an
+        // imperfect match, so take any other English voice rather than double up.
+        const pickOp = who => {
+          voiceOp = (who === 'male' || who === 'female')
+            ? byKind(who)
+            : list().find(v => v.name === who) || voiceOp;
+          if (voiceOp && voice && voiceOp.name === voice.name) {
+            // never two people with one voice: take anything that is not the caller, and
+            // prefer something that at least is not a known female
+            const vs = list().filter(v => v.name !== voice.name);
+            voiceOp = vs.find(v => MALE.test(v.name)) || vs.find(v => !FEMALE.test(v.name))
+                   || vs[0] || voiceOp;
+          }
+          return voiceOp;
+        };
+        // THE SHOW CALLER IS MALE, THE PLAYBACK OPERATOR FEMALE — the same way round as the
+        // recordings. This is only the fallback for a line with no file.
+        // voices load async in Chrome; getVoices() is empty on the first call
+        if (hasTTS && !list().length) synth.addEventListener('voiceschanged', () => { if (!voice) { pick('male'); pickOp('female'); } }, { once: true });
+        else if (hasTTS) { pick('male'); pickOp('female'); }
+
+        return {
+          ok: true,
+          get on() { return on; },
+          get spoke() { return spoke; },     // has this browser ever let the VO be heard?
+          enable() { on = true; if (hasTTS && !voice) pick('male'); },
+          warm,                              // pull the files down before they are needed
+          disable() {
+            on = false;
+            queue.length = 0;        // nothing waiting may speak after she has been stopped
+            live = 0;
+            try { synth.cancel(); } catch (e) {}
+            // and stop the recording mid-line, for the same reason
+            try { if (liveSrc) { liveSrc.onended = null; liveSrc.stop(); liveSrc = null; } }
+            catch (e) {}
+          },
+          pick, pickOp, list, rate: r => (rate = r),
+          // what the matcher thinks each voice is, so the bench can show its working
+          kindOf: n => MALE.test(n) ? 'male' : FEMALE.test(n) ? 'female' : 'unknown',
+          current: () => voice,
+          currentOp: () => voiceOp,
+          // ↓ the one place to swap in a real recording: play an <audio> here instead.
+          //   A file is under the same gesture rule, so keep the `start`/`error` reporting.
+          // `then` runs when she has finished the line — or at once if she never started,
+          // so a browser with no voice at all can never stall the show waiting for one.
+          //
+          // Calls QUEUE, they do not interrupt. A caller finishes the line she is on before
+          // starting the next one, and this is where that is enforced — the cue cards wait for
+          // her as well, but the calls over clips and slides are fired by the clock, and
+          // without this a short gap would cut her off mid-sentence.
+          // The screen is not held back by any of this: the cue light appears on its own beat,
+          // the voice catches up. The two are allowed to be a moment apart; they are not
+          // allowed to talk over each other.
+          //
+          // A line ending in GO is spoken as TWO utterances — the phrase, then the word — and
+          // `onGo` fires as that last word begins. That is the whole point of a GO: the
+          // operator hits play ON the word, so the phrase leads and only GO is simultaneous
+          // with the picture. Firing the content at the START of the line instead put the
+          // entire call over the top of an already-running clip.
+          // Split rather than listening for a word boundary, because boundary events are not
+          // reliable across browsers and a missed one would leave the content never shown.
+          say(text, then, onGo, who) {
+            if (!on || !text) { if (onGo) onGo(); if (then) then(); return; }
+            if (live > 0) {
+              // never let it back up without limit — a queue longer than this means the show
+              // has got away from the voice, and the newest call is the one that matters
+              if (queue.length > 3) queue.shift();
+              queue.push([text, then, onGo, who]);
+              return;
+            }
+            speak(text, then, onGo, who);
+          },
+
+          // The playback operator. Same queue, different voice — so a count never lands on top
+          // of a call, and a call never lands on top of a number.
+          op(text) { this.say(text, null, null, 'op'); }
+        };
+      })();
+
+      // Fade an element in. Two frames, not one: the element has to be PAINTED at opacity 0
+      // before the class lands, or the browser coalesces both into one style resolution, sees
+      // no change to animate, and the thing simply appears.
+      const fadeIn = el => requestAnimationFrame(() =>
+        requestAnimationFrame(() => el.classList.add('is-in')));
+
+      // ── THE GO IS HELD BACK ──────────────────────────────────────────────────────────────
+      // A call goes on the wall as the caller starts speaking, but the GO at the end of it
+      // does not: it stays off until the word is actually said, then CUTS on with the picture.
+      // That is the whole point of a GO — it is not part of the standby, it is the moment.
+      //
+      // The word is in the DOM from the start and only made invisible, so the slate is already
+      // the width it will end up. Taking it out of the flow instead would make the box grow
+      // sideways at the exact moment the eye is on the cut.
+      const GO_RE = /^([\s\S]*?)(\bGO\b)([.!]?\s*)$/i;
+      function writeCall(el, text) {
+        el.textContent = '';
+        const m = GO_RE.exec(String(text == null ? '' : text));
+        if (!m) { el.textContent = text == null ? '' : text; return null; }
+        el.appendChild(document.createTextNode(m[1]));
+        const go = document.createElement('span');
+        go.className = 'wall-go';
+        // Set INLINE, not left to the stylesheet. None of the CSS carries a version string,
+        // so a browser can serve a cached wall-card.css next to freshly deployed HTML — and
+        // with no .wall-go rule the word simply renders, which is the GO being on screen
+        // before it is called. An inline style cannot be missing.
+        go.style.display = 'none';
+        go.textContent = m[2] + m[3];
+        el.appendChild(go);
+        return go;
+      }
+      // How long the finished call stays on the wall after its GO has popped in. The picture
+      // is never delayed by it — only the call lingers, the way a caller's last word hangs
+      // for a moment on comms.
+      const GO_READ = 700;
+      // A video take used to get LONGER — 1500 — because the slate was sitting over a clip
+      // that had already started and the GO had to fight the picture for attention. The
+      // picture now waits for the beat instead of starting under it, so the GO is read on an
+      // empty wall and needs no more room than any other. Back to the house beat.
+      // This is the number to move if the pause before a clip feels wrong: it IS the pause.
+      const GO_READ_CLIP = GO_READ;
+      let goHold = 0, goTimer = 0, cueGen = 0;
+      const lightGo = (el, hold) => {
+        if (!el) return;
+        el.classList.add('is-lit');
+        el.style.display = 'inline';     // inline, for the same reason writeCall hid it inline
+
+        goHold = performance.now() + (hold || GO_READ);
+      };
+      // Take a called element off the wall. If a GO popped in moments ago it waits out the
+      // rest of that beat first, so the word is actually seen; otherwise it goes on this
+      // frame. Its own handle, NOT cueTimers: a GO usually hands straight on to the next
+      // step, and the next step empties cueTimers — which would cancel this very wait.
+      function dropAfterGo(fn) {
+        const left = goHold - performance.now();
+        clearTimeout(goTimer);
+        if (left > 0) goTimer = setTimeout(fn, left); else fn();
+      }
+
+      // NO DUCKING. The clip's level is left exactly where it is while anyone is speaking —
+      // the voices sit over the programme at full, nothing dips under anything. (There was a
+      // ramp here that pulled the clip to 14% under every call; it is gone, not disabled.)
+
+      // ── THE AUDIO ────────────────────────────────────────────────────────────────────────
+      // Once the show starts, sound is simply ON: the clips play with their own audio and the
+      // voice ducks them when she calls. There is no mode where a clip runs silently, which is
+      // what made the clips mute through the whole show in the last build.
+      //   'off' — before the press. Nothing makes a sound.
+      //   'on'  — from the press onward. Clips audible, voice calling over them.
+      //   'show'— the show is over: clips keep their audio, the voice has nothing left to say.
+      let audioOn = false;
+      let noteTimer = 0;
+      function audioMode(mode) {
+        clearTimeout(noteTimer);
+        audioOn = mode !== 'off';
+        if (mode === 'on') VO.enable(); else VO.disable();
+        vid.muted = !audioOn;
+        if (audioOn) { try { vid.volume = 1; } catch (e) {} }
+
+        // The note tracks what is actually audible, so the screen cannot claim sound that is
+        // not playing — or stay quiet about sound that is.
+        if (!audioNote) return;
+        const audible = audioOn;
+        if (audible) {
+          audioNote.hidden = false;
+          audioNote.classList.remove('is-in');
+          fadeIn(audioNote);
+        } else {
+          // a cut, like the slate: off on this frame, so the screen never claims sound that
+          // has already stopped
+          audioNote.classList.remove('is-in');
+          audioNote.hidden = true;
+        }
+        syncAudioBtn();
+      }
+
+      // the speaker icon is a readout of the real state, never a second source of truth
+      function syncAudioBtn() {
+        const btn = document.querySelector('.wall-audio');
+        if (!btn) return;
+        const on = !vid.muted || VO.on;
+        btn.setAttribute('aria-pressed', String(on));
+        btn.setAttribute('aria-label', on ? 'Mute the show' : 'Turn on sound');
+      }
+
+      // Run a cue. Each build fades up on its own beat; the one being called is white and the
+      // ones above it step back to the wall's quiet grey, the way a called cue recedes on a
+      // comms display.
+      //
+      // EVERY build is put in the DOM up front, at opacity 0. That is not tidiness — the card
+      // is a centred flex column, so appending the take while the standby was already up
+      // re-centred the column and shoved the standby half a line upward as it arrived. Laying
+      // them all in first makes the layout final before anything is visible, so a build fades
+      // in where it will stay and nothing moves.
+      //
+      // The schedule is worked out up front as absolute offsets, so a beat is the gap the
+      // playlist says it is and cannot drift with however long the previous step took.
+      function runCue(item, done) {
+        cueGen++;          // a deferred hide from the previous card must not take this one
+        cueBuilds.textContent = '';
+        cue.hidden = false;
+
+        // A cue step finishes exactly once. A build marked `go` ends it on the word GO, which
+        // leaves its own beat and hold timers still pending behind it — without this guard
+        // those would fire afterwards and advance the stack a second time, skipping a step.
+        let finished = false;
+        const finish = () => { if (finished) return; finished = true; done(); };
+
+        const builds = item.builds || [];
+        const goEls = [];
+        const els = builds.map(build => {
+          const line = document.createElement('span');
+          line.className = 'wall-cue-line';     // no .is-in yet: present, sized, invisible
+          goEls.push(writeCall(line, (build.line || '').replace('{lvl}', cueLevel())));
+          cueBuilds.appendChild(line);
+          return line;
+        });
+
+        // A line is laid in when BOTH its beat has passed and she has finished the line
+        // before it. The beat is a minimum, not a deadline.
+        //
+        // This is why: say() interrupts, so a beat shorter than the line it follows cut her
+        // off mid-sentence — CUE 1's first line is 49 characters and its beat was 4.2s.
+        // Lengthening the beat would have fixed that one line and broken again at the next
+        // rewrite, so the voice gates the stack instead. Reword anything, as long as you like,
+        // and the call still finishes before the next one starts.
+        const BREATH = 280;                     // a beat of air between calls, not a hard cut
+        let n = 0;
+
+        const lay = () => {
+          els.forEach(el => el.classList.remove('is-live'));
+          els[n].classList.add('is-live');
+          fadeIn(els[n]);
+          const build = builds[n];
+
+          let spoken = false, waited = false;
+          const next = () => {
+            if (finished || !spoken || !waited) return;
+            n++;
+            if (n < builds.length) cueTimers.push(setTimeout(lay, BREATH));
+            else cueTimers.push(setTimeout(finish, item.hold || 0));
+          };
+          // The levels move on the WORD "GO", not when the line starts — the call leads, the
+          // cue lands on the word. VO.say speaks the phrase and the word as two utterances and
+          // fires this as the word begins; with no voice available it fires at once, so the
+          // cue can never be left uncalled.
+          // On the word GO: the levels move, and a build marked `go` hands straight on to the
+          // step it is calling, so the picture lands on the word instead of after the card's
+          // hold. Both lines stay on the card; only the wall underneath changes.
+          // The GO on the card lights on the word too, whether or not this build takes
+          // anything — so a line that ends in GO always reads as a standby until it is called.
+          const act = (build.take || build.go)
+            ? () => { if (build.take) take(build.take); if (build.go) finish(); }
+            : null;
+          const lit = goEls[n];
+          const onGo = (act || lit) ? () => { lightGo(lit); if (act) act(); } : null;
+          VO.say(els[n].textContent, () => { spoken = true; next(); }, onGo, build.who);
+          cueTimers.push(setTimeout(() => { waited = true; next(); },
+            n + 1 < builds.length ? (builds[n + 1].beat || 0) : 0));
+        };
+
+        cueTimers.push(setTimeout(lay, item.lead || 0));
+      }
+
+      const pad = (n, w) => String(Math.floor(n)).padStart(w, '0');
+
+      // ── TRT and the sequence clock ───────────────────────────────────────────────────────
+      // hms   a running time, as a playback system shows it: 00:04:31
+      // code  a timecode with frames at 29.97: 00:00:12;04
+      const hms = s => !isFinite(s) ? '--:--:--'
+        : pad(s / 3600, 2) + ':' + pad((s / 60) % 60, 2) + ':' + pad(s % 60, 2);
+      const code = (s, fps) => pad(s / 3600, 2) + ':' + pad((s / 60) % 60, 2) + ':' +
+        pad(s % 60, 2) + ';' + pad((s % 1) * fps, 2);
+
+      // The show's total running time, worked out from the cue stack itself rather than typed
+      // in — change a beat and the TRT corrects itself. Every number the stack waits on is
+      // counted: a cue's lead, its beats and its hold; a slide's hold; a clip's real duration.
+      // Clip durations are only known once their metadata has loaded, so TRT reads --:--:--
+      // until both are in rather than showing a figure that is wrong.
+      const clipLen = [NaN, NaN];
+      function seqTRT() {
+        let ms = 0, known = true;
+        for (const step of SHOW) {
+          if (step.kind === 'cue') {
+            ms += (step.lead || 0) + (step.hold || 0);
+            (step.builds || []).forEach(b => { ms += b.beat || 0; });
+          } else if (step.kind === 'slide') {
+            ms += step.hold || 0;
+          } else {
+            const d = clipLen[step.v];
+            if (isFinite(d)) ms += d * 1000; else known = false;
+          }
+        }
+        return known ? ms / 1000 : NaN;
+      }
+
+      // Read each clip's length without waiting for it to be its turn. preload="metadata" is a
+      // small range request, not the whole file, so this costs almost nothing and lets the TRT
+      // be right from the first frame of the show.
+      VIDEOS.forEach((v, n) => {
+        const probe = document.createElement('video');
+        probe.preload = 'metadata';
+        probe.muted = true;
+        probe.addEventListener('loadedmetadata', () => {
+          clipLen[n] = probe.duration;
+          paintSeq();
+        }, { once: true });
+        probe.src = v.src;
+      });
+
+      // The sequence clock runs for the WHOLE show — across cues, clips and slides alike — so
+      // it cannot ride the clip's own frame loop the way the burn-in does. It gets its own.
+      let seqStart = 0, seqRaf = 0;
+      function paintSeq() {
+        if (seqTrtEl) seqTrtEl.textContent = 'TRT ' + hms(seqTRT());
+        if (seqCodeEl && seqStart) {
+          seqCodeEl.textContent = code((performance.now() - seqStart) / 1000, 30000 / 1001);
+        }
+      }
+      const seqTick = () => { paintSeq(); seqRaf = requestAnimationFrame(seqTick); };
+      function startSeqClock() {
+        seqStart = performance.now();
+        if (seqEl) { seqEl.hidden = false; }
+        if (!seqRaf) seqRaf = requestAnimationFrame(seqTick);
+      }
+      function stopSeqClock() {
+        if (seqRaf) { cancelAnimationFrame(seqRaf); seqRaf = 0; }
+        if (seqEl) seqEl.hidden = true;      // the readout belongs to the sequence, not the wall
+      }
+      const draw = () => {
+        if (!tc || !cur || cur.kind !== 'video') return;
+        const fps = VIDEOS[cur.v].fps;
+        // COUNTS DOWN: time remaining in the clip, the way a playback system shows it, so the
+        // number on the wall is the one a caller is actually working to. The sequence clock
+        // above still counts up — that is elapsed show, which only runs forwards.
+        const d = vid.duration;
+        const left = isFinite(d) ? Math.max(0, d - (vid.currentTime || 0)) : 0;
+        tc.textContent = code(left, fps);
+        // the clip's own TRT, beside its countdown, the way the sequence carries its own above
+        if (tcTrt) tcTrt.textContent = 'TRT ' + hms(vid.duration);
+      };
+
+      let raf = 0, onScreen = true;
+      const tick = () => { draw(); watchClip(); endWatch(); raf = requestAnimationFrame(tick); };
+      const start = () => {
+        if (!raf && onScreen && cur && cur.kind === 'video' && !vid.paused) raf = requestAnimationFrame(tick);
+      };
+      const stop = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+
+      // ── The right-hand call ──────────────────────────────────────────────────────────────
+      // A standby given while something else is still on the wall — over a running clip, or
+      // over a slide being read. It does not replace what is up; it sits beside it, which is
+      // the whole point of a standby.
+      let readyTimer = 0;
+      // Clear the slate a beat from now, cancelling any clear already pending. It uses the
+      // same handle callReady and clearReady use, so a new call landing inside the beat
+      // cancels this rather than wiping the new slate a moment after it arrives.
+      function clearReadySoon(ms) {
+        clearTimeout(readyTimer);
+        readyTimer = setTimeout(() => clearReady(true), ms);
+      }
+      // WHO SAYS WHAT. The show caller calls the CUES — every one of them, playback included.
+      // The playback operator calls the TIME, and nothing else: the count-out and only the
+      // count-out. Two jobs, one each, and they do not borrow each other's lines.
+      // A call is a plain string (the caller) or { line, who } if it ever needs to be someone
+      // else; the counts go through VO.op directly.
+      const lineOf = c => (c && c.line !== undefined) ? c.line : c;
+      const whoOf  = c => (c && c.who !== undefined) ? c.who : undefined;
+
+      function callReady(call, ms, onGo, holdAfterGo) {
+        const line = lineOf(call), who = whoOf(call);
+        if (!ready) { if (onGo) onGo(); return; }
+        clearTimeout(readyTimer);
+        // The slate and the sequence readout share the top row, and on a phone the panel is
+        // only ~267px wide — measured, the longest call needs 197px and the gap left beside
+        // the readout is 3px. So the readout yields while a call is up. They are both operator
+        // data and a cue call outranks a running clock; the clock is back two seconds later.
+        if (seqEl && !seqEl.hidden) seqEl.classList.add('is-yielded');
+        const goEl = writeCall(readyLine, line);
+        ready.hidden = false;
+        ready.classList.remove('is-in');
+        fadeIn(ready);
+        // onGo lands on the word "GO" — see VO.say. The call is on the wall from the start of
+        // the line; the GO at the end of it, and the content it calls, arrive on the word.
+        const hold = holdAfterGo || GO_READ;
+        const fire = (onGo || goEl) ? () => {
+          lightGo(goEl, hold);
+          // The slate holds a beat PAST the GO so the word can actually be read. Without
+          // this the GO was popping in on the same frame the slate was taken away — the
+          // picture's cut did it on a clip, and on a slide the dwell could expire on, or
+          // even just before, the very word it was waiting for. The picture is not delayed
+          // by any of this; only the finished call lingers, the way a caller's last word
+          // hangs for a moment on comms.
+          if (goEl) clearReadySoon(hold);
+          if (onGo) onGo();
+        } : null;
+        VO.say(line, null, fire, who);
+        // A call that ends in GO is taken off by its own GO, never by this dwell. A fixed
+        // dwell cannot know how long the line runs, and on the longest call it expired 0.1s
+        // BEFORE the word it was waiting for — clearing the slate just as the GO popped in.
+        // onGo is guaranteed to fire (on the word, on the end of the line, or on VO's own
+        // backstop), so the GO always clears it.
+        if (ms && !goEl) readyTimer = setTimeout(clearReady, ms);
+      }
+      function clearReady(force) {
+        if (!ready) return;
+        // A GO that has just popped in holds the slate for the rest of its beat. An ordinary
+        // clear landing inside that beat is pushed to the end of it rather than wiping the
+        // word on the frame it arrived — leaveClip() does exactly that on a slide cue, and
+        // the clip's own cut did it on a video cue. A forced clear still goes through, so
+        // starting a new step or stopping the show still takes the slate at once.
+        if (!force && goHold > performance.now()) {
+          clearReadySoon(goHold - performance.now());
+          return;
+        }
+        if (seqEl) seqEl.classList.remove('is-yielded');
+        clearTimeout(readyTimer);
+        // A CUT, not a fade. Taken off on this frame — no transition to wait out, and no
+        // timer that could hide it part way through one.
+        ready.classList.remove('is-in');
+        ready.hidden = true;
+      }
+
+      // Fires a clip's standby once it has N seconds left to run. Checked on the same frame
+      // loop that draws the timecode, so it cannot drift: duration is only known after the
+      // clip has loaded, which is why this is a watcher and not a timer set up front.
+      // ── THE PLAYBACK OPERATOR'S COUNT-OUT ────────────────────────────────────────────────
+      // Marks are seconds remaining in the clip. Spelled for a voice rather than written as
+      // digits — a speech engine reads "50 sec" unevenly and "Fifty seconds" cleanly.
+      const COUNT = [
+        [60, 'One minute remaining'],
+        // fifty is deliberately not called — removed at George's ask. op-50 is still cut,
+        // levelled and on disk, so putting the mark back here is all it takes.
+        [30, 'Thirty'],
+        [15, 'Fifteen seconds. Standby for count out.'],
+        [10, 'Ten'], [9, 'Nine'], [8, 'Eight'], [7, 'Seven'], [6, 'Six'],
+        [5, 'Five'], [4, 'Four'], [3, 'Three'], [2, 'Two'], [1, 'One']
+      ];
+      // How far ahead of each mark the operator starts saying it. Tuned so the word itself
+      // lands on the number rather than after it.
+      const COUNT_LEAD = 0.45;
+      let counted = new Set();
+
+      let readyFired = false, outFired = false;
+      function watchClip() {
+        if (!cur || cur.kind !== 'video') return;
+        const d = vid.duration;
+        if (!isFinite(d) || !d) return;
+        const left = d - vid.currentTime;
+
+        // Each mark fires once, and only if the clip is actually past it — seeking or a short
+        // clip must not dump the whole count at once.
+        if (cur.count) {
+          for (const [at, line] of COUNT) {
+            // LEAD the mark. Fired exactly on it, the word is still being got out while the
+            // second ticks over, so "Ten" is heard against a readout already showing 9 — the
+            // count reads a second late. Speech has an onset, so the call has to start before
+            // the number it is calling, the way a person draws breath first.
+            if (left <= at + COUNT_LEAD && !counted.has(at)) {
+              counted.add(at);
+              // only the mark we have just reached; anything further down is still to come
+              if (left > at - 1.2) VO.op(line);
+            }
+          }
+        }
+        if (!readyFired && cur.ready && left <= cur.ready.remaining) {
+          readyFired = true;
+          callReady(cur.ready, 0);          // the standby stays up
+        }
+        // The call out of the clip starts while the clip is still running, so the word GO
+        // lands as it ends rather than after it. This is the difference between calling a
+        // transition and announcing one that already happened.
+        if (!outFired && cur.out && left <= cur.out.remaining) {
+          outFired = true;
+          callReady(cur.out, 2600, clipGo);
+        }
+      }
+
+      // Build the dots. Real buttons, so they are keyboard-reachable and screen-readable; the
+      // wall itself is pointer-events:none, so the strip turns pointers back on for itself.
+      // They are built from LOOP, not SHOW: a dot is an invitation to come back to something,
+      // and nothing in a cue stack is come back to.
+      const dots = LOOP.map((item, n) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'wall-dot';
+        b.setAttribute('aria-label', 'Show ' +
+          (item.kind === 'video' ? VIDEOS[item.v].name : SLIDES[item.c].label));
+        b.addEventListener('click', () => { endShow(); go(n); });
+        if (dotsWrap) dotsWrap.appendChild(b);
+        return b;
+      });
+      // The dots belong to the LOOP, not the show. They are an invitation to jump between
+      // items, and during a written cue stack there is nothing to jump to yet — so the strip
+      // is out of the way for the whole show, which also leaves the bottom-right corner free
+      // for the cue slate to sit hard right on the bottom edge.
+      const paintDots = () => {
+        // No loop here, so there is never anything to jump between: the strip stays down for
+        // the life of the page rather than coming back when the show ends.
+        if (dotsWrap) dotsWrap.hidden = true;
+        if (dotsWrap) return;
+        dots.forEach((d, n) => {
+          const on = showAt < 0 && n === i;
+          d.classList.toggle('is-on', on);
+          d.setAttribute('aria-current', on ? 'true' : 'false');
+        });
+      };
+
+      // ── Putting something on the wall ────────────────────────────────────────────────────
+      // One function for both lists, so a clip behaves identically whether the show is running
+      // it or the loop is. `done` is what to do when this step finishes.
+      // Take a running clip down gently. A clip that is cut away from mid-audio should fade,
+      // not stop dead on a frame — the only place a hard stop is right is when it has already
+      // played to its end, where there is nothing left to fade.
+      // The wall's picture. A paused clip keeps its last frame on screen, so leaving one put
+      // the ARTEMIS frame behind the invitation and behind every call the caller made before
+      // the playback was taken. The picture is now up only while a clip is rolling: the grid
+      // is what a call is read against, and the clip arrives when it is called.
+      const scEl = document.querySelector('.screen-content');
+      const cueEl = document.querySelector('.wall-cue');
+      const clipOn  = () => {
+        if (scEl) scEl.classList.add('is-clip');
+        // The standby that announced this playback is spent the moment the picture lands —
+        // it was still sitting over the clip's opening alongside its own GO, which is the
+        // trail. Only the call that was just made stays, for the rest of its read.
+        if (cueEl) cueEl.classList.add('is-over-clip');
+      };
+      const clipOff = () => {
+        if (scEl) scEl.classList.remove('is-clip');
+        if (cueEl) cueEl.classList.remove('is-over-clip');
+      };
+
+      function leaveClip() { stop(); vid.pause(); clipOff(); }
+
+      function show(item, done) {
+        cur = item;
+        clearTimeout(holdTimer); holdTimer = 0;
+        cueTimers.forEach(clearTimeout); cueTimers = [];
+        readyFired = false;
+        outFired = false;
+        counted = new Set();
+        paintDots();
+
+        if (item.kind === 'invite') {
+          leaveClip();
+          if (card) card.hidden = true;
+          if (cue) cue.hidden = true;
+          if (tcWrap) tcWrap.hidden = true;
+          clearReady(true);
+          audioMode('off');
+          if (invite) { invite.hidden = false; fadeIn(invite); }
+          return;                       // no timer: the wall waits here for as long as it takes
+        }
+        if (invite) invite.hidden = true;
+
+        if (item.kind === 'cue') {
+          leaveClip();
+          // Get the clip this cue is calling ready NOW, while the card is up. A paused clip
+          // asked to play from a standing start has to seek and decode first, and that is the
+          // pause on GO. Priming it here — src set, seeked to 0, one frame decoded — leaves
+          // the GO with nothing to do but play().
+          primeNext();
+          if (card) card.hidden = true;
+          if (tcWrap) tcWrap.hidden = true;     // the burn-in names a clip, not a cue
+          clearReady(true);
+          if (cue) runCue(item, done);
+          else holdTimer = setTimeout(done, 1000);
+          return;
+        }
+        // NOTE: the cue card is NOT hidden here. Whatever is on the wall stays up until the
+        // content that replaces it actually arrives — on the word GO — or the wall goes black
+        // for the length of the call, which reads as a dropout rather than a standby being
+        // held. Each `put`/`roll` below clears it at the moment it puts something up.
+
+        // Content called by a GO does not appear until the word lands — `put` is what the
+        // call fires. Whatever was on the wall stays up until then, which is why an advance
+        // leaves the previous slide showing while "Advance GFX 1, SLIDE 2," is still being
+        // spoken, and only swaps on "GO".
+        if (item.kind === 'slide') {
+          const put = () => {
+            leaveClip();
+            const gen = cueGen;
+            // if a new cue card has gone up inside the beat, this deferred hide is stale
+            dropAfterGo(() => { if (cue && cueGen === gen) cue.hidden = true; });
+            const s = SLIDES[item.c];
+            if (card) {
+              card.href = s.href;
+              cardDates.textContent = s.dates;
+              cardTitle.textContent = s.title;
+              cardMeta.textContent = s.meta;
+              card.hidden = false;
+            }
+            if (tcWrap) tcWrap.hidden = true;   // the burn-in names a clip, not a slide
+            // the hold and the standby are both measured from when the slide is actually up,
+            // not from when the call for it began
+            if (item.ready) cueTimers.push(setTimeout(
+              () => callReady(item.ready, 0), item.ready.after));
+            holdTimer = setTimeout(done, item.hold);
+          };
+          if (item.call) {
+            callReady(item.call, 2600, put);       // content waits for the word GO
+          } else if (item.callOver) {
+            // Called OVER content that is already up. After a count-out the take happens on
+            // zero — the operator's count was the cue — so holding the slide back for the
+            // caller's GO would leave the wall empty through the whole line.
+            put();
+            callReady(item.callOver, 2600);
+          } else { clearReady(true); put(); }
+          return;
+        }
+
+        // video
+        const v = VIDEOS[item.v];
+        const roll = () => {
+          // Straight cut to picture: the slate and the slide are off on this frame. A clip
+          // starting is the hardest cut on the wall and nothing rides over the top of it —
+          // the GO pops in and goes with the same frame the picture arrives.
+          // The slate is not taken here any more: callReady cuts it when the caller stops
+          // speaking, a beat past the GO. Taken on this frame it was gone before the word
+          // it had just popped in could be read.
+          // The CARD is not part of that cut. It carries its own GO, it is not sitting over
+          // the picture, and it keeps the beat so the word can be read before it goes.
+          const gen = cueGen;
+          // THE PICTURE WAITS FOR THE WALL TO CLEAR.
+          // The clip used to roll on the word while the call was still serving out its beat,
+          // so for about a second the GO lay across the opening of the clip — at 00:00:17;18
+          // "Mitti Playback-Video 1, GO" was sitting over the ARTEMIS title. The call is not
+          // something to read THROUGH a picture.
+          // So the whole take now hangs off the same beat: the call is read, the wall clears,
+          // and the picture arrives on an empty grid. The card and the burn-in go with it, so
+          // nothing appears before the clip it belongs to.
+          // Its own handle, not cueTimers — see dropAfterGo. If a new cue card has gone up
+          // inside the beat this deferred take is stale, which the gen check catches.
+          if (card) card.hidden = true;
+          dropAfterGo(() => {
+            if (cue && cueGen === gen) cue.hidden = true;
+            if (tcWrap) tcWrap.hidden = false;
+            if (nameEl) nameEl.textContent = v.name;
+            startClip();
+          });
+        };
+        if (item.call) { callReady(item.call, 2600, roll, GO_READ_CLIP); return; }
+        clearReady(true);
+        roll();
+        return;
+
+        function startClip() {
+        if (vid.getAttribute('src') !== v.src) { vid.src = v.src; vid.currentTime = 0; }
+        else if (vid.currentTime > 0.05) vid.currentTime = 0;   // already primed at 0: don't re-seek
+        primed = '';
+        // iPhones take a play() that follows a tap as a request to go fullscreen unless the
+        // element is explicitly inline, and setting src re-reads these, so they are re-asserted
+        // on every switch rather than trusted to survive from the markup. The property is set
+        // alongside the attributes because older iOS reads one and not the other.
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('webkit-playsinline', '');
+        vid.playsInline = true;
+        const r = vid.play();
+        if (r && r.catch) r.catch(() => {});
+        clipOn();                  // the picture, on the roll — not before it is called
+        draw();
+        start();
+        // The clip is finished by whichever comes first: the word GO of its out-call, or its
+        // own last frame. Guarded, because both can happen within a frame of each other and
+        // the step must only hand on once.
+        let spent = false, goGiven = false;
+        // THE CLIP IS NEVER CUT. The out-call's GO does not end it — it only says the
+        // transition is standing by. Whatever happens first:
+        //   GO lands while the clip is still running  -> remember it, and go on the last frame
+        //   the clip reaches its last frame first     -> go now if the GO has been given
+        // Either way every frame of the clip plays, and the transition is ON the end rather
+        // than before it. Cutting on the GO took the last second or so off both clips.
+        const fire = () => {
+          if (spent) return;
+          spent = true;
+          done();
+        };
+        finishClip = () => {                // the clip reached its end
+          if (goGiven || !cur || !cur.out) {
+            // Counted out: the take is ON zero, with no post-roll — ten seconds of numbers is
+            // all the warning anyone needs. Called out of by a GO: also immediate. Otherwise
+            // TAIL gives the next cue a breath so it does not step on the last frame.
+            if (cur && (cur.out || cur.count)) fire();
+            else cueTimers.push(setTimeout(fire, TAIL));
+          } else {
+            goGiven = true;                 // GO is still coming; it will fire on arrival
+          }
+        };
+        clipGo = () => {                    // the out-call's GO landed
+          if (vid.ended || vid.currentTime >= (vid.duration || Infinity) - 0.05) fire();
+          else goGiven = true;              // hold: the 'ended' handler will take it
+        };
+        onClipEnd = finishClip;
+        }
+      }
+
+      // Look ahead for the next clip in the stack and decode its first frame.
+      let primed = '';
+      function primeNext() {
+        if (showAt < 0) return;
+        const nextVid = SHOW.slice(showAt + 1).find(s => s.kind === 'video');
+        if (!nextVid) return;
+        const src = VIDEOS[nextVid.v].src;
+        if (primed === src) return;
+        primed = src;
+        try {
+          if (vid.getAttribute('src') !== src) vid.src = src;
+          vid.currentTime = 0;
+          // play/pause is what actually forces a frame to be decoded; load() alone does not
+          const r = vid.play();
+          if (r && r.then) r.then(() => vid.pause()).catch(() => {});
+          else vid.pause();
+        } catch (e) {}
+      }
+
+      // what to run when the current clip finishes, and the guarded finisher behind it
+      let onClipEnd = null;
+      let finishClip = () => {};
+      let clipGo = () => {};
+
+      // ── The show ─────────────────────────────────────────────────────────────────────────
+      function runShow(n) {
+        // THE 4K WINDOW DOES NOT LOOP. On the hero the wall is part of the page and has to
+        // carry on after the show, so there it rotates — that is index.html's and is left
+        // alone. This is a window a visitor opened to watch one show call, so when the stack
+        // runs out the show ends and the wall returns to its invitation. Nothing rotates, and
+        // the only thing that plays again is a show the visitor calls themselves.
+        if (n >= SHOW.length) { endShow(); show({ kind: 'invite' }, () => {}); return; }
+        showAt = n;
+        show(SHOW[n], () => runShow(n + 1));
+      }
+
+      // The show is over: the house comes back to 100% and the wall starts rotating. Also
+      // called if a visitor presses a dot part-way through, because at that point they have
+      // taken over and the rest of the stack is no longer theirs to sit through.
+      function endShow() {
+        if (showAt < 0) return;
+        showAt = -1;
+        cueTimers.forEach(clearTimeout); cueTimers = [];
+        clearReady(true);
+        stopSeqClock();
+        take();                         // house back to 100%
+        // The show is over and the sign-off has been said, so the sound goes off with it: the
+        // visitor unmuted for the show, not for a wall that keeps playing at them afterwards.
+        // The sound button is still there if they want it back.
+        audioMode('off');
+      }
+
+      // ── The loop ─────────────────────────────────────────────────────────────────────────
+      function go(n) {
+        i = ((n % LOOP.length) + LOOP.length) % LOOP.length;
+        show(LOOP[i], () => go(i + 1));
+      }
+
+      vid.addEventListener('play', start);
+      vid.addEventListener('pause', stop);
+      vid.addEventListener('seeked', draw);
+      // A clip is left to finish. TAIL is the breath after its last frame before the next cue
+      // is called — without it the call began in the same instant the clip ended and stepped
+      // on the end of its audio, which is what "cut off at the end of the video" was.
+      const TAIL = 700;
+      vid.addEventListener('ended', () => {
+        const go = onClipEnd;
+        onClipEnd = null;
+        // The slate is only cleared here if nothing called us out of the clip — an out-call's
+        // own GO handles its own slate, and clearing it here would cut the call short.
+        // `go` must still be set, too: endWatch hands on a frame or two BEFORE 'ended'
+        // arrives, and by the time it does the next step has its own call on the wall.
+        // Clearing then wiped a slate that was not ours — which is how the whole of
+        // "GFX 1, Slide 1, GO." came to be called with nothing on screen.
+        if (go && !outFired) clearReady();
+        if (go) go();
+      });
+      // A clip that stalls on its final frame without firing 'ended' would hold the stack, so
+      // the frame loop watches for the playhead reaching the end as well.
+      const endWatch = () => {
+        if (cur && cur.kind === 'video' && vid.duration &&
+            vid.currentTime >= vid.duration - 0.04 && onClipEnd) {
+          const go = onClipEnd; onClipEnd = null; go();
+        }
+      };
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => {
+          onScreen = e.isIntersecting;
+          // off screen, a card's hold timer keeps running; only the rAF readout is parked
+          onScreen ? start() : stop();
+        }, { threshold: 0 }).observe(vid);
+      }
+
+      // The wall's controls, for the sound button below and for picking a VO voice while this
+      // is still a prototype. From the console:
+      //   proavCue.vo.list().map(v => v.name)   every voice this machine has
+      //   proavCue.vo.pick('male')              or 'female', or an exact voice name
+      //   proavCue.replay()                     put the levels back up and call CUE 1 again
+      window.proavCue = {
+        vo: VO,
+        take,
+        // back to the top: levels up, show unstarted, the wall holding its invitation
+        replay() { take(); showAt = 0; show({ kind: 'invite' }, () => {}); }
+      };
+
+      // Starting the show. This press is doing two jobs at once: it is the visitor asking for
+      // the show, and it is the user gesture that makes audio legal for the rest of the visit.
+      // Priming the video here — one muted play() while we still have the gesture — is what
+      // lets the first clip start with sound later without being refused.
+      if (invite) {
+        invite.addEventListener('click', () => {
+          try { vid.muted = true; const r = vid.play(); if (r && r.catch) r.catch(() => {}); } catch (e) {}
+          VO.pick(VO.current() ? VO.current().name : 'male');
+          VO.pickOp('female');   // by now the voice list has certainly loaded
+          VO.warm();            // start pulling the 25 recordings down on the same press
+          audioMode('on');      // sound is on from here: clips audible, voice ducking them
+          startSeqClock();      // the sequence clock runs from the press
+          runShow(0);           // the cue stack, from CUE 1
+        });
+      }
+
+      // Everything on the wall — the standby, the take, the dim it fires — waits for the site
+      // to finish loading, so the cue is called against a settled page rather than racing the
+      // fonts and the first clip. If load has already gone by, start now.
+      const roll = () => show({ kind: 'invite' }, () => {});
+      if (document.readyState === 'complete') roll();
+      else addEventListener('load', roll, { once: true });
+
+      // There is deliberately NO timer that takes the cue on its own. The take build is the
+      // only caller, so the levels cannot move before the wall has said they will.
+    })();
+</script>
+
+<!-- ── ONE COPY ────────────────────────────────────────────────────────────────────────────
+     The cue stack, the VO manifest and the engine above are a SECOND COPY of the hero's. They
+     were lifted verbatim so this page could be built without touching index.html, which is
+     the right trade for getting it on screen — but it is a trade, and it will drift: change a
+     cue in one place and the other still calls the old one.
+     The seam to fix it is the data, not the code: VIDEOS, SLIDES, SHOW, LOOP, COUNT and
+     VO_LINES are pure data and belong in one js/cue-stack.js that both pages load, leaving
+     the rendering separate in each. That edit touches index.html's script, so it is a
+     deliberate step to take on its own and not a thing to slip into another change.
+     ─────────────────────────────────────────────────────────────────────────────────────── -->
+</body>
+</html>

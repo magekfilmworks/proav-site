@@ -5,7 +5,7 @@
    .wall-* elements the cue engine drives — so everything here is layout, not behaviour.
 
    EVERYTHING IS AUTHORED IN 4K PIXELS. The stage is exactly 3840x2160 and one transform in
-   showcall.html scales it to the screen, so a size written here is the size it is in the
+   showcaller.html scales it to the screen, so a size written here is the size it is in the
    finished frame. No clamp(), no vw, no breakpoints: this is a graphics project, not a page,
    and it has one canvas.
 
@@ -80,7 +80,7 @@ html, body {
   top: 50%;
   width: 3840px;
   height: 2160px;
-  transform-origin: 50% 50%;   /* the fit transform in showcall.html supplies the scale */
+  transform-origin: 50% 50%;   /* the fit transform in showcaller.html supplies the scale */
   transform: translate(-50%, -50%);
   background: var(--stage-black, #0B0B0D);
 }
@@ -442,7 +442,7 @@ html, body {
 /* Everything in this frame is authored in 4K pixels and scales with the stage, which is right
    for the wall and wrong for the two things a person has to hit. At 390px wide the stage runs
    at about 0.10, which rendered both buttons at 11px. --fit is the live stage scale, published
-   by the fit function in showcall.html, so these counter-scale against it and stop shrinking
+   by the fit function in showcaller.html, so these counter-scale against it and stop shrinking
    once they reach roughly 44px on screen: 44 / 110 authored = 0.4. The max() keeps them at
    their authored size on any screen big enough, so nothing changes on a desktop. Each grows
    toward the inside of the frame rather than off its edge. */

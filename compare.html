@@ -96,7 +96,7 @@
   </figure>
   <figure>
     <figcaption><span class="who">Live stage</span>
-      <span class="what">showcall.html — DOM, 3840 × 2160, scaled to fit</span></figcaption>
+      <span class="what">showcaller.html — DOM, 3840 × 2160, scaled to fit</span></figcaption>
     <div class="box"><iframe id="f" src="" title="Live show call stage"
                              allow="autoplay"></iframe></div>
   </figure>
@@ -144,7 +144,7 @@
   go.addEventListener('click', function () {
     if (running) return;
     running = true; go.disabled = true; stop.disabled = false;
-    f.src = 'showcall.html';
+    f.src = 'showcaller.html';
     // The stage needs its own document up before it can be told to start. The video is held
     // at 0 until then, so both begin on the same tick rather than whenever each is ready.
     f.addEventListener('load', function once() {

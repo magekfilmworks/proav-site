@@ -455,7 +455,36 @@
     background:
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.010'/%3E%3C/svg%3E"),
       radial-gradient(ellipse 110vw 70vw at 0% 180px, rgba(255,156,61,0.34), rgba(255,156,61,0) 55%),
-      radial-gradient(ellipse 110vw 70vw at 100% 430px, rgba(42,217,236,0.30), rgba(42,217,236,0) 55%);
+      /* THE DESKTOP TREATMENT, ported. George, 27 Nov: "this is your desktop header, why
+         can't you give the mobile the same treatment." The answer was that it was never
+         a different idea, only a unit that collapses. Measured off the desktop: the cyan
+         sits at 94% across and 33px BELOW the wall's bottom edge — 0.178 x the wall's own
+         height — with a tight 42% stop, so it fades UP through the wall and dies 0.32 x
+         that height above its top. Ported to the phone's wall box, the horizontal radius
+         comes out at 78vw: EXACTLY the desktop figure. The horizontal was never wrong.
+         The vertical is the whole story — desktop's 50vw is 660px on a 1320 screen and
+         only 195px on a 390 one, so the glow died long before it reached the wall. The
+         same reach needs 119vw here.
+         Both calc()s track the wall rather than guessing: the wall's bottom runs
+         0.39 x viewport + 110, so its centre and its height — and therefore this glow —
+         follow the screen instead of fitting one width and drifting at the rest.
+
+         THE HORIZONTAL REACH IS NOT THE DESKTOP'S, AND CANNOT BE. Ported at desktop's own
+         78vw/42% the glow reached 128px from its centre, which left the wall's left two
+         thirds over black and its right third lit, with a hard ramp between them — George:
+         "this looks like the LED Wall is hanging over a hole." The seam measured as a flat
+         ~15 from x=10 to x=230 and then +10 every 20px.
+         The reason is the layouts differ in a way the colours do not: on a desktop the wall
+         occupies the RIGHT 36% of the screen, so lighting the right third covers it. On a
+         phone the wall runs x=28..362 of 390 — 86% of the width, nearly full bleed — so the
+         same reach lights a fraction of it. The glow has to span the whole wall: 339px from
+         its centre to the wall's far edge, not 128.
+         Widening the radius alone would have made the core brighter and the ramp steeper, so
+         the colour stop moves out with it — 70% instead of 42% spreads the same light over a
+         longer fade. The vertical radius comes down to hold the reach above the wall at the
+         195px that was already right, since one gradient has one stop for both axes. */
+      radial-gradient(ellipse 124vw calc(84vw - 47px) at 94% calc(106px + 46vw),
+                      rgba(42,217,236,0.30), rgba(42,217,236,0) 70%);
   }
 }
 
@@ -659,6 +688,43 @@
   margin-bottom: 28px;
 }
 
+/* WHO STARTED IT — the creator credit at the foot of THE SHOW.
+   Apple Podcasts Connect asks for a Creator; this is that same credit on the page, and the
+   reason there is no about page. A hairline above it rather than a heading: it is a credit,
+   not a section, and a fourth eyebrow in the hero would compete with THE SHOW itself. */
+.show-creator {
+  max-width: 1000px;
+  margin-top: 40px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border-quiet);
+}
+.show-creator-line {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text-soft);
+}
+.show-creator-line a {
+  color: var(--signal-white);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(245, 245, 240, .35);
+  transition: border-color .2s ease;
+}
+.show-creator-line a:hover,
+.show-creator-line a:focus-visible { border-bottom-color: var(--signal-white); }
+.show-creator-sub {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  letter-spacing: .03em;
+  color: var(--graphite-light);
+}
+@media (max-width: 720px) {
+  .show-creator { margin-top: 32px; padding-top: 22px; }
+  .show-creator-line { font-size: 16px; }
+  .show-creator-sub { font-size: 12.5px; }
+}
+
 /* segments */
 .segments-wrap {
   position: relative;
@@ -711,6 +777,14 @@
   font-size: 18px;
   line-height: 1.7;
   color: var(--text-soft);
+}
+
+/* The way out of the capped EPISODES strip and into the full library on /watch.
+   The strip holds at most three tiles so the front page stays short; everything else
+   lives on that page. See the comment on the strip in index.html. */
+.watch-seeall {
+  margin-top: 36px;
+  text-align: center;
 }
 
 /* watch: one show's video slot and audio slot, side by side */
@@ -1001,7 +1075,7 @@
 }
 
 /* ═══ THE 4K SHOW CALL, IN THE EPISODES SECTION ═════════════════════════════════════════
-   A poster for showcall.html — the hero's cue stack laid out as a flat 3840x2160 broadcast
+   A poster for showcaller.html — the hero's cue stack laid out as a flat 3840x2160 broadcast
    frame. The poster is a still; the show runs in the overlay, or at /showcall on its own.
    It sits on its own row under the episode and the listen slot, full width, because a 4K
    frame deserves the whole column rather than half of one. `order` rather than moved markup,
@@ -1154,6 +1228,8 @@ iframe { background: #000; }
 .showcall-modal.is-pip .showcall-modal-frame,
 .showcall-modal.is-pip .showcall-video,
 .showcall-modal.is-pip .video-modal-inner { background: #000; }
+/* nothing to control while the picture is out of the window */
+
 
 .showcall-modal .video-modal-inner {
   transform-origin: 50% 50%;
@@ -1184,9 +1260,10 @@ iframe { background: #000; }
      phone the three piled on top of each other. Apple's controls cannot be moved, so the
      frame is pushed down instead and the close lives in the band above it. Nothing can
      collide because nothing shares that row.
-     56px: 44px of touch target plus the 12px it is inset by. */
+     64px: 44px of touch target, the 8px it is inset by, and 12px of daylight under it so the
+     gap to Apple's row is deliberate rather than incidental. */
   .showcall-modal .video-modal-inner {
-    padding-top: calc(env(safe-area-inset-top, 0px) + 56px);
+    padding-top: calc(env(safe-area-inset-top, 0px) + 64px);
   }
 
   .showcall-modal .showcall-modal-frame {
@@ -1212,11 +1289,23 @@ iframe { background: #000; }
     background: transparent;
   }
 
-  /* Top left, in its own strip, clear of the notch and of Apple's controls below it. */
+  /* THE CLOSE GOES TOP-RIGHT, AND THE STRIP GETS TALLER. v263.
+     It sat top-LEFT in the strip, 6px above the video element. On paper that clears Apple's
+     expand and PiP, which it draws at the element's TOP-LEFT — and in Chromium at 390x844
+     and 844x390 it measures clear. On George's iPhone in landscape it does not: "the close
+     button is blocking full screen and pop buttons". Six pixels is not clearance, it is a
+     coincidence, and iOS hit areas are bigger than the glyphs they draw.
+     So the two are separated on BOTH axes instead of one. Apple owns the element's top-left;
+     this now sits at the opposite corner of a strip that is 8px taller. Even if the strip
+     collapses on some layout I cannot see from here, they are at opposite ends of the row.
+     Apple's volume control is top-right OF THE ELEMENT, which is a full strip-height below
+     this — different row, no contest.
+     DO NOT move this back to the left. That corner is Apple's on every iOS build. */
   .showcall-modal .video-modal-close {
     position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 6px);
-    left: calc(env(safe-area-inset-left, 0px) + 10px);
+    top: calc(env(safe-area-inset-top, 0px) + 8px);
+    right: calc(env(safe-area-inset-right, 0px) + 10px);
+    left: auto;
     margin: 0;
     z-index: 3;
     width: 44px;
