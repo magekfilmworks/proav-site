@@ -81,10 +81,6 @@
       <button id="hearV" type="button" aria-pressed="true">Hear rendered</button>
       <button id="hearL" type="button" aria-pressed="false">Hear live</button>
     </span>
-    <span class="seg" role="group" aria-label="Which render">
-      <button id="q1080" type="button" aria-pressed="true">1080</button>
-      <button id="q720"  type="button" aria-pressed="false">720</button>
-    </span>
     <span class="clock" id="clock">—</span>
   </div>
 </header>
@@ -100,7 +96,7 @@
   </figure>
   <figure>
     <figcaption><span class="who">Live stage</span>
-      <span class="what">showcall.html — DOM, 3840 × 2160, scaled to fit</span></figcaption>
+      <span class="what">showcaller.html — DOM, 3840 × 2160, scaled to fit</span></figcaption>
     <div class="box"><iframe id="f" src="" title="Live show call stage"
                              allow="autoplay"></iframe></div>
   </figure>
@@ -120,12 +116,12 @@
   var v = document.getElementById('v'), f = document.getElementById('f');
   var go = document.getElementById('go'), stop = document.getElementById('stop');
   var clock = document.getElementById('clock'), vMeta = document.getElementById('vMeta');
-  var SRC = { '1080': 'images/showcall-1080.mp4', '720': 'images/showcall-720.mp4' };
-  var quality = '1080', hear = 'v', running = false;
+  var SRC = 'images/showcall-1080.mp4';   // one file now — the 720 cut was dropped 27 Nov
+  var hear = 'v', running = false;
 
   function setSrc() {
-    v.src = SRC[quality];
-    vMeta.textContent = SRC[quality].split('/').pop();
+    v.src = SRC;
+    vMeta.textContent = SRC.split('/').pop();
   }
   function applyAudio() {
     v.muted = (hear !== 'v');
@@ -144,17 +140,11 @@
   press('hearL', function () { hear = 'l';
     this.setAttribute('aria-pressed', 'true');
     document.getElementById('hearV').setAttribute('aria-pressed', 'false'); applyAudio(); });
-  press('q1080', function () { if (running) return; quality = '1080';
-    this.setAttribute('aria-pressed', 'true');
-    document.getElementById('q720').setAttribute('aria-pressed', 'false'); setSrc(); });
-  press('q720', function () { if (running) return; quality = '720';
-    this.setAttribute('aria-pressed', 'true');
-    document.getElementById('q1080').setAttribute('aria-pressed', 'false'); setSrc(); });
 
   go.addEventListener('click', function () {
     if (running) return;
     running = true; go.disabled = true; stop.disabled = false;
-    f.src = 'showcall.html';
+    f.src = 'showcaller.html';
     // The stage needs its own document up before it can be told to start. The video is held
     // at 0 until then, so both begin on the same tick rather than whenever each is ready.
     f.addEventListener('load', function once() {
