@@ -10,7 +10,6 @@ frontend:
     files:
       - 'index.html'
       - 'showcall.html'
-      - 'showcaller.html'
       - 'compare.html'
       - 'contact.html'
       - 'signal-flow-daily.html'
