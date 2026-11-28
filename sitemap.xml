@@ -16,7 +16,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://proavpodcast.fm/digest.html</loc>
+    <loc>https://proavpodcast.fm/signal-flow-digest.html</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
