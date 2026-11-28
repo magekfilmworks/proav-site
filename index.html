@@ -875,15 +875,6 @@
     v.addEventListener('seeked',     function () { scApplyCue(v.currentTime); });
     v.addEventListener('play',       function () { scApplyCue(v.currentTime); });
     v.addEventListener('ended',      function () { document.documentElement.removeAttribute('data-cue'); });
-    // The window keeps its black while the picture is popped out — see .is-pip in home.css.
-    var modal = document.getElementById('showCallModal');
-    v.addEventListener('enterpictureinpicture', function () { modal.classList.add('is-pip'); });
-    v.addEventListener('leavepictureinpicture', function () { modal.classList.remove('is-pip'); });
-    // Safari fires its own names for the same thing.
-    v.addEventListener('webkitpresentationmodechanged', function () {
-      var m = v.webkitPresentationMode;
-      modal.classList.toggle('is-pip', m === 'picture-in-picture');
-    });
   }
 
   // THE WINDOW ZOOMS UP OUT OF THE TILE, over a ground that goes dark.

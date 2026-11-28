@@ -1144,16 +1144,6 @@ iframe { background: #000; }
    thing you watch. This single number is the balance between the two readings. */
 .showcall-modal { background: rgba(5, 5, 7, 0.55); }
 
-/* THE POP-OUT KEEPS THE BLACK.
-   The scrim is 55% so the house dim reads through it. The moment the video pops out to
-   picture-in-picture the element collapses to Apple's placeholder, and that 45% of page
-   showing through turns the whole screen into a pale slab behind a grey icon. There is no
-   dim to watch while the picture is somewhere else, so the ground goes solid for as long as
-   it is out, and comes back the moment it returns. */
-.showcall-modal.is-pip { background: #000; }
-.showcall-modal.is-pip .showcall-modal-frame,
-.showcall-modal.is-pip .video-modal-inner { background: #000; }
-
 .showcall-modal .video-modal-inner {
   transform-origin: 50% 50%;
   will-change: transform;
